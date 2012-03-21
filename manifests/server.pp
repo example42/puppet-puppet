@@ -1,0 +1,94 @@
+# = Class: puppet::server
+#
+# This class manages Puppet server components
+#
+#
+# == Parameters
+#
+# The parameters used in this class are defined for the main puppet class
+#
+class puppet::server inherits puppet {
+
+  ### Managed resources
+  package { 'puppet_server':
+    ensure => $puppet::manage_package_server,
+    name   => $puppet::package_server,
+  }
+
+  service { 'puppet_server':
+    ensure     => $puppet::manage_service_server_ensure,
+    name       => $puppet::service_server,
+    enable     => $puppet::manage_service_server_enable,
+    hasstatus  => $puppet::service_status,
+    pattern    => $puppet::process_server,
+    require    => Package['puppet_server'],
+  }
+
+  file { 'fileserver.conf':
+    ensure  => $puppet::manage_file,
+    path    => "${puppet::config_dir}/fileserver.conf",
+    mode    => $puppet::config_file_mode,
+    owner   => $puppet::config_file_owner,
+    group   => $puppet::config_file_group,
+    require => Package['puppet'],
+    notify  => $puppet::manage_service_server_autorestart,
+    content => $puppet::manage_file_fileserver_content,
+    replace => $puppet::manage_file_replace,
+    audit   => $puppet::manage_audit,
+  }
+
+  ### Service monitoring, if enabled ( monitor => true )
+  if $puppet::bool_monitor == true {
+    monitor::port { "puppet_${puppet::protocol}_${puppet::port}":
+      protocol => $puppet::protocol,
+      port     => $puppet::port,
+      target   => $puppet::monitor_target,
+      tool     => $puppet::monitor_tool,
+      enable   => $puppet::manage_monitor,
+    }
+    monitor::process { 'puppet_process_server':
+      process  => $puppet::process_server,
+      service  => $puppet::service_server,
+      pidfile  => $puppet::pid_file_server,
+      user     => $puppet::process_user_server,
+      argument => $puppet::process_args_server,
+      tool     => $puppet::monitor_tool,
+      enable   => $puppet::manage_monitor,
+    }
+  }
+
+
+  ### Firewall management, if enabled ( firewall => true )
+  if $puppet::bool_firewall == true {
+    firewall { "puppet_${puppet::protocol}_${puppet::port}":
+      source      => $puppet::firewall_source,
+      destination => $puppet::firewall_destination,
+      protocol    => $puppet::protocol,
+      port        => $puppet::port,
+      action      => 'allow',
+      direction   => 'input',
+      tool        => $puppet::firewall_tool,
+      enable      => $puppet::manage_firewall,
+    }
+  }
+
+  ### Manage Node tool
+  case $puppet::nodetool {
+    dashboard: { include dashboard }
+    foreman: { include foreman }
+    default: { }
+  }
+
+  ### Rails required when storeconfigs activated
+  if $puppet::bool_storeconfigs == true { include puppet::rails }
+
+  ### Manage database for storeconfigs
+  case $puppet::db {
+    mysql: { include puppet::server::mysql }
+    default: { }
+  }
+
+  ### Manage Passenger
+  if $puppet::bool_passenger == true { include puppet::server::passenger }
+
+}

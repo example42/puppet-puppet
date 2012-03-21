@@ -1,0 +1,5 @@
+# File managed by Puppet 
+
+[plugins]
+<% scope.lookupvar('puppet::allow').each do |pa| %>  allow <%= pa %>
+<% end -%>
