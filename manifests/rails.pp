@@ -8,7 +8,7 @@
 #
 class puppet::rails {
 
-  incldue puppet::params
+  include puppet::params
   if ! defined(Package['rails']) {
     package { 'rails':
       ensure => $::operatingsystem ? {

@@ -13,7 +13,7 @@ class puppet::server::mysql {
         mysql_db         => $puppet::db_name,
         mysql_user       => $puppet::db_user,
         mysql_password   => $puppet::db_password,
-        mysql_privileges => 'ALL",
+        mysql_privileges => 'ALL',
         mysql_host       => $puppet::db_server,
       }
     }
