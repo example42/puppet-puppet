@@ -22,13 +22,21 @@ class puppet::params {
 
   $mode = 'client'
   $server = 'puppet'
-  $allow = [ "*.$::domain" , '127.0.0.1' ]
-  $bindeaddress = '0.0.0.0'
+  $allow = $::domain ? {
+    ''      => [ '127.0.0.1' ],
+    default => [ "*.$::domain" , '127.0.0.1' ],
+  }
+  $bindaddress = '0.0.0.0'
   $listen = false
   $port_listen = '8139'
   $nodetool = ''
   $runmode = 'service'
   $runinterval = '1800'
+  $croninterval = '0 * * * *'
+  $croncommand = $major_version ? {
+    '0.2' => '/usr/sbin/puppetd --onetime',
+    '2.x' => '/usr/sbin/puppet agent --onetime',
+  }
   $externalnodes = false
   $passenger = false
   $autosign = false

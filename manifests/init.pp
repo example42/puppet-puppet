@@ -25,6 +25,10 @@
 #
 # [*runinterval*]
 #
+# [*croninterval*]
+#
+# [*croncommand*]
+#
 # [*externalnodes*]
 #
 # [*passenger*]
@@ -282,6 +286,8 @@ class puppet (
   $nodetool            = params_lookup( 'nodetool' ),
   $runmode             = params_lookup( 'runmode' ),
   $runinterval         = params_lookup( 'runinterval' ),
+  $croninterval        = params_lookup( 'croninterval' ),
+  $croncommand         = params_lookup( 'croncommand' ),
   $externalnodes       = params_lookup( 'externalnodes' ),
   $passenger           = params_lookup( 'passenger' ),
   $autosign            = params_lookup( 'autosign' ),
@@ -634,8 +640,8 @@ class puppet (
   if $puppet::bool_firewall == true 
   and $puppet::bool_listen == true {
     firewall { "puppet_${puppet::protocol}_${puppet::port_listen}":
-      source      => $puppet::firewall_source,
-      destination => $puppet::firewall_destination,
+      source      => $puppet::firewall_src,
+      destination => $puppet::firewall_dst,
       protocol    => $puppet::protocol,
       port        => $puppet::port_listen,
       action      => 'allow',
@@ -661,6 +667,18 @@ class puppet (
   ### PuppetMaster configuration
   if $puppet::mode == 'server' {
     include puppet::server
+  }
+
+  ### Cron configuration if run_mode = cron
+  if $puppet::runmode == 'cron' {
+    file { 'puppet_cron':
+      ensure  => $puppet::manage_file,
+      path    => '/etc/cron.d/puppet',
+      mode    => '0644',
+      owner   => 'root',
+      group   => 'root',
+      content => template('puppet/client/puppet.cron.erb'),
+    }
   }
 
 }

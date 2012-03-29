@@ -61,8 +61,8 @@ class puppet::server inherits puppet {
   ### Firewall management, if enabled ( firewall => true )
   if $puppet::bool_firewall == true {
     firewall { "puppet_${puppet::protocol}_${puppet::port}":
-      source      => $puppet::firewall_source,
-      destination => $puppet::firewall_destination,
+      source      => $puppet::firewall_src,
+      destination => $puppet::firewall_dst,
       protocol    => $puppet::protocol,
       port        => $puppet::port,
       action      => 'allow',

@@ -12,6 +12,11 @@ path ~ ^/catalog/([^/]+)$
 method find
 allow $1
 
+# allow nodes to retrieve their own node definition
+path ~ ^/node/([^/]+)$
+method find
+allow $1
+
 # allow all nodes to access the certificates services
 path /certificate_revocation_list/ca
 method find
@@ -22,7 +27,7 @@ path /report
 method save
 allow *
 
-# unconditionnally allow access to all files services
+# inconditionnally allow access to all files services
 # which means in practice that fileserver.conf will
 # still be used
 path /file
