@@ -5,7 +5,9 @@
 # $:.unshift('/opt/puppet/lib')
 
 $0 = "puppetmasterd"
+<% if scope.lookupvar('puppetversion') <= '2.6.1' -%>
 require 'puppet'
+<% end %>
 
 # if you want debugging:
 # ARGV << "--debug"
