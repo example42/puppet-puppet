@@ -525,21 +525,6 @@ class puppet (
     require    => Package['puppet'],
   }
 
-  # Enable service start on Ubuntu
-  if $::operatingsystem == 'Ubuntu'
-  and $puppet::runmode == 'service' {
-    file { 'default-puppet':
-      ensure  => $puppet::manage_file,
-      path    => $puppet::config_file_init,
-      require => Package[puppet],
-      content => template('puppet/default.init-ubuntu'),
-      mode    => $puppet::config_file_mode,
-      owner   => $puppet::config_file_owner,
-      group   => $puppet::config_file_group,
-      notify  => $puppet::manage_service_autorestart,
-    }
-  }
-
   file { 'puppet.conf':
     ensure  => $puppet::manage_file,
     path    => $puppet::config_file,
@@ -593,6 +578,12 @@ class puppet (
       replace => $puppet::manage_file_replace,
       audit   => $puppet::manage_audit,
     }
+  }
+
+
+  ### Include distrib specific class
+  case $::operatingsystem {
+    ubuntu: { require puppet::ubuntu }
   }
 
 
