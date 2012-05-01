@@ -21,7 +21,10 @@ class puppet::params {
   }
 
   $mode = 'client'
-  $server = 'puppet'
+  $server = $::domain ? {
+    ''      => 'puppet',
+    default => "puppet.$::domain",
+  }
   $allow = $::domain ? {
     ''      => [ '127.0.0.1' ],
     default => [ "*.$::domain" , '127.0.0.1' ],
