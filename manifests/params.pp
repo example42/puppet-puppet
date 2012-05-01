@@ -120,7 +120,8 @@ class puppet::params {
   }
 
   $process_user = $::operatingsystem ? {
-    default => 'root',
+    /(?i:Debian|Ubuntu|Mint)/ => 'puppet',
+    default                   => 'root',
   }
 
   $config_dir = $::operatingsystem ? {
@@ -136,11 +137,13 @@ class puppet::params {
   }
 
   $config_file_owner = $::operatingsystem ? {
-    default => 'root',
+    /(?i:Debian|Ubuntu|Mint)/ => 'puppet',
+    default                   => 'root',
   }
 
   $config_file_group = $::operatingsystem ? {
-    default => 'root',
+    /(?i:Debian|Ubuntu|Mint)/ => 'puppet',
+    default                   => 'root',
   }
 
   $config_file_init = $::operatingsystem ? {

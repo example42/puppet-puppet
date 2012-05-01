@@ -583,6 +583,7 @@ class puppet (
 
   ### Include distrib specific class
   case $::operatingsystem {
+    debian: { require puppet::debian }
     ubuntu: { require puppet::ubuntu }
   }
 
