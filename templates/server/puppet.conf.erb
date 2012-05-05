@@ -56,9 +56,10 @@
 
   # Reporting
 <% if scope.lookupvar('puppet::nodetool') == "foreman" -%>
-  reports = log,foreman
+  reports = store, foreman
 <% elsif scope.lookupvar('puppet::nodetool') == "dashboard" -%>
-  reports = log,puppet_dashboard
+  reports = store, http
+  reporturl = <%= scope.lookupvar('puppet::dashboard_url') %>/reports/upload
 <% else -%>
   reports = log
 <% end -%>

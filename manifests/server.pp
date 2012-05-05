@@ -74,7 +74,7 @@ class puppet::server inherits puppet {
 
   ### Manage Node tool
   case $puppet::nodetool {
-    dashboard: { include dashboard }
+    dashboard: { include puppet-dashboard }
     foreman: { include foreman }
     default: { }
   }

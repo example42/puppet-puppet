@@ -77,6 +77,9 @@
 #
 # [*run_dir*]
 #
+# [*dashboard_url*]
+#
+# Standard class parameters
 # Standard class parameters
 # Define the general class behaviour and customizations
 #
@@ -312,6 +315,7 @@ class puppet (
   $template_auth       = params_lookup( 'template_auth' ),
   $template_fileserver = params_lookup( 'template_fileserver' ),
   $run_dir             = params_lookup( 'run_dir' ),
+  $dashboard_url       = params_lookup( 'dashboard_url' ),
   $my_class            = params_lookup( 'my_class' ),
   $source              = params_lookup( 'source' ),
   $source_dir          = params_lookup( 'source_dir' ),

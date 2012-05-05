@@ -48,6 +48,7 @@ class puppet::params {
   $db_user = 'root'
   $db_password = ''
   $inventoryserver = 'localhost'
+  $dashboard_url = 'http://localhost:3000'
 
   $package_server = $::operatingsystem ? {
     /(?i:Debian|Ubuntu|Mint)/ => 'puppetmaster',
