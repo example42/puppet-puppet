@@ -35,7 +35,7 @@ class puppet::server::passenger {
     template => 'puppet/passenger/puppet-passenger.conf.erb',
   }
 
-  case $operatingsystem {
+  case $::operatingsystem {
     ubuntu,debian,mint: { 
       package { 'libapache2-mod-passenger':
         ensure => present;
