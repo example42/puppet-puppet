@@ -12,7 +12,6 @@ class puppet::server::passenger {
   }
 
   include apache
-  include apache::ssl
 
   file { ['/etc/puppet/rack', '/etc/puppet/rack/public', '/etc/puppet/rack/tmp']:
     ensure => directory,
