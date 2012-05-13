@@ -1,17 +1,17 @@
 # File Managed by Puppet
 
-# you probably want to tune these settings
-PassengerHighPerformance on
-PassengerMaxPoolSize 12
-PassengerPoolIdleTime 1500
-# PassengerMaxRequests 1000
-PassengerStatThrottleRate 120
-RackAutoDetect On
-RailsAutoDetect Off
-
 Listen <%= port %>
 
 <VirtualHost *:<%= port %>>
+        # you probably want to tune these settings
+        PassengerHighPerformance on
+        PassengerMaxPoolSize 12
+        PassengerPoolIdleTime 1500
+        # PassengerMaxRequests 1000
+        PassengerStatThrottleRate 120
+        RackAutoDetect On
+        RailsAutoDetect Off
+
         SSLEngine on
         SSLProtocol -ALL +SSLv3 +TLSv1
         SSLCipherSuite ALL:!ADH:RC4+RSA:+HIGH:+MEDIUM:-LOW:-SSLv2:-EXP
