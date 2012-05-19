@@ -29,6 +29,8 @@
 #
 # [*croncommand*]
 #
+# [*postrun_command*]
+#
 # [*externalnodes*]
 #
 # [*passenger*]
@@ -40,10 +42,13 @@
 # [*storeconfigs_thin*]
 #
 # [*db*]
-#
+#   
 # [*db_name*]
 #
 # [*db_server*]
+#
+# [*db_port*]
+#   DB port to connet to (Used only for puppetdb)
 #
 # [*db_user*]
 #
@@ -291,6 +296,7 @@ class puppet (
   $runinterval         = params_lookup( 'runinterval' ),
   $croninterval        = params_lookup( 'croninterval' ),
   $croncommand         = params_lookup( 'croncommand' ),
+  $postrun_command     = params_lookup( 'postrun_command' ),
   $externalnodes       = params_lookup( 'externalnodes' ),
   $passenger           = params_lookup( 'passenger' ),
   $autosign            = params_lookup( 'autosign' ),
@@ -299,6 +305,7 @@ class puppet (
   $db                  = params_lookup( 'db' ),
   $db_name             = params_lookup( 'db_name' ),
   $db_server           = params_lookup( 'db_server' ),
+  $db_port             = params_lookup( 'db_port' ),
   $db_user             = params_lookup( 'db_user' ),
   $db_password         = params_lookup( 'db_password' ),
   $inventoryserver     = params_lookup( 'inventoryserver'),

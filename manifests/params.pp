@@ -40,6 +40,7 @@ class puppet::params {
     '0.2' => '/usr/sbin/puppetd --onetime',
     '2.x' => '/usr/sbin/puppet agent --onetime',
   }
+  $postrun_command = ''
   $externalnodes = false
   $passenger = false
   $autosign = false
@@ -48,6 +49,7 @@ class puppet::params {
   $db = 'sqlite'
   $db_name = 'puppet'
   $db_server = 'localhost'
+  $db_port = '8080'
   $db_user = 'root'
   $db_password = ''
   $inventoryserver = 'localhost'

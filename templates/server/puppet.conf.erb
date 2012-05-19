@@ -9,6 +9,10 @@
   user = <%= scope.lookupvar('puppet::process_user') %>
   group = <%= scope.lookupvar('puppet::process_user') %>
 
+<% if scope.lookupvar('puppet::postrun_command') -%>
+  postrun_command = <%= scope.lookupvar('puppet::postrun_command') -%>
+<% end -%>
+
 <% if scope.lookupvar('puppet::params::version') == "0.2" -%># [puppet]<% else -%># [user]<% end %>
 
 <% if scope.lookupvar('puppet::params::version') == "0.2" -%>[puppetd]<% else -%>[agent]<% end %>
@@ -33,9 +37,9 @@
   ssl_client_verify_header = SSL_CLIENT_VERIFY
 <% end -%>
   autosign = <%= scope.lookupvar('puppet::bool_autosign') %>
-<% if scope.lookupvar('puppet::bool_storeconfigs') == true -%>
+<% if scope.lookupvar('puppet::bool_storeconfigs') == true or scope.lookupvar('puppet::db') == "puppetdb" -%>
   storeconfigs = true
-<% if scope.lookupvar('puppet::bool_storeconfigs_thin') == true -%>
+<% if scope.lookupvar('puppet::bool_storeconfigs_thin') == true and scope.lookupvar('puppet::db') != "puppetdb" %>
   thin_storeconfigs = true
 <% end -%>
 <% end -%>
@@ -52,6 +56,10 @@
   dbserver = <%= scope.lookupvar('puppet::db_server') %>
   dbuser = <%= scope.lookupvar('puppet::db_user') %>
   dbpassword = <%= scope.lookupvar('puppet::db_password') %>
+<% end -%>
+<% if scope.lookupvar('puppet::db') == "puppetdb" -%>
+  # Sets PuppetDB database backend
+  storeconfigs_backend = puppetdb
 <% end -%>
 
   # Reporting
