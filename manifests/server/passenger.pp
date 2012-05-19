@@ -11,7 +11,8 @@ class puppet::server::passenger {
     redhat: { require yum::repo::passenger }
   }
 
-  include apache
+  include apache::ssl
+  include apache::passenger
 
   file { ['/etc/puppet/rack', '/etc/puppet/rack/public', '/etc/puppet/rack/tmp']:
     ensure => directory,
@@ -33,20 +34,6 @@ class puppet::server::passenger {
     docroot  => '/etc/puppet/rack/public/',
     ssl      => true,
     template => 'puppet/passenger/puppet-passenger.conf.erb',
-  }
-
-  case $::operatingsystem {
-    ubuntu,debian,mint: { 
-      package { 'libapache2-mod-passenger':
-        ensure => present;
-      }     
-    }
-
-    centos,redhat,scientific,fedora: {
-      package { 'mod_passenger':
-        ensure => present;
-      }
-    }
   }
 
 }
