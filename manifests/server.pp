@@ -72,13 +72,6 @@ class puppet::server inherits puppet {
     }
   }
 
-  ### Manage Node tool
-  case $puppet::nodetool {
-    dashboard: { include puppet-dashboard }
-    foreman: { include foreman }
-    default: { }
-  }
-
   ### Rails required when storeconfigs activated
   if $puppet::bool_storeconfigs == true { include puppet::rails }
 
