@@ -37,8 +37,8 @@ class puppet::params {
   $runinterval = '1800'
   $croninterval = '0 * * * *'
   $croncommand = $major_version ? {
-    '0.2' => '/usr/sbin/puppetd --onetime',
-    '2.x' => '/usr/sbin/puppet agent --onetime',
+    '0.2' => '/usr/bin/puppetd --onetime',
+    '2.x' => '/usr/bin/puppet agent --onetime',
   }
   $postrun_command = ''
   $externalnodes = false
@@ -65,7 +65,7 @@ class puppet::params {
   }
 
   $process_server = $::operatingsystem ? {
-    default => 'puppetmasterd',
+    default => 'ruby',
   }
 
   $pid_file_server = $major_version ? {
@@ -74,7 +74,7 @@ class puppet::params {
   }
 
   $process_args_server = $::operatingsystem ? {
-    default => '',
+    default => 'puppet master',
   }
 
   $process_user_server = $::operatingsystem ? {
