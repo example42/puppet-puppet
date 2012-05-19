@@ -10,7 +10,7 @@
   group = <%= scope.lookupvar('puppet::process_user') %>
 
 <% if scope.lookupvar('puppet::postrun_command') -%>
-  postrun_command = <%= scope.lookupvar('puppet::postrun_command') -%>
+  postrun_command = "<%= scope.lookupvar('puppet::postrun_command') -%>"
 <% end -%>
 
 <% if scope.lookupvar('puppet::params::version') == "0.2" -%># [puppet]<% else -%># [user]<% end %>
