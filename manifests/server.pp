@@ -74,7 +74,7 @@ class puppet::server inherits puppet {
 
   ### Manage Node tool
   case $puppet::nodetool {
-    dashboard: { include dashboard }
+    dashboard: { include puppet-dashboard }
     foreman: { include foreman }
     default: { }
   }
@@ -85,6 +85,7 @@ class puppet::server inherits puppet {
   ### Manage database for storeconfigs
   case $puppet::db {
     mysql: { include puppet::server::mysql }
+    puppetdb: { include puppet::server::puppetdb }
     default: { }
   }
 
