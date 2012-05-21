@@ -53,7 +53,7 @@ class puppet::params {
   $db_user = 'root'
   $db_password = ''
   $inventoryserver = 'localhost'
-  $dashboard_url = 'http://localhost:3000'
+  $reporturl = 'http://localhost:3000/reports'
 
   $package_server = $::operatingsystem ? {
     /(?i:Debian|Ubuntu|Mint)/ => 'puppetmaster',
@@ -97,6 +97,7 @@ class puppet::params {
   $template_namespaceauth = ''
   $template_auth = ''
   $template_fileserver = ''
+  $template_passenger = 'puppet/passenger/puppet-passenger.conf.erb'
 
   ### Application related parameters
 
@@ -200,5 +201,17 @@ class puppet::params {
   $puppi_helper = 'standard'
   $debug = false
   $audit_only = false
+
+  ### FILE SERVING SOURCE
+  # Sets the correct source for static files - Needed for backwards compatibility
+  case $base_source {
+    '': { $general_base_source = $puppetversion ? {
+      /(^0.25)/ => "puppet:///modules",
+      /(^0.)/   => "puppet://$servername",
+      default   => "puppet:///modules",
+    }
+  }
+    default: { $general_base_source=$base_source }
+  }
 
 }

@@ -32,9 +32,9 @@ Listen <%= port %>
                 allow from all
         </Directory>
        
-        ErrorLog /var/log/<%= scope.lookupvar('apache::params::service') %>/<%= name %>_error.log
+        ErrorLog <%= scope.lookupvar('apache::params::log_dir') %>/<%= name %>_error.log
         LogLevel warn
-        CustomLog /var/log/<%= scope.lookupvar('apache::params::service') %>/<%= name %>_access.log combined
+        CustomLog <%= scope.lookupvar('apache::params::log_dir') %>/<%= name %>_access.log combined
         ServerSignature On
 
 </VirtualHost>

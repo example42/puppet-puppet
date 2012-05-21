@@ -80,11 +80,12 @@
 #
 # [*template_fileserver*]
 #
+# [*template_passenger*]
+#
 # [*run_dir*]
 #
-# [*dashboard_url*]
+# [*reporturl*]
 #
-# Standard class parameters
 # Standard class parameters
 # Define the general class behaviour and customizations
 #
@@ -321,8 +322,9 @@ class puppet (
   $template_namespaceauth = params_lookup( 'template_namespaceauth' ),
   $template_auth       = params_lookup( 'template_auth' ),
   $template_fileserver = params_lookup( 'template_fileserver' ),
+  $template_passenger  = params_lookup( 'template_passenger' ),
   $run_dir             = params_lookup( 'run_dir' ),
-  $dashboard_url       = params_lookup( 'dashboard_url' ),
+  $reporturl           = params_lookup( 'reporturl' ),
   $my_class            = params_lookup( 'my_class' ),
   $source              = params_lookup( 'source' ),
   $source_dir          = params_lookup( 'source_dir' ),
