@@ -429,7 +429,7 @@ class puppet (
     default =>  $puppet::bool_absent ? {
       true    => 'stopped',
       default => $puppet::runmode ? {
-        cron    => 'stopped',
+        cron    => undef,
         service => 'running',
       },
     },
@@ -440,7 +440,7 @@ class puppet (
     default =>  $puppet::bool_absent ? {
       true    => 'stopped',
       default => $puppet::bool_passenger ? {
-        true  => 'stopped',
+        true  => undef,
         false => 'running',
       },
     },
