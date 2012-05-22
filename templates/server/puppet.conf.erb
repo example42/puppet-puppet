@@ -74,7 +74,7 @@
 
 <% if scope.lookupvar('puppet::inventoryserver') == "localhost" -%>
   # Local Inventory Service 
-  facts_terminus = inventory_active_record
+  facts_terminus = active_record
 <% else -%>
 <% if scope.lookupvar('puppet::inventoryserver') != "" -%>
   # Remote Inventory Service
