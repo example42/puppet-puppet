@@ -13,7 +13,7 @@
   postrun_command = "<%= scope.lookupvar('puppet::postrun_command') -%>"
 <% end -%>
 
-<% if scope.lookupvar('puppet::params::version') == "0.2" -%>[puppetd]<% else -%>[agent]<% end %>
+<% if scope.lookupvar('puppet::params::major_version') == "0.2" -%>[puppetd]<% else -%>[agent]<% end %>
   certname = <%= scope.lookupvar('clientcert') %>
   server = <%= scope.lookupvar('puppet::server') %>
   pluginsync = true

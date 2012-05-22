@@ -33,7 +33,7 @@ class puppet::server::passenger {
     priority => '10',
     docroot  => '/etc/puppet/rack/public/',
     ssl      => true,
-    template => 'puppet/passenger/puppet-passenger.conf.erb',
+    template => $puppet::template_passenger,
   }
 
 }
