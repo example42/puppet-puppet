@@ -13,6 +13,16 @@ describe 'puppet' do
     it { should contain_file('puppet.conf').with_ensure('present') }
   end
 
+  describe 'Test standard installation on Debian' do
+    let(:facts) { { :ipaddress => '10.42.42.42', :operatingsystem => 'Debian' } }
+
+    it { should contain_package('puppet').with_ensure('present') }
+    it { should contain_service('puppet').with_ensure('running') }
+    it { should contain_service('puppet').with_enable('true') }
+    it { should contain_file('puppet.conf').with_ensure('present') }
+    it { should contain_file('default-puppet').with_ensure('present') }
+  end
+
   describe 'Test installation of a specific version' do
     let(:params) { {:version => '1.0.42' } }
     it { should contain_package('puppet').with_ensure('1.0.42') }
