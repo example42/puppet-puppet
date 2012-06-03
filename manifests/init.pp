@@ -539,7 +539,8 @@ class puppet (
   }
 
   # Enable service start on Ubuntu
-  if $::operatingsystem == 'Ubuntu'
+  if ($::operatingsystem == 'Ubuntu'
+  or $::operatingsystem == 'Debian')
   and $puppet::runmode == 'service' {
     file { 'default-puppet':
       ensure  => $puppet::manage_file,
