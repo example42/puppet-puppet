@@ -25,7 +25,7 @@ class puppet::params {
     ''      => 'puppet',
     default => "puppet.$::domain",
   }
-  $environment = 'production',
+  $environment = 'production'
   $allow = $::domain ? {
     ''      => [ '127.0.0.1' ],
     default => [ "*.$::domain" , '127.0.0.1' ],
