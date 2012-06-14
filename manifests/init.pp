@@ -11,6 +11,8 @@
 #
 # [*server*]
 #
+# [*environment*]
+#
 # [*allow*]
 #
 # [*bindaddress*]
@@ -288,6 +290,7 @@
 class puppet (
   $mode                = params_lookup( 'mode' ),
   $server              = params_lookup( 'server' ),
+  $environment         = params_lookup( 'environment' ),
   $allow               = params_lookup( 'allow' ),
   $bindaddress         = params_lookup( 'bindaddress' ),
   $listen              = params_lookup( 'listen' ),
