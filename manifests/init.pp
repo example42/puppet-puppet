@@ -606,7 +606,7 @@ class puppet (
       notify  => $puppet::manage_service_autorestart,
       source  => $puppet::source_dir,
       recurse => true,
-      purge   => $puppet::source_dir_purge,
+      purge   => $puppet::bool_source_dir_purge,
       replace => $puppet::manage_file_replace,
       audit   => $puppet::manage_audit,
     }
