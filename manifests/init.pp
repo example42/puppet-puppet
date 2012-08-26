@@ -8,12 +8,19 @@
 # Module specific parameters
 #
 # [*mode*]
+#   Define if to install just the client (mode = client) or both server
+#   and client (mode = server ). Default: client
 #
 # [*server*]
+#   FQDN of the puppet server. Default: puppet.$domain or just puppet
+#   if $domain fact is blank
 #
 # [*environment*]
+#   The default environmentset in puppet.conf. Default: production
 #
 # [*allow*]
+#   The allow directive in the server file namespaceauth.conf.
+#   Default: *.$domain and localhost
 #
 # [*bindaddress*]
 #
@@ -407,6 +414,7 @@ class puppet (
         true  => false,
         false => $puppet::runmode ? {
           cron    => false,
+          manual  => false,
           service => true,
         },
       },
@@ -433,6 +441,7 @@ class puppet (
       true    => 'stopped',
       default => $puppet::runmode ? {
         cron    => undef,
+        manual  => undef,
         service => 'running',
       },
     },
@@ -462,6 +471,11 @@ class puppet (
   $manage_file = $puppet::bool_absent ? {
     true    => 'absent',
     default => 'present',
+  }
+
+  $manage_file_cron = $puppet::runmode ? {
+    'cron'  => 'present',
+    default => 'absent',
   }
 
   if $puppet::bool_absent == true
@@ -687,15 +701,13 @@ class puppet (
   }
 
   ### Cron configuration if run_mode = cron
-  if $puppet::runmode == 'cron' {
-    file { 'puppet_cron':
-      ensure  => $puppet::manage_file,
-      path    => '/etc/cron.d/puppet',
-      mode    => '0644',
-      owner   => 'root',
-      group   => 'root',
-      content => template('puppet/client/puppet.cron.erb'),
-    }
+  file { 'puppet_cron':
+    ensure  => $puppet::manage_file_cron,
+    path    => '/etc/cron.d/puppet',
+    mode    => '0644',
+    owner   => 'root',
+    group   => 'root',
+    content => template('puppet/client/puppet.cron.erb'),
   }
 
 }
