@@ -61,6 +61,13 @@ auth no
 method save
 allow <%= scope.lookupvar('puppet::server') %>
 
+# Access to DashBoard (Here it's supposed to be on the puppetmaster)
+# for file diff viewing
+path /file_bucket_file
+auth no
+method find, search
+allow <%= scope.lookupvar('puppet::server') %>
+
 # this one is not stricly necessary, but it has the merit
 # to show the default policy which is deny everything else
 path /
