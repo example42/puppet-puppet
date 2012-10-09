@@ -66,7 +66,8 @@ class puppet::params {
   }
 
   $process_server = $::operatingsystem ? {
-    default => 'ruby',
+    /(?i:Debian|Ubuntu|Mint)/ => 'ruby',
+    default                   => 'puppet',
   }
 
   $pid_file_server = $major_version ? {
@@ -75,7 +76,8 @@ class puppet::params {
   }
 
   $process_args_server = $::operatingsystem ? {
-    default => 'puppet master',
+    /(?i:Debian|Ubuntu|Mint)/ => 'puppet',
+    default                   => 'master',
   }
 
   $process_user_server = $::operatingsystem ? {
