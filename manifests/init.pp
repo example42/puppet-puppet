@@ -540,6 +540,9 @@ class puppet (
     default   => template($puppet::template_fileserver),
   }
 
+  $version_puppet = split($::puppetversion, '[.]')
+  $version_major = $version_puppet[0]
+
   ### Managed resources
   package { 'puppet':
     ensure => $puppet::manage_package,

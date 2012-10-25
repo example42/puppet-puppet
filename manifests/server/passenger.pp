@@ -6,11 +6,6 @@
 class puppet::server::passenger {
   require puppet
 
-  case $::operatingsystem {
-    centos: { require yum::repo::passenger }
-    redhat: { require yum::repo::passenger }
-  }
-
   include apache::ssl
   include apache::passenger
 
@@ -25,7 +20,10 @@ class puppet::server::passenger {
     owner   => $puppet::process_user_server,
     group   => $puppet::process_user_server,
     mode    => 0644,
-    content => template('puppet/passenger/config.ru'),
+    content => $puppet::version_major ? {
+      3       => template('puppet/passenger/config.ru_3'),
+      default => template('puppet/passenger/config.ru_3'),
+    },
   }
 
   apache::vhost { 'puppetmaster':
