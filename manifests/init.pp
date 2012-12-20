@@ -707,7 +707,7 @@ class puppet (
   }
 
   ### Use template for puppet cron if set
-  $puppet_cron_template = $puppet::template_cron ? {
+  $cron_template = $puppet::template_cron ? {
     ''        => 'puppet/client/puppet.cron.erb',
     default   => $puppet::template_cron,
   }
@@ -719,7 +719,7 @@ class puppet (
     mode    => '0644',
     owner   => 'root',
     group   => 'root',
-    content => template($puppet::puppet_cron_template),
+    content => template($puppet::cron_template),
   }
 
 }
