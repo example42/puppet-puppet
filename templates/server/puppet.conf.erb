@@ -8,7 +8,9 @@
   usecacheonfailure = true
   user = <%= scope.lookupvar('puppet::process_user_server') %>
   group = <%= scope.lookupvar('puppet::process_user_server') %>
-
+<% if scope.lookupvar('puppet::prerun_command') -%>
+  prerun_command = "<%= scope.lookupvar('puppet::prerun_command') -%>"
+<% end -%>
 <% if scope.lookupvar('puppet::postrun_command') -%>
   postrun_command = "<%= scope.lookupvar('puppet::postrun_command') -%>"
 <% end -%>
