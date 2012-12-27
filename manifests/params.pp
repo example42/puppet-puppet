@@ -41,6 +41,7 @@ class puppet::params {
     '0.2' => '/usr/bin/puppetd --onetime',
     '2.x' => '/usr/bin/puppet agent --onetime',
   }
+  $prerun_command = ''
   $postrun_command = ''
   $externalnodes = false
   $passenger = false

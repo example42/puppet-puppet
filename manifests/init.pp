@@ -307,6 +307,7 @@ class puppet (
   $runinterval         = params_lookup( 'runinterval' ),
   $croninterval        = params_lookup( 'croninterval' ),
   $croncommand         = params_lookup( 'croncommand' ),
+  $prerun_command      = params_lookup( 'prerun_command' ),
   $postrun_command     = params_lookup( 'postrun_command' ),
   $externalnodes       = params_lookup( 'externalnodes' ),
   $passenger           = params_lookup( 'passenger' ),
