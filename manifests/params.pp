@@ -102,7 +102,7 @@ class puppet::params {
   $template_auth = ''
   $template_fileserver = ''
   $template_passenger = 'puppet/passenger/puppet-passenger.conf.erb'
-  $template_cron = ''
+  $template_cron = 'puppet/client/puppet.cron.erb'
 
   ### Application related parameters
 
