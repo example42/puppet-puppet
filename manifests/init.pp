@@ -91,6 +91,8 @@
 #
 # [*template_passenger*]
 #
+# [*template_cron*]
+#
 # [*run_dir*]
 #
 # [*reporturl*]
@@ -334,6 +336,7 @@ class puppet (
   $template_auth       = params_lookup( 'template_auth' ),
   $template_fileserver = params_lookup( 'template_fileserver' ),
   $template_passenger  = params_lookup( 'template_passenger' ),
+  $template_cron       = params_lookup( 'template_cron' ),
   $run_dir             = params_lookup( 'run_dir' ),
   $reporturl           = params_lookup( 'reporturl' ),
   $my_class            = params_lookup( 'my_class' ),
@@ -704,6 +707,12 @@ class puppet (
     include puppet::server
   }
 
+  ### Use template for puppet cron if set
+  $cron_template = $puppet::template_cron ? {
+    ''        => 'puppet/client/puppet.cron.erb',
+    default   => $puppet::template_cron,
+  }
+
   ### Cron configuration if run_mode = cron
   file { 'puppet_cron':
     ensure  => $puppet::manage_file_cron,
@@ -711,7 +720,7 @@ class puppet (
     mode    => '0644',
     owner   => 'root',
     group   => 'root',
-    content => template('puppet/client/puppet.cron.erb'),
+    content => template($puppet::cron_template),
   }
 
 }
