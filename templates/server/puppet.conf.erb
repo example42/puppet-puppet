@@ -46,6 +46,10 @@
 <% end -%>
 <% end -%>
 
+<% if scope.lookupvar('puppet::dns_alt_names') -%>
+  dns_alt_names = <%= scope.lookupvar('puppet::dns_alt_names') %>
+<% end -%>
+
 <% if scope.lookupvar('puppet::db') == "sqlite" -%>
   # Sets SQLite database backend
   dbadapter = sqlite3
