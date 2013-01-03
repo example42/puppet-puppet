@@ -181,6 +181,8 @@ class puppet::params {
   $port = '8140'
   $protocol = 'tcp'
 
+  $client_daemon_opts = ''
+
   # General Settings
   $my_class = ''
   $source = ''

@@ -283,6 +283,9 @@
 #   This is used by monitor, firewall and puppi (optional) components
 #   Can be defined also by the (top scope) variable $puppet_protocol
 #
+# [*client_daemon_opts*]
+#   If $operatingsystem is Debian or Ubuntu, these options will be passed to
+#   the puppetd on startup
 #
 # == Examples
 #
@@ -378,7 +381,8 @@ class puppet (
   $log_dir             = params_lookup( 'log_dir' ),
   $log_file            = params_lookup( 'log_file' ),
   $port                = params_lookup( 'port' ),
-  $protocol            = params_lookup( 'protocol' )
+  $protocol            = params_lookup( 'protocol' ),
+  $client_daemon_opts  = params_lookup( 'client_daemon_opts' )
   ) inherits puppet::params {
 
   $bool_listen=any2bool($listen)
@@ -564,8 +568,7 @@ class puppet (
 
   # Enable service start on Ubuntu
   if ($::operatingsystem == 'Ubuntu'
-  or $::operatingsystem == 'Debian')
-  and $puppet::runmode == 'service' {
+  or $::operatingsystem == 'Debian') {
     file { 'default-puppet':
       ensure  => $puppet::manage_file,
       path    => $puppet::config_file_init,
