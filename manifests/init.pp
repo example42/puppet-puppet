@@ -349,7 +349,7 @@ class puppet (
   $version_server      = params_lookup( 'version_server' ),
   $service_server_autorestart = params_lookup( 'service_server_autorestart' ),
   $dns_alt_names       = params_lookup( 'dns_alt_names' ),
-  $client_daemon_opts  = params_lookup( 'client_daemon_opts' )
+  $client_daemon_opts  = params_lookup( 'client_daemon_opts' ),
   $basedir             = params_lookup( 'basedir' ),
   $template_namespaceauth = params_lookup( 'template_namespaceauth' ),
   $template_auth       = params_lookup( 'template_auth' ),
