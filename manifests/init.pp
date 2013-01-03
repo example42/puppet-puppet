@@ -81,6 +81,20 @@
 #
 # [*service_server_autorestart*]
 #
+# [*dns_alt_names*]
+#   The comma-separated list of alternative DNS names to use for the local
+#   host. When the node generates a CSR for itself, these are added to the
+#   request as the desired subjectAltName in the certificate: additional DNS
+#   labels that the certificate is also valid answering as. This is generally
+#   required if you use a non-hostname certname, or if you want to use puppet
+#   kick or puppet resource -H and the primary certname does not match the DNS
+#   name you use to communicate with the host. This is unnecessary for agents,
+#   unless you intend to use them as a server for puppet kick or remote puppet
+#   resource management. It is rarely necessary for servers; it is usually
+#   helpful only if you need to have a pool of multiple load balanced masters,
+#   or for the same master to respond on two physically separate networks under
+#   different names. 
+#
 # [*basedir*]
 #
 # [*template_namespaceauth*]
@@ -331,6 +345,7 @@ class puppet (
   $process_user_server = params_lookup( 'process_user_server' ),
   $version_server      = params_lookup( 'version_server' ),
   $service_server_autorestart = params_lookup( 'service_server_autorestart' ),
+  $dns_alt_names       = params_lookup( 'dns_alt_names' ),
   $basedir             = params_lookup( 'basedir' ),
   $template_namespaceauth = params_lookup( 'template_namespaceauth' ),
   $template_auth       = params_lookup( 'template_auth' ),
