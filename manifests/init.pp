@@ -95,6 +95,10 @@
 #   or for the same master to respond on two physically separate networks under
 #   different names. 
 #
+# [*client_daemon_opts*]
+#   If $operatingsystem is Debian or Ubuntu, these options will be passed to
+#   the puppetd on startup
+#
 # [*basedir*]
 #
 # [*template_namespaceauth*]
@@ -297,10 +301,6 @@
 #   This is used by monitor, firewall and puppi (optional) components
 #   Can be defined also by the (top scope) variable $puppet_protocol
 #
-# [*client_daemon_opts*]
-#   If $operatingsystem is Debian or Ubuntu, these options will be passed to
-#   the puppetd on startup
-#
 # == Examples
 #
 # You can use this class in 2 ways:
@@ -349,6 +349,7 @@ class puppet (
   $version_server      = params_lookup( 'version_server' ),
   $service_server_autorestart = params_lookup( 'service_server_autorestart' ),
   $dns_alt_names       = params_lookup( 'dns_alt_names' ),
+  $client_daemon_opts  = params_lookup( 'client_daemon_opts' )
   $basedir             = params_lookup( 'basedir' ),
   $template_namespaceauth = params_lookup( 'template_namespaceauth' ),
   $template_auth       = params_lookup( 'template_auth' ),
@@ -396,8 +397,7 @@ class puppet (
   $log_dir             = params_lookup( 'log_dir' ),
   $log_file            = params_lookup( 'log_file' ),
   $port                = params_lookup( 'port' ),
-  $protocol            = params_lookup( 'protocol' ),
-  $client_daemon_opts  = params_lookup( 'client_daemon_opts' )
+  $protocol            = params_lookup( 'protocol' )
   ) inherits puppet::params {
 
   $bool_listen=any2bool($listen)
