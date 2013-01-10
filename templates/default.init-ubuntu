@@ -3,7 +3,7 @@
 # Defaults for puppet - sourced by /etc/init.d/puppet
 
 # Start puppet on boot?
-START=yes
+START=<% if scope.lookupvar('puppet::runmode') == 'service' -%>yes<% else %>no<% end %> 
 
 # Startup options
-DAEMON_OPTS=""
+DAEMON_OPTS="<%= scope.lookupvar('puppet::client_daemon_opts') -%>"

@@ -181,6 +181,8 @@ class puppet::params {
   $port = '8140'
   $protocol = 'tcp'
 
+  $client_daemon_opts = ''
+
   # General Settings
   $my_class = ''
   $source = ''
@@ -193,6 +195,9 @@ class puppet::params {
   $absent = false
   $disable = false
   $disableboot = false
+
+  ### Enable setting of dns_alt_names
+  $dns_alt_names = undef
 
   ### General module variables that can have a site or per module default
   $monitor = false
