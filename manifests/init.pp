@@ -463,8 +463,8 @@ class puppet (
     default =>  $puppet::bool_absent ? {
       true    => 'stopped',
       default => $puppet::runmode ? {
-        cron    => undef,
-        manual  => undef,
+        cron    => 'stopped',
+        manual  => 'stopped',
         service => 'running',
       },
     },
