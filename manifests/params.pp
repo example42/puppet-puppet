@@ -200,7 +200,7 @@ class puppet::params {
   $disableboot = false
 
   ### Enable setting of dns_alt_names
-  $dns_alt_names = undef
+  $dns_alt_names = ''
 
   ### General module variables that can have a site or per module default
   $monitor = false
