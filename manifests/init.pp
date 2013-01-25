@@ -31,10 +31,13 @@
 # [*nodetool*]
 #
 # [*runmode*]
+#   One of 'cron', 'manual', or 'service'.
 #
 # [*runinterval*]
+#   How much time should pass between two puppet runs. In seconds.
 #
 # [*croninterval*]
+#   Cron interval specification when the puppet agent should run.
 #
 # [*croncommand*]
 #
@@ -57,7 +60,7 @@
 # [*db_server*]
 #
 # [*db_port*]
-#   DB port to connet to (Used only for puppetdb)
+#   DB port to connect to (Used only for puppetdb)
 #
 # [*db_user*]
 #
