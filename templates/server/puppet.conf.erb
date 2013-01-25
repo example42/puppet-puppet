@@ -46,7 +46,7 @@
 <% end -%>
 <% end -%>
 
-<% if scope.lookupvar('puppet::dns_alt_names') -%>
+<% if scope.lookupvar('puppet::dns_alt_names') != '' -%>
   dns_alt_names = <%= scope.lookupvar('puppet::dns_alt_names') %>
 <% end -%>
 

@@ -46,14 +46,16 @@ class puppet::server inherits puppet {
       tool     => $puppet::monitor_tool,
       enable   => $puppet::manage_monitor,
     }
-    monitor::process { 'puppet_process_server':
-      process  => $puppet::process_server,
-      service  => $puppet::service_server,
-      pidfile  => $puppet::pid_file_server,
-      user     => $puppet::process_user_server,
-      argument => $puppet::process_args_server,
-      tool     => $puppet::monitor_tool,
-      enable   => $puppet::manage_monitor,
+    if $puppet::bool_passenger == false {
+      monitor::process { 'puppet_process_server':
+        process  => $puppet::process_server,
+        service  => $puppet::service_server,
+        pidfile  => $puppet::pid_file_server,
+        user     => $puppet::process_user_server,
+        argument => $puppet::process_args_server,
+        tool     => $puppet::monitor_tool,
+        enable   => $puppet::manage_monitor,
+      }
     }
   }
 

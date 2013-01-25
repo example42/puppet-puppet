@@ -90,8 +90,8 @@ class puppet::params {
   $service_server_autorestart = false
 
   $basedir = $::operatingsystem ? {
-      /(?i:RedHat|Centos|Scientific|Fedora)/ => '/usr/lib/ruby/site_ruby/1.8/puppet',
-      default                                => '/usr/lib/ruby/1.8/puppet',
+    /(?i:RedHat|Centos|Scientific|Fedora)/ => '/usr/lib/ruby/site_ruby/1.8/puppet',
+    default                                => '/usr/lib/ruby/1.8/puppet',
   }
 
   $run_dir = $::operatingsystem ? {
@@ -115,7 +115,10 @@ class puppet::params {
   }
 
   $service_status = $::operatingsystem ? {
-    debian  => false,
+    debian  => $::lsbmajdistrelease ? { 
+      5       => false,
+      default => true,
+    },
     default => true,
   }
 
@@ -197,7 +200,7 @@ class puppet::params {
   $disableboot = false
 
   ### Enable setting of dns_alt_names
-  $dns_alt_names = undef
+  $dns_alt_names = ''
 
   ### General module variables that can have a site or per module default
   $monitor = false
