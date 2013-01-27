@@ -9,6 +9,8 @@
   user = <%= scope.lookupvar('puppet::process_user') %>
   group = <%= scope.lookupvar('puppet::process_user') %>
 
+  masterport = <%= scope.lookupvar('puppet::port') %>
+
 <% if scope.lookupvar('puppet::prerun_command') != '' -%>
   prerun_command = "<%= scope.lookupvar('puppet::prerun_command') -%>"
 <% end -%>
