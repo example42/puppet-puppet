@@ -37,6 +37,12 @@ class puppet::server inherits puppet {
     audit   => $puppet::manage_audit,
   }
 
+  exec { 'puppetmaster-ca-generate':
+    creates => "${puppet::data_dir}/ssl/private_keys/${::fqdn}.pem",
+    command => "/usr/bin/puppet ca generate ${::fqdn}",
+    require => Package['puppet'],
+  }
+
   ### Service monitoring, if enabled ( monitor => true )
   if $puppet::bool_monitor == true {
     monitor::port { "puppet_${puppet::protocol}_${puppet::port}":

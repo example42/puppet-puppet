@@ -32,6 +32,7 @@ class puppet::server::passenger {
     docroot  => '/etc/puppet/rack/public/',
     ssl      => true,
     template => $puppet::template_passenger,
+    require  => Exec['puppetmaster-ca-generate'],
   }
 
 }
