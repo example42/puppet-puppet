@@ -31,14 +31,8 @@ class puppet::server::mysql {
     }
   }
 
-  case $operatingsystem {
-    ubuntu,debian: {
-      package { 'libmysql-ruby':
-        ensure => present,
-      }
-    }
-
-    default: { }
+  package { $puppet::mysql_conn_package:
+    ensure => present,
   }
 
 }

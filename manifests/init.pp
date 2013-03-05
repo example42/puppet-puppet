@@ -118,6 +118,11 @@
 #
 # [*reporturl*]
 #
+# Extra Database settings
+#
+# [*mysql_conn_package*]
+# MySQL ruby database connector
+#
 # Standard class parameters
 # Define the general class behaviour and customizations
 #
@@ -353,6 +358,7 @@ class puppet (
   $service_server_autorestart = params_lookup( 'service_server_autorestart' ),
   $dns_alt_names       = params_lookup( 'dns_alt_names' ),
   $client_daemon_opts  = params_lookup( 'client_daemon_opts' ),
+  $mysql_conn_package  = params_lookup( 'mysql_conn_package' ),
   $basedir             = params_lookup( 'basedir' ),
   $template_namespaceauth = params_lookup( 'template_namespaceauth' ),
   $template_auth       = params_lookup( 'template_auth' ),

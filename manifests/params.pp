@@ -186,6 +186,12 @@ class puppet::params {
 
   $client_daemon_opts = ''
 
+  # DB package resources
+  $mysql_conn_package = $::operatingsystem ? {
+    /(?i:RedHat|Centos|Scientific|Fedora)/  => 'ruby-mysql',
+    default                                 => 'libmysql-ruby',
+  }
+
   # General Settings
   $my_class = ''
   $source = ''
