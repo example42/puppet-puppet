@@ -187,7 +187,7 @@ class puppet::params {
   $client_daemon_opts = ''
 
   $manifest_path = '$confdir/manifests/'
-  $module_path   = '$confdir/modules/'
+  $module_path   = '/etc/puppet/modules:/usr/share/puppet/modules'
 
 
   # DB package resources
