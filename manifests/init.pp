@@ -298,15 +298,6 @@
 # [*log_file*]
 #   Log file(s). Used by puppi
 #
-# [*default_environment*]
-#   Default environment to use in a multi-environment server setup
-#
-# [*manifest_path*]
-#   Path to the manifests
-#
-# [*module_path*]
-#   Location of the modules
-#
 # [*port*]
 #   The listening port, if any, of the service.
 #   This is used by monitor, firewall and puppi (optional) components
@@ -317,6 +308,13 @@
 #   The protocol used by the the service.
 #   This is used by monitor, firewall and puppi (optional) components
 #   Can be defined also by the (top scope) variable $puppet_protocol
+#
+# [*manifest_path*]
+#   Path to the manifests
+#
+# [*module_path*]
+#   Location of the modules
+#
 #
 # == Examples
 #
@@ -416,7 +414,6 @@ class puppet (
   $log_file            = params_lookup( 'log_file' ),
   $port                = params_lookup( 'port' ),
   $protocol            = params_lookup( 'protocol' ),
-  $default_environment = params_lookup( 'default_environment' ),
   $manifest_path       = params_lookup( 'manifest_path' ),
   $module_path         = params_lookup( 'module_path' )
   ) inherits puppet::params {
