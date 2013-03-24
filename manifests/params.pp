@@ -186,6 +186,10 @@ class puppet::params {
 
   $client_daemon_opts = ''
 
+  $manifest_path = '$confdir/manifests/'
+  $module_path   = '$confdir/modules/'
+
+
   # DB package resources
   $mysql_conn_package = $::operatingsystem ? {
     /(?i:RedHat|Centos|Scientific|Fedora)/  => 'ruby-mysql',

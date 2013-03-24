@@ -47,15 +47,9 @@
 <% end -%>
 <% end -%>
 
-<% if scope.lookupvar('puppet::environment') != '' -%>
-  environment = <%= scope.lookupvar('puppet::environment') %>
-<% end -%>
-<% if scope.lookupvar('puppet::manifest_path') != '' -%>
-  manifest    = <%= scope.lookupvar('puppet::manifest_path') %>
-<% end -%>
-<% if scope.lookupvar('puppet::module_path') != '' -%>
-  modulepath  = <%= scope.lookupvar('puppet::module_path') %>
-<% end -%>
+environment = <%= scope.lookupvar('puppet::environment') %>
+manifest    = <%= scope.lookupvar('puppet::manifest_path') %>
+modulepath  = <%= scope.lookupvar('puppet::module_path') %>
 
 <% if scope.lookupvar('puppet::dns_alt_names') != '' -%>
   dns_alt_names = <%= scope.lookupvar('puppet::dns_alt_names') %>
