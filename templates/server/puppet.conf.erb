@@ -47,6 +47,16 @@
 <% end -%>
 <% end -%>
 
+<% if scope.lookupvar('puppet::default_environment') != '' -%>
+  environment = <%= scope.lookupvar('puppet::default_environment') %>
+<% end -%>
+<% if scope.lookupvar('puppet::manifest_path') != '' -%>
+  manifest    = <%= scope.lookupvar('puppet::manifest_path') %>
+<% end -%>
+<% if scope.lookupvar('puppet::module_path') != '' -%>
+  modulepath  = <%= scope.lookupvar('puppet::module_path') %>
+<% end -%>
+
 <% if scope.lookupvar('puppet::dns_alt_names') != '' -%>
   dns_alt_names = <%= scope.lookupvar('puppet::dns_alt_names') %>
 <% end -%>

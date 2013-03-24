@@ -298,6 +298,15 @@
 # [*log_file*]
 #   Log file(s). Used by puppi
 #
+# [*default_environment*]
+#   Default environment to use in a multi-environment server setup
+#
+# [*manifest_path*]
+#   Path to the manifests
+#
+# [*module_path*]
+#   Location of the modules
+#
 # [*port*]
 #   The listening port, if any, of the service.
 #   This is used by monitor, firewall and puppi (optional) components
@@ -406,7 +415,10 @@ class puppet (
   $log_dir             = params_lookup( 'log_dir' ),
   $log_file            = params_lookup( 'log_file' ),
   $port                = params_lookup( 'port' ),
-  $protocol            = params_lookup( 'protocol' )
+  $protocol            = params_lookup( 'protocol' ),
+  $default_environment = params_lookup( 'default_environment' ),
+  $manifest_path       = params_lookup( 'manifest_path' ),
+  $module_path         = params_lookup( 'module_path' )
   ) inherits puppet::params {
 
   $bool_listen=any2bool($listen)
