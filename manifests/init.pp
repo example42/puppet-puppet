@@ -309,6 +309,13 @@
 #   This is used by monitor, firewall and puppi (optional) components
 #   Can be defined also by the (top scope) variable $puppet_protocol
 #
+# [*manifest_path*]
+#   Path to the manifests
+#
+# [*module_path*]
+#   Location of the modules
+#
+#
 # == Examples
 #
 # You can use this class in 2 ways:
@@ -406,7 +413,9 @@ class puppet (
   $log_dir             = params_lookup( 'log_dir' ),
   $log_file            = params_lookup( 'log_file' ),
   $port                = params_lookup( 'port' ),
-  $protocol            = params_lookup( 'protocol' )
+  $protocol            = params_lookup( 'protocol' ),
+  $manifest_path       = params_lookup( 'manifest_path' ),
+  $module_path         = params_lookup( 'module_path' )
   ) inherits puppet::params {
 
   $bool_listen=any2bool($listen)

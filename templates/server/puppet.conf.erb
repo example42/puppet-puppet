@@ -47,6 +47,10 @@
 <% end -%>
 <% end -%>
 
+environment = <%= scope.lookupvar('puppet::environment') %>
+manifest    = <%= scope.lookupvar('puppet::manifest_path') %>
+modulepath  = <%= scope.lookupvar('puppet::module_path') %>
+
 <% if scope.lookupvar('puppet::dns_alt_names') != '' -%>
   dns_alt_names = <%= scope.lookupvar('puppet::dns_alt_names') %>
 <% end -%>
