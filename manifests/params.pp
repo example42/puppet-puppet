@@ -186,7 +186,7 @@ class puppet::params {
 
   $client_daemon_opts = ''
 
-  $manifest_path = '$confdir/manifests/'
+  $manifest_path = '$confdir/manifests/site.pp'
   $module_path   = '/etc/puppet/modules:/usr/share/puppet/modules'
 
 
