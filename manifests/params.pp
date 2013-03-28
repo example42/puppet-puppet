@@ -188,6 +188,7 @@ class puppet::params {
 
   $manifest_path = '$confdir/manifests/'
   $module_path   = '/etc/puppet/modules:/usr/share/puppet/modules'
+  $template_dir  = '/var/lib/puppet/templates'
 
 
   # DB package resources
