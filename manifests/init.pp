@@ -315,6 +315,9 @@
 # [*module_path*]
 #   Location of the modules
 #
+# [*template_dir*]
+#   Location of the templates
+#
 #
 # == Examples
 #
@@ -415,7 +418,8 @@ class puppet (
   $port                = params_lookup( 'port' ),
   $protocol            = params_lookup( 'protocol' ),
   $manifest_path       = params_lookup( 'manifest_path' ),
-  $module_path         = params_lookup( 'module_path' )
+  $module_path         = params_lookup( 'module_path' ),
+  $template_dir        = params_lookup( 'template_dir' )
   ) inherits puppet::params {
 
   $bool_listen=any2bool($listen)
