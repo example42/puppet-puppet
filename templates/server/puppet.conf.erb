@@ -1,10 +1,11 @@
 # File managed by Puppet 
 
 [main]
-  vardir = <%= scope.lookupvar('puppet::data_dir') %>
-  logdir = <%= scope.lookupvar('puppet::log_dir') %>
-  rundir = <%= scope.lookupvar('puppet::run_dir') %>
-  ssldir = $vardir/ssl
+  vardir      = <%= scope.lookupvar('puppet::data_dir') %>
+  logdir      = <%= scope.lookupvar('puppet::log_dir') %>
+  rundir      = <%= scope.lookupvar('puppet::run_dir') %>
+  templatedir = <%= scope.lookupvar('puppet::template_dir') %>
+  ssldir      = $vardir/ssl
   usecacheonfailure = true
   user = <%= scope.lookupvar('puppet::process_user_server') %>
   group = <%= scope.lookupvar('puppet::process_user_server') %>
