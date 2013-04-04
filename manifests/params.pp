@@ -68,8 +68,9 @@ class puppet::params {
   }
 
   $process_server = $::operatingsystem ? {
-    /(?i:Debian|Ubuntu|Mint)/ => 'ruby',
-    default                   => 'puppet',
+    /(?i:Debian|Mint)/ => 'ruby',
+    /(?i:Ubuntu)/      => 'puppet',
+    default            => 'puppet',
   }
 
   $pid_file_server = $major_version ? {
@@ -78,8 +79,9 @@ class puppet::params {
   }
 
   $process_args_server = $::operatingsystem ? {
-    /(?i:Debian|Ubuntu|Mint)/ => 'puppet',
-    default                   => 'master',
+    /(?i:Debian|Mint)/ => 'puppet',
+    /(?i:Ubuntu)/      => 'master',
+    default            => 'master',
   }
 
   $process_user_server = $::operatingsystem ? {
@@ -186,6 +188,17 @@ class puppet::params {
   $protocol = 'tcp'
 
   $client_daemon_opts = ''
+
+  $manifest_path = '$confdir/manifests/site.pp'
+  $module_path   = '/etc/puppet/modules:/usr/share/puppet/modules'
+  $template_dir  = '/var/lib/puppet/templates'
+
+
+  # DB package resources
+  $mysql_conn_package = $::operatingsystem ? {
+    /(?i:RedHat|Centos|Scientific|Fedora)/  => 'ruby-mysql',
+    default                                 => 'libmysql-ruby',
+  }
 
   # General Settings
   $my_class = ''
