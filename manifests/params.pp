@@ -36,8 +36,9 @@ class puppet::params {
   $nodetool = ''
   $runmode = 'service'
   $runinterval = '1800'
-  $tmp_cronminute = fqdn_rand(60)
-  $croninterval = "${tmp_cronminute} * * * *"
+  $tmp_cronminute = fqdn_rand(30)
+  $tmp_cronminute2 = $tmp_cronminute + 30
+  $croninterval = "${tmp_cronminute},${tmp_cronminute2} * * * *"
   $croncommand = $major_version ? {
     '0.2' => '/usr/bin/puppetd --onetime',
     '2.x' => '/usr/bin/puppet agent --onetime',
