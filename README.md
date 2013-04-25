@@ -46,18 +46,20 @@ For detailed info about the logic and usage patterns of Example42 modules check 
 
 
 ## USAGE - Overrides and Customizations
-* Use custom sources for main config file 
+* Use custom sources for main config file (you have to explicitely disable the default template)
 
         class { 'puppet':
-          source => [ "puppet:///modules/lab42/puppet/puppet.conf-${hostname}" , "puppet:///modules/lab42/puppet/puppet.conf" ], 
+          source   => [ "puppet:///modules/lab42/puppet/puppet.conf-${hostname}" , "puppet:///modules/lab42/puppet/puppet.conf" ], 
+          template => absent,
         }
 
 
-* Use custom source directory for the whole configuration dir
+* Use custom source directory for the whole configuration dir (you have to explicitely disable the default template) 
 
         class { 'puppet':
           source_dir       => 'puppet:///modules/lab42/puppet/conf/',
           source_dir_purge => false, # Set to true to purge any existing file not present in $source_dir
+          template         => absent,
         }
 
 * Use custom template for main config file. Note that template and source arguments are alternative. 

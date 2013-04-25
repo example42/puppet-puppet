@@ -558,6 +558,7 @@ class puppet (
       client => template('puppet/client/puppet.conf.erb'),
       server => template('puppet/server/puppet.conf.erb'),
     },
+    'absent'  => undef,
     default   => template($puppet::template),
   }
 
