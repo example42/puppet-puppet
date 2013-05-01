@@ -1,5 +1,5 @@
 # Class puppet::server::puppetdb
-# 
+#
 # Manages PuppetDB configuration on Puppet Master.
 #
 class puppet::server::puppetdb {

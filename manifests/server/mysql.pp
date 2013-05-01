@@ -1,5 +1,5 @@
-# Class puppet::server::mysql 
-# 
+# Class puppet::server::mysql
+#
 # Manages Mysql on Puppet Master.
 #
 class puppet::server::mysql {
