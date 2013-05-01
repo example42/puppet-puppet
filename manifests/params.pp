@@ -119,7 +119,7 @@ class puppet::params {
   }
 
   $service_status = $::operatingsystem ? {
-    debian  => $::lsbmajdistrelease ? { 
+    debian  => $::lsbmajdistrelease ? {
       5       => false,
       default => true,
     },
@@ -188,6 +188,9 @@ class puppet::params {
   $port = '8140'
   $protocol = 'tcp'
 
+  $http_proxy_host = ''
+  $http_proxy_port = ''
+
   $client_daemon_opts = ''
 
   $manifest_path = '$confdir/manifests/site.pp'
@@ -231,7 +234,8 @@ class puppet::params {
   $audit_only = false
 
   ### FILE SERVING SOURCE
-  # Sets the correct source for static files - Needed for backwards compatibility
+  # Sets the correct source for static files -
+  # Needed for backwards compatibility
   case $base_source {
     '': { $general_base_source = $puppetversion ? {
       /(^0.25)/ => "puppet:///modules",
