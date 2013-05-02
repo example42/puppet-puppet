@@ -54,7 +54,7 @@
 # [*storeconfigs_thin*]
 #
 # [*db*]
-#   
+#
 # [*db_name*]
 #
 # [*db_server*]
@@ -96,7 +96,7 @@
 #   resource management. It is rarely necessary for servers; it is usually
 #   helpful only if you need to have a pool of multiple load balanced masters,
 #   or for the same master to respond on two physically separate networks under
-#   different names. 
+#   different names
 #
 # [*client_daemon_opts*]
 #   If $operatingsystem is Debian or Ubuntu, these options will be passed to
@@ -304,6 +304,16 @@
 #   Note: This doesn't necessarily affect the service configuration file
 #   Can be defined also by the (top scope) variable $puppet_port
 #
+# [*http_proxy_host*]
+#   The HTTP proxy port, if any, required to perform HTTP requests.
+#   This is used by the agent component.
+#   Note: This doesn't necessarily affect the service configuration file
+#   Can be defined also by the (top scope) variable $puppet_port
+#
+# [*http_proxy_port*]
+#   The HTTP proxy port, if any, required to perform HTTP requests.
+#   This is used by the agent component.
+#
 # [*protocol*]
 #   The protocol used by the the service.
 #   This is used by monitor, firewall and puppi (optional) components
@@ -416,6 +426,8 @@ class puppet (
   $log_dir             = params_lookup( 'log_dir' ),
   $log_file            = params_lookup( 'log_file' ),
   $port                = params_lookup( 'port' ),
+  $http_proxy_host     = params_lookup( 'http_proxy_host' ),
+  $http_proxy_port     = params_lookup( 'http_proxy_port' ),
   $protocol            = params_lookup( 'protocol' ),
   $manifest_path       = params_lookup( 'manifest_path' ),
   $module_path         = params_lookup( 'module_path' ),
@@ -716,7 +728,7 @@ class puppet (
 
 
   ### Firewall management, if enabled ( firewall => true )
-  if $puppet::bool_firewall == true 
+  if $puppet::bool_firewall == true
   and $puppet::bool_listen == true {
     firewall { "puppet_${puppet::protocol}_${puppet::port_listen}":
       source      => $puppet::firewall_src,
