@@ -41,11 +41,11 @@ class puppet::params {
   $croninterval = "${tmp_cronminute},${tmp_cronminute2} * * * *"
   $croncommand = $major_version ? {
     '0.2' => $::operatingsystem ? {
-      /(?i:OpenBSD)/ => '/usr/local/bin/puppetd --onetime --pidfile /var/run/puppet-cron.pid',
+      /(?i:OpenBSD)/ => '/usr/local/bin/puppetd --onetime --pidfile /var/run/puppet-cron.pid >/dev/null 2>&1',
       default        => '/usr/bin/puppetd --onetime --pidfile /var/run/puppet-cron.pid',
     },
     '2.x' => $::operatingsystem ? {
-      /(?i:OpenBSD)/ => '/usr/local/bin/puppet agent --onetime --pidfile /var/run/puppet-cron.pid',
+      /(?i:OpenBSD)/ => '/usr/local/bin/puppet agent --onetime --pidfile /var/run/puppet-cron.pid >/dev/null 2>&1',
       default        => '/usr/bin/puppet agent --onetime --pidfile /var/run/puppet-cron.pid',
     }
   }
