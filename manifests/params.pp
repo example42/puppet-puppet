@@ -40,8 +40,14 @@ class puppet::params {
   $tmp_cronminute2 = $tmp_cronminute + 30
   $croninterval = "${tmp_cronminute},${tmp_cronminute2} * * * *"
   $croncommand = $major_version ? {
-    '0.2' => '/usr/bin/puppetd --onetime --pidfile /var/run/puppet-cron.pid',
-    '2.x' => '/usr/bin/puppet agent --onetime --pidfile /var/run/puppet-cron.pid',
+    '0.2' => $::operatingsystem ? {
+      /(?i:OpenBSD)/ => '/usr/local/bin/puppetd --onetime --pidfile /var/run/puppet-cron.pid >/dev/null 2>&1',
+      default        => '/usr/bin/puppetd --onetime --pidfile /var/run/puppet-cron.pid',
+    },
+    '2.x' => $::operatingsystem ? {
+      /(?i:OpenBSD)/ => '/usr/local/bin/puppet agent --onetime --pidfile /var/run/puppet-cron.pid >/dev/null 2>&1',
+      default        => '/usr/bin/puppet agent --onetime --pidfile /var/run/puppet-cron.pid',
+    }
   }
   $prerun_command = ''
   $postrun_command = ''
@@ -99,7 +105,13 @@ class puppet::params {
   }
 
   $run_dir = $::operatingsystem ? {
-    default => '/var/run/puppet',
+    /(?i:OpenBSD)/ => '/var/puppet/run',
+    default        => '/var/run/puppet',
+  }
+
+  $ssl_dir = $::operatingsystem ? {
+    /(?i:OpenBSD)/ => '/etc/puppet/ssl',
+    default        => '/var/lib/puppet/ssl',
   }
 
   $template_namespaceauth = ''
@@ -111,11 +123,13 @@ class puppet::params {
   ### Application related parameters
 
   $package = $::operatingsystem ? {
-    default => 'puppet',
+    /(?i:OpenBSD)/ => 'ruby-puppet',
+    default        => 'puppet',
   }
 
   $service = $::operatingsystem ? {
-    default => 'puppet',
+    /(?i:OpenBSD)/ => 'puppetd',
+    default        => 'puppet',
   }
 
   $service_status = $::operatingsystem ? {
@@ -142,6 +156,11 @@ class puppet::params {
     default => 'root',
   }
 
+  $process_group = $::operatingsystem ? {
+    /(?i:OpenBSD)/ => 'wheel',
+    default        => 'root',
+  }
+
   $config_dir = $::operatingsystem ? {
     default => '/etc/puppet',
   }
@@ -159,7 +178,8 @@ class puppet::params {
   }
 
   $config_file_group = $::operatingsystem ? {
-    default => 'root',
+    /(?i:OpenBSD)/ => 'wheel',
+    default        => 'root',
   }
 
   $config_file_init = $::operatingsystem ? {
@@ -168,16 +188,24 @@ class puppet::params {
   }
 
   $pid_file = $major_version ? {
-    '0.2' => '/var/run/puppet/puppet.pid',
-    '2.x' => '/var/run/puppet/agent.pid',
+    '0.2' => $::operatingsystem ? {
+      /(?i:OpenBSD)/ => '/var/puppet/run/puppet.pid',
+      default        => '/var/run/puppet/puppet.pid',
+    },
+    '2.x' => $::operatingsystme ? {
+      /(?i:OpenBSD)/ => '/var/puppet/run/agent.pid',
+      default        => '/var/run/puppet/agent.pid',
+    }
   }
 
   $data_dir = $::operatingsystem ? {
-    default => '/var/lib/puppet',
+    /(?i:OpenBSD)/ => '/var/puppet',
+    default        => '/var/lib/puppet',
   }
 
   $log_dir = $::operatingsystem ? {
-    default => '/var/log/puppet',
+    /(?i:OpenBSD)/ => '/var/puppet/log',
+    default        => '/var/log/puppet',
   }
 
   $log_file = $::operatingsystem ? {

@@ -4,10 +4,10 @@
   vardir = <%= scope.lookupvar('puppet::data_dir') %>
   logdir = <%= scope.lookupvar('puppet::log_dir') %>
   rundir = <%= scope.lookupvar('puppet::run_dir') %>
-  ssldir = $vardir/ssl
+  ssldir = <%= scope.lookupvar('puppet::ssl_dir') %>
   usecacheonfailure = true
   user = <%= scope.lookupvar('puppet::process_user') %>
-  group = <%= scope.lookupvar('puppet::process_user') %>
+  group = <%= scope.lookupvar('puppet::process_group') %>
 
   masterport = <%= scope.lookupvar('puppet::port') %>
 
