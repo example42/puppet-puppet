@@ -763,7 +763,7 @@ class puppet (
     path    => '/etc/cron.d/puppet',
   }
 
-  cron { puppet_cron:
+  cron { 'puppet_cron':
     ensure  => $puppet::manage_file_cron,
     command => $puppet::croncommand,
     user    => $puppet::process_user,
