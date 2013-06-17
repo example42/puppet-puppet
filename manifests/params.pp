@@ -38,7 +38,8 @@ class puppet::params {
   $runinterval = '1800'
   $tmp_cronminute = fqdn_rand(30)
   $tmp_cronminute2 = $tmp_cronminute + 30
-  $croninterval = [$tmp_cronminute,$tmp_cronminute2]
+  $template_cron = 'puppet/client/puppet.cron.erb'
+  $croninterval = "${tmp_cronminute},${tmp_cronminute2} * * * *"
   $croncommand = $major_version ? {
     '0.2' => $::operatingsystem ? {
       /(?i:OpenBSD)/ => '/usr/local/bin/puppetd --onetime --pidfile /var/run/puppet-cron.pid >/dev/null 2>&1',

@@ -38,6 +38,7 @@
 #
 # [*croninterval*]
 #   Cron interval specification when the puppet agent should run.
+#   If defined must be in cron like syntax (ie: 4 5 * * *)
 #
 # [*croncommand*]
 #
@@ -382,6 +383,7 @@ class puppet (
   $template_auth       = params_lookup( 'template_auth' ),
   $template_fileserver = params_lookup( 'template_fileserver' ),
   $template_passenger  = params_lookup( 'template_passenger' ),
+  $template_cron       = params_lookup( 'template_cron' ),
   $run_dir             = params_lookup( 'run_dir' ),
   $reporturl           = params_lookup( 'reporturl' ),
   $my_class            = params_lookup( 'my_class' ),
@@ -758,16 +760,25 @@ class puppet (
   }
 
   ### Cron configuration if run_mode = cron
-  file { 'puppet_cron':
-    ensure  => 'absent',
-    path    => '/etc/cron.d/puppet',
-  }
+  # Quick patch for BSD support and backwards compatibility
 
-  cron { 'puppet_cron':
-    ensure  => $puppet::manage_file_cron,
-    command => $puppet::croncommand,
-    user    => $puppet::process_user,
-    minute  => $puppet::croninterval,
+  if $::operatingsystem != 'OpenBSD'
+  or $::operatingsystem == 'FreeBSD' {
+    cron { 'puppet_cron':
+      ensure   => $puppet::manage_file_cron,
+      command  => $puppet::croncommand,
+      user     => $puppet::process_user,
+      minute   => [ $puppet::tmp_cronminute , $puppet::tmp_cronminute2 ],
+    }
+  } else {
+    file { 'puppet_cron':
+      ensure  => $puppet::manage_file,
+      path    => '/etc/cron.d/puppet',
+      mode    => '0644',
+      owner   => 'root',
+      group   => 'root',
+      content => template($puppet::template_cron),
+    }
   }
 
 }
