@@ -762,7 +762,7 @@ class puppet (
   ### Cron configuration if run_mode = cron
   # Quick patch for BSD support and backwards compatibility
 
-  if $::operatingsystem != 'OpenBSD'
+  if $::operatingsystem == 'OpenBSD'
   or $::operatingsystem == 'FreeBSD' {
     cron { 'puppet_cron':
       ensure   => $puppet::manage_file_cron,
