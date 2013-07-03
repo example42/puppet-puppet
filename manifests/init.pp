@@ -772,7 +772,7 @@ class puppet (
     }
   } else {
     file { 'puppet_cron':
-      ensure  => $puppet::manage_file,
+      ensure  => $puppet::manage_file_cron,
       path    => '/etc/cron.d/puppet',
       mode    => '0644',
       owner   => 'root',
