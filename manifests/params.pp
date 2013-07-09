@@ -232,6 +232,22 @@ class puppet::params {
     default                                 => 'libmysql-ruby',
   }
 
+  $sqlite_package = $::osfamily ? {
+    #/(?i:RedHat)/ => '# TODO: find the right package name on RH based distributions',
+    /Debian/    => 'ruby-sqlite3',
+    /Gentoo/    => 'dev-ruby/sqlite3',
+    /(?i:SuSE)/ => $::operatingsystem ? {
+        /(?:OpenSuSE)/ => 'rubygem-sqlite3',
+        default        => 'sqlite3-ruby',
+    },
+    # older Facter versions don't report a Gentoo OS family
+    /Linux/     => $::operatingsystem ? {
+        /Gentoo/ => 'dev-ruby/sqlite3',
+        default  => 'sqlite3-ruby',
+    },
+    default     => 'sqlite3-ruby',
+  }
+
   # General Settings
   $my_class = ''
   $source = ''
