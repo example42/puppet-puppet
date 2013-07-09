@@ -238,10 +238,12 @@ class puppet::params {
     /Gentoo/    => 'dev-ruby/sqlite3',
     /(?i:SuSE)/    => $::operatingsystem ? {
         /(?:OpenSuSE)/ => 'rubygem-sqlite3',
+        default        => 'sqlite3-ruby',
     },
     # older Facter versions don't report a Gentoo OS family
     /Linux/     => $::operatingsystem ? {
         /Gentoo/ => 'dev-ruby/sqlite3',
+        default  => 'sqlite3-ruby',
     }
   }
 
