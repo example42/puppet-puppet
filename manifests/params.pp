@@ -232,6 +232,14 @@ class puppet::params {
     default                                 => 'libmysql-ruby',
   }
 
+  $sqlite_package = $::osfamily ? {
+    #/?i:RedHat/ => '# TODO: find the right package name on RH based distributions',
+    "Debian"    => 'ruby-sqlite3',
+    "Linux"     => $::operatingsystem ? {
+        "Gentoo" => 'dev-ruby/sqlite3',
+    }
+  }
+
   # General Settings
   $my_class = ''
   $source = ''
