@@ -233,10 +233,15 @@ class puppet::params {
   }
 
   $sqlite_package = $::osfamily ? {
-    #/?i:RedHat/ => '# TODO: find the right package name on RH based distributions',
-    "Debian"    => 'ruby-sqlite3',
-    "Linux"     => $::operatingsystem ? {
-        "Gentoo" => 'dev-ruby/sqlite3',
+    #/(?i:RedHat)/ => '# TODO: find the right package name on RH based distributions',
+    /Debian/    => 'ruby-sqlite3',
+    /Gentoo/    => 'dev-ruby/sqlite3',
+    /(?i:SuSE)/    => $::operatingsystem ? {
+        /(?:OpenSuSE)/ => 'rubygem-sqlite3',
+    },
+    # older Facter versions don't report a Gentoo OS family
+    /Linux/     => $::operatingsystem ? {
+        /Gentoo/ => 'dev-ruby/sqlite3',
     }
   }
 
