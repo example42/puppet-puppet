@@ -236,7 +236,7 @@ class puppet::params {
     #/(?i:RedHat)/ => '# TODO: find the right package name on RH based distributions',
     /Debian/    => 'ruby-sqlite3',
     /Gentoo/    => 'dev-ruby/sqlite3',
-    /(?i:SuSE)/    => $::operatingsystem ? {
+    /(?i:SuSE)/ => $::operatingsystem ? {
         /(?:OpenSuSE)/ => 'rubygem-sqlite3',
         default        => 'sqlite3-ruby',
     },
@@ -244,7 +244,8 @@ class puppet::params {
     /Linux/     => $::operatingsystem ? {
         /Gentoo/ => 'dev-ruby/sqlite3',
         default  => 'sqlite3-ruby',
-    }
+    },
+    default     => 'sqlite3-ruby',
   }
 
   # General Settings
