@@ -88,7 +88,7 @@ class puppet::server inherits puppet {
   case $puppet::db {
     mysql: { include puppet::server::mysql }
     puppetdb: { include puppet::server::puppetdb }
-    default: { }
+    default: { include puppet::server::sqlite }
   }
 
   ### Manage Passenger
