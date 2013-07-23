@@ -233,7 +233,7 @@ class puppet::params {
   }
 
   $sqlite_package = $::osfamily ? {
-    #/(?i:RedHat)/ => '# TODO: find the right package name on RH based distributions',
+    /(?i:RedHat)/ => 'rubygem-sqlite3-ruby',
     /Debian/    => 'ruby-sqlite3',
     /Gentoo/    => 'dev-ruby/sqlite3',
     /(?i:SuSE)/ => $::operatingsystem ? {
