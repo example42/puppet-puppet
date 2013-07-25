@@ -614,7 +614,7 @@ class puppet (
     require    => Package['puppet'],
   }
 
-  # Enable service start on Ubuntu
+  # Enable service start on Ubuntu
   if ($::operatingsystem == 'Ubuntu'
   or $::operatingsystem == 'Debian') {
     file { 'default-puppet':
