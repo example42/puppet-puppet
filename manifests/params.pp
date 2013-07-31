@@ -21,11 +21,19 @@ class puppet::params {
   }
 
   $mode = 'client'
-  $server = $::domain ? {
-    ''      => 'puppet',
-    default => "puppet.$::domain",
+  if $::puppetmaster {
+    $server = $::puppetmaster
+  } else {
+    $server = $::domain ? {
+      ''      => 'puppet',
+      default => "puppet.$::domain",
+    }
   }
-  $environment = 'production'
+  if $::foreman_env {
+    $environment = $::foreman_env
+  } else {
+    $environment = 'production'
+  }
   $allow = $::domain ? {
     ''      => [ '127.0.0.1' ],
     default => [ "*.$::domain" , '127.0.0.1' ],
