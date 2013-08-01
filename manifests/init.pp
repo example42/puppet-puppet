@@ -436,7 +436,6 @@ class puppet (
   $bool_listen=any2bool($listen)
   $bool_externalnodes=any2bool($externalnodes)
   $bool_passenger=any2bool($passenger)
-  $bool_autosign=any2bool($autosign)
   $bool_storeconfigs=any2bool($storeconfigs)
   $bool_storeconfigs_thin=any2bool($storeconfigs_thin)
   $bool_service_server_autorestart=any2bool($service_server_autorestart)
@@ -615,7 +614,7 @@ class puppet (
     require    => Package['puppet'],
   }
 
-  # Enable service start on Ubuntu
+  # Enable service start on Ubuntu
   if ($::operatingsystem == 'Ubuntu'
   or $::operatingsystem == 'Debian') {
     file { 'default-puppet':

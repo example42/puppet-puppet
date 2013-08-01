@@ -40,7 +40,7 @@
   ssl_client_header = SSL_CLIENT_S_DN
   ssl_client_verify_header = SSL_CLIENT_VERIFY
 <% end -%>
-  autosign = <%= scope.lookupvar('puppet::bool_autosign') %>
+  autosign = <%= scope.lookupvar('puppet::autosign') %>
 <% if scope.lookupvar('puppet::bool_storeconfigs') == true or scope.lookupvar('puppet::db') == "puppetdb" -%>
   storeconfigs = true
 <% if scope.lookupvar('puppet::bool_storeconfigs_thin') == true and scope.lookupvar('puppet::db') != "puppetdb" %>
