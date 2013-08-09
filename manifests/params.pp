@@ -21,11 +21,19 @@ class puppet::params {
   }
 
   $mode = 'client'
-  $server = $::domain ? {
-    ''      => 'puppet',
-    default => "puppet.$::domain",
+  if $::puppetmaster {
+    $server = $::puppetmaster
+  } else {
+    $server = $::domain ? {
+      ''      => 'puppet',
+      default => "puppet.$::domain",
+    }
   }
-  $environment = 'production'
+  if $::foreman_env {
+    $environment = $::foreman_env
+  } else {
+    $environment = 'production'
+  }
   $allow = $::domain ? {
     ''      => [ '127.0.0.1' ],
     default => [ "*.$::domain" , '127.0.0.1' ],
@@ -101,7 +109,7 @@ class puppet::params {
   $service_server_autorestart = false
 
   $basedir = $::operatingsystem ? {
-    /(?i:RedHat|Centos|Scientific|Fedora)/ => '/usr/lib/ruby/site_ruby/1.8/puppet',
+    /(?i:RedHat|Centos|Scientific|Fedora|Linux)/ => '/usr/lib/ruby/site_ruby/1.8/puppet',
     default                                => '/usr/lib/ruby/1.8/puppet',
   }
 
@@ -143,7 +151,7 @@ class puppet::params {
   $process = $major_version ? {
     '0.2' => 'puppetd',
     '2.x' => $::operatingsystem ? {
-      /(?i:RedHat|Centos|Scientific|Fedora)/ => 'puppetd',
+      /(?i:RedHat|Centos|Scientific|Fedora|Linux)/ => 'puppetd',
       default                                => 'puppet',
     }
   }
@@ -228,7 +236,7 @@ class puppet::params {
 
   # DB package resources
   $mysql_conn_package = $::operatingsystem ? {
-    /(?i:RedHat|Centos|Scientific|Fedora)/  => 'ruby-mysql',
+    /(?i:RedHat|Centos|Scientific|Fedora|Linux)/  => 'ruby-mysql',
     default                                 => 'libmysql-ruby',
   }
 
