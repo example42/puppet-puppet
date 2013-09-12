@@ -26,7 +26,7 @@ class puppet::params {
   } else {
     $server = $::domain ? {
       ''      => 'puppet',
-      default => "puppet.$::domain",
+      default => "puppet.${::domain}",
     }
   }
   if $::foreman_env {
@@ -36,7 +36,7 @@ class puppet::params {
   }
   $allow = $::domain ? {
     ''      => [ '127.0.0.1' ],
-    default => [ "*.$::domain" , '127.0.0.1' ],
+    default => [ "*.${::domain}" , '127.0.0.1' ],
   }
   $bindaddress = '0.0.0.0'
   $listen = false
@@ -284,18 +284,5 @@ class puppet::params {
   $puppi_helper = 'standard'
   $debug = false
   $audit_only = false
-
-  ### FILE SERVING SOURCE
-  # Sets the correct source for static files -
-  # Needed for backwards compatibility
-  case $base_source {
-    '': { $general_base_source = $puppetversion ? {
-      /(^0.25)/ => "puppet:///modules",
-      /(^0.)/   => "puppet://$servername",
-      default   => "puppet:///modules",
-    }
-  }
-    default: { $general_base_source=$base_source }
-  }
 
 }
