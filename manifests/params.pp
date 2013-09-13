@@ -20,13 +20,18 @@ class puppet::params {
     default   => '2.x',
   }
 
+  $win_basedir = $::kernelmajversion ? {
+    '5.2' => 'C:/Documents and Settings/All Users/Application Data/PuppetLabs/puppet',
+    default => 'C:/ProgramData/PuppetLabs/puppet',
+  }
+
   $mode = 'client'
   if $::puppetmaster {
     $server = $::puppetmaster
   } else {
     $server = $::domain ? {
       ''      => 'puppet',
-      default => "puppet.$::domain",
+      default => "puppet.${::domain}",
     }
   }
   if $::foreman_env {
@@ -36,7 +41,7 @@ class puppet::params {
   }
   $allow = $::domain ? {
     ''      => [ '127.0.0.1' ],
-    default => [ "*.$::domain" , '127.0.0.1' ],
+    default => [ "*.${::domain}" , '127.0.0.1' ],
   }
   $bindaddress = '0.0.0.0'
   $listen = false
@@ -115,11 +120,13 @@ class puppet::params {
 
   $run_dir = $::operatingsystem ? {
     /(?i:OpenBSD)/ => '/var/puppet/run',
+    /(?i:Windows)/ => "${win_basedir}/var/run",
     default        => '/var/run/puppet',
   }
 
   $ssl_dir = $::operatingsystem ? {
     /(?i:OpenBSD)/ => '/etc/puppet/ssl',
+    /(?i:Windows)/ => "${win_basedir}/etc/ssl",
     default        => '/var/lib/puppet/ssl',
   }
 
@@ -132,6 +139,7 @@ class puppet::params {
 
   $package = $::operatingsystem ? {
     /(?i:OpenBSD)/ => 'ruby-puppet',
+    /(?i:Windows)/ => 'Puppet',
     default        => 'puppet',
   }
 
@@ -170,23 +178,28 @@ class puppet::params {
   }
 
   $config_dir = $::operatingsystem ? {
-    default => '/etc/puppet',
+    /(?i:Windows)/ => "${win_basedir}/etc",
+    default        => '/etc/puppet',
   }
 
   $config_file = $::operatingsystem ? {
-    default => '/etc/puppet/puppet.conf',
+    /(?i:Windows)/ => "${win_basedir}/etc/puppet.conf",
+    default        => '/etc/puppet/puppet.conf',
   }
 
   $config_file_mode = $::operatingsystem ? {
-    default => '0644',
+    /(?i:Windows)/ => '0770',
+    default        => '0644',
   }
 
   $config_file_owner = $::operatingsystem ? {
-    default => 'root',
+    /(?i:Windows)/ => 'S-1-5-32-544',
+    default        => 'root',
   }
 
   $config_file_group = $::operatingsystem ? {
     /(?i:OpenBSD)/ => 'wheel',
+    /(?i:Windows)/ => 'S-1-5-18',
     default        => 'root',
   }
 
@@ -208,16 +221,19 @@ class puppet::params {
 
   $data_dir = $::operatingsystem ? {
     /(?i:OpenBSD)/ => '/var/puppet',
+    /(?i:Windows)/ => "${win_basedir}/var/lib",
     default        => '/var/lib/puppet',
   }
 
   $log_dir = $::operatingsystem ? {
     /(?i:OpenBSD)/ => '/var/puppet/log',
+    /(?i:Windows)/ => "${win_basedir}/var/log",
     default        => '/var/log/puppet',
   }
 
   $log_file = $::operatingsystem ? {
     /(?i:Debian|Ubuntu|Mint)/ => '/var/log/syslog',
+    /(?i:Windows)/            => "${win_basedir}/var/log/windows.log",
     default                   => '/var/log/messages',
   }
 
@@ -284,18 +300,5 @@ class puppet::params {
   $puppi_helper = 'standard'
   $debug = false
   $audit_only = false
-
-  ### FILE SERVING SOURCE
-  # Sets the correct source for static files -
-  # Needed for backwards compatibility
-  case $base_source {
-    '': { $general_base_source = $puppetversion ? {
-      /(^0.25)/ => "puppet:///modules",
-      /(^0.)/   => "puppet://$servername",
-      default   => "puppet:///modules",
-    }
-  }
-    default: { $general_base_source=$base_source }
-  }
 
 }
