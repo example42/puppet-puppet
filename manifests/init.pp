@@ -759,23 +759,27 @@ class puppet (
 
   ### Cron configuration if run_mode = cron
   # Quick patch for BSD support and backwards compatibility
+  # Skip configuration on Windows because of scheduled_task limitations
 
-  if $::operatingsystem == 'OpenBSD'
-  or $::operatingsystem == 'FreeBSD' {
-    cron { 'puppet_cron':
-      ensure   => $puppet::manage_file_cron,
-      command  => $puppet::croncommand,
-      user     => $puppet::process_user,
-      minute   => [ $puppet::tmp_cronminute , $puppet::tmp_cronminute2 ],
+  case $::operatingsystem {
+    /(?i:OpenBSD|FreeBSD)/: {
+      cron { 'puppet_cron':
+        ensure   => $puppet::manage_file_cron,
+        command  => $puppet::croncommand,
+        user     => $puppet::process_user,
+        minute   => [ $puppet::tmp_cronminute , $puppet::tmp_cronminute2 ],
+      }
     }
-  } else {
-    file { 'puppet_cron':
-      ensure  => $puppet::manage_file_cron,
-      path    => '/etc/cron.d/puppet',
-      mode    => '0644',
-      owner   => 'root',
-      group   => 'root',
-      content => template($puppet::template_cron),
+    /(?i:Windows)/: { }
+    default: {
+      file { 'puppet_cron':
+        ensure  => $puppet::manage_file_cron,
+        path    => '/etc/cron.d/puppet',
+        mode    => '0644',
+        owner   => 'root',
+        group   => 'root',
+        content => template($puppet::template_cron),
+      }
     }
   }
 
