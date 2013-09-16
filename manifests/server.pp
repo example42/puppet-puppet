@@ -109,4 +109,13 @@ class puppet::server inherits puppet {
   ### Manage Passenger
   if $puppet::bool_passenger == true { include puppet::server::passenger }
 
+  ### remove stored reports after a week
+  if $puppet::nodetool == "foreman" or $puppet::nodetool == "dashboard" {
+    tidy { $puppet::reports_dir:
+      age     => "1w",
+      recurse => true,
+      rmdirs  => true,
+      type    => ctime;
+    }
+  }
 }

@@ -477,7 +477,8 @@ class puppet (
   $protocol            = params_lookup( 'protocol' ),
   $manifest_path       = params_lookup( 'manifest_path' ),
   $module_path         = params_lookup( 'module_path' ),
-  $template_dir        = params_lookup( 'template_dir' )
+  $template_dir        = params_lookup( 'template_dir' ),
+  $reports_dir         = params_lookup( 'reports_dir' )
   ) inherits puppet::params {
 
   $bool_enc_backup=any2bool($enc_backup)
