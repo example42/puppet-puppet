@@ -110,7 +110,7 @@ class puppet::params {
 
   $basedir = $::operatingsystem ? {
     /(?i:RedHat|Centos|Scientific|Fedora|Linux)/ => '/usr/lib/ruby/site_ruby/1.8/puppet',
-    default                                => '/usr/lib/ruby/1.8/puppet',
+    default                                      => '/usr/lib/ruby/1.8/puppet',
   }
 
   $run_dir = $::operatingsystem ? {
@@ -152,7 +152,7 @@ class puppet::params {
     '0.2' => 'puppetd',
     '2.x' => $::operatingsystem ? {
       /(?i:RedHat|Centos|Scientific|Fedora|Linux)/ => 'puppetd',
-      default                                => 'puppet',
+      default                                      => 'puppet',
     }
   }
 
@@ -237,14 +237,14 @@ class puppet::params {
   # DB package resources
   $mysql_conn_package = $::operatingsystem ? {
     /(?i:RedHat|Centos|Scientific|Fedora|Linux)/  => 'ruby-mysql',
-    default                                 => 'libmysql-ruby',
+    default                                       => 'libmysql-ruby',
   }
 
   $sqlite_package = $::osfamily ? {
     /(?i:RedHat)/ => 'rubygem-sqlite3-ruby',
-    /Debian/    => 'ruby-sqlite3',
-    /Gentoo/    => 'dev-ruby/sqlite3',
-    /(?i:SuSE)/ => $::operatingsystem ? {
+    /Debian/      => 'ruby-sqlite3',
+    /Gentoo/      => 'dev-ruby/sqlite3',
+    /(?i:SuSE)/   => $::operatingsystem ? {
         /(?:OpenSuSE)/ => 'rubygem-sqlite3',
         default        => 'sqlite3-ruby',
     },
