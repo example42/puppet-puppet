@@ -83,7 +83,7 @@
 #
 # [*version_server*]
 #
-# [*version_puppetdb*]
+# [*version_puppetdb_terminus*]
 #
 # [*service_server_autorestart*]
 #
@@ -376,7 +376,7 @@ class puppet (
   $process_args_server = params_lookup( 'process_args_server' ),
   $process_user_server = params_lookup( 'process_user_server' ),
   $version_server      = params_lookup( 'version_server' ),
-  $version_puppetdb    = params_lookup( 'version_puppetdb' ),
+  $version_puppetdb_terminus  = params_lookup( 'version_puppetdb_terminus' ),
   $service_server_autorestart = params_lookup( 'service_server_autorestart' ),
   $dns_alt_names       = params_lookup( 'dns_alt_names' ),
   $client_daemon_opts  = params_lookup( 'client_daemon_opts' ),
@@ -464,9 +464,9 @@ class puppet (
     false => $puppet::version_server,
   }
 
-  $manage_package_puppetdb = $puppet::bool_absetn ? {
+  $manage_package_puppetdb_terminus = $puppet::bool_absent ? {
     true  => 'absent',
-    false => $puppet::version_puppetdb,
+    false => $puppet::version_puppetdb_terminus,
   }
 
   $manage_service_enable = $puppet::bool_disableboot ? {
