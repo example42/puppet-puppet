@@ -252,8 +252,7 @@ class puppet::params {
 
   # DB package resources
   $mysql_conn_package = $::operatingsystem ? {
-    /(?i:RedHat|Centos|Scientific|Fedora|Linux)/  => 'ruby-mysql',
-    default                                 => 'libmysql-ruby',
+    default                                 => 'ruby-mysql',
   }
 
   $sqlite_package = $::osfamily ? {
