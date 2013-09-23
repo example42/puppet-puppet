@@ -76,16 +76,19 @@ class puppet::params {
 
   $package_server = $::operatingsystem ? {
     /(?i:Debian|Ubuntu|Mint)/ => 'puppetmaster',
+    /(?i:Solaris)/            => 'puppetmaster',
     default                   => 'puppet-server',
   }
 
   $service_server = $::operatingsystem ? {
-    default => 'puppetmaster',
+    /(?i:Solaris)/ => 'cswpuppetmasterd',
+    default        => 'puppetmaster',
   }
 
   $process_server = $::operatingsystem ? {
     /(?i:Debian|Mint)/ => 'ruby',
     /(?i:Ubuntu)/      => 'puppet',
+    /(?i:Solaris)/     => 'puppetmasterd',
     default            => 'puppet',
   }
 
@@ -110,6 +113,7 @@ class puppet::params {
 
   $basedir = $::operatingsystem ? {
     /(?i:RedHat|Centos|Scientific|Fedora|Linux)/ => '/usr/lib/ruby/site_ruby/1.8/puppet',
+    /(?i:Solaris)/                               => '/opt/csw/lib/ruby/site_ruby/1.8/puppet',
     default                                      => '/usr/lib/ruby/1.8/puppet',
   }
 
@@ -137,6 +141,7 @@ class puppet::params {
 
   $service = $::operatingsystem ? {
     /(?i:OpenBSD)/ => 'puppetd',
+    /(?i:Solaris)/ => 'cswpuppetd',
     default        => 'puppet',
   }
 
@@ -192,6 +197,7 @@ class puppet::params {
 
   $config_file_init = $::operatingsystem ? {
     /(?i:Debian|Ubuntu|Mint)/ => '/etc/default/puppet',
+    /(?i:Solaris)/            => '',
     default                   => '/etc/sysconfig/puppet',
   }
 
@@ -218,6 +224,7 @@ class puppet::params {
 
   $log_file = $::operatingsystem ? {
     /(?i:Debian|Ubuntu|Mint)/ => '/var/log/syslog',
+    /(?i:Solaris)/            => '/var/adm/messages',
     default                   => '/var/log/messages',
   }
 
@@ -237,6 +244,7 @@ class puppet::params {
   # DB package resources
   $mysql_conn_package = $::operatingsystem ? {
     /(?i:RedHat|Centos|Scientific|Fedora|Linux)/  => 'ruby-mysql',
+    /(?i:Solaris)/                                => 'rb18_mysql_2_8_1',
     default                                       => 'libmysql-ruby',
   }
 
@@ -249,11 +257,12 @@ class puppet::params {
         default        => 'sqlite3-ruby',
     },
     # older Facter versions don't report a Gentoo OS family
-    /Linux/     => $::operatingsystem ? {
+    /Linux/        => $::operatingsystem ? {
         /Gentoo/ => 'dev-ruby/sqlite3',
         default  => 'sqlite3-ruby',
     },
-    default     => 'sqlite3-ruby',
+    /(?i:Solaris)/ => '',
+    default        => 'sqlite3-ruby',
   }
 
   # General Settings
