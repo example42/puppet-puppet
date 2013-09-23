@@ -9,6 +9,35 @@
 #
 class puppet::server inherits puppet {
 
+  ### Check if both services should be restarted or not
+  ### if we dont do this we get something like this:
+  ### No title provided and :undef is not a valid resource reference
+  if $puppet::bool_service_autorestart == true and $puppet::bool_service_server_autorestart == true {
+    File <| title == 'puppet.conf' |> {
+      notify  +> $puppet::manage_service_server_autorestart,
+    }
+
+    File <| title == 'auth.conf' |> {
+      notify  +> $puppet::manage_service_server_autorestart,
+    }
+
+    File <| title == 'namespaceauth.conf' |> {
+      notify  +> $puppet::manage_service_server_autorestart,
+    }
+  } elsif $puppet::bool_service_server_autorestart == true {
+    File <| title == 'puppet.conf' |> {
+      notify  => $puppet::manage_service_server_autorestart,
+    }
+
+    File <| title == 'auth.conf' |> {
+      notify  => $puppet::manage_service_server_autorestart,
+    }
+
+    File <| title == 'namespaceauth.conf' |> {
+      notify  => $puppet::manage_service_server_autorestart,
+    }
+  }
+
   ### Managed resources
   package { 'puppet_server':
     ensure => $puppet::manage_package_server,
@@ -25,6 +54,20 @@ class puppet::server inherits puppet {
     require    => Package['puppet_server'],
   }
 
+  if ($::operatingsystem == 'Ubuntu'
+  or $::operatingsystem == 'Debian') {
+    file { 'default-puppetmaster':
+      ensure  => $puppet::manage_file,
+      path    => $puppet::config_file_server_init,
+      before  => Package['puppet_server'],
+      content => template('puppet/puppetmaster.default.init-ubuntu'),
+      mode    => $puppet::config_file_mode,
+      owner   => $puppet::config_file_owner,
+      group   => $puppet::config_file_group,
+      notify  => $puppet::manage_service_server_autorestart,
+    }
+  }
+
   file { 'fileserver.conf':
     ensure  => $puppet::manage_file,
     path    => "${puppet::config_dir}/fileserver.conf",
@@ -38,10 +81,22 @@ class puppet::server inherits puppet {
     audit   => $puppet::manage_audit,
   }
 
-  exec { 'puppetmaster-ca-generate':
-    creates => "${puppet::data_dir}/ssl/private_keys/${::fqdn}.pem",
-    command => "/usr/bin/puppet ca generate ${::fqdn}",
+  file { 'puppetmaster-ca-generate.sh':
+    ensure  => $puppet::manage_file,
+    path    => "${puppet::config_dir}/puppetmaster-ca-generate.sh",
+    mode    => $puppet::config_file_mode,
+    owner   => $puppet::config_file_owner,
+    group   => $puppet::config_file_group,
+    content => template('puppet/server/puppetmaster-ca-generate.sh.erb'),
     require => Package['puppet'],
+    notify  => Exec['puppetmaster-ca-generate'],
+  }
+
+  exec { 'puppetmaster-ca-generate':
+    command     => "sh ${puppet::config_dir}/puppetmaster-ca-generate.sh",
+    refreshonly => true,
+    before      => Service['puppet_server'],
+    require     => [ File['puppet.conf'], File['puppetmaster-ca-generate.sh'] ],
   }
 
   ### Service monitoring, if enabled ( monitor => true )
@@ -55,13 +110,14 @@ class puppet::server inherits puppet {
     }
     if $puppet::bool_passenger == false {
       monitor::process { 'puppet_process_server':
-        process  => $puppet::process_server,
-        service  => $puppet::service_server,
-        pidfile  => $puppet::pid_file_server,
-        user     => $puppet::process_user_server,
-        argument => $puppet::process_args_server,
-        tool     => $puppet::monitor_tool,
-        enable   => $puppet::manage_monitor,
+        process     => $puppet::process_server,
+        service     => $puppet::service_server,
+        pidfile     => $puppet::pid_file_server,
+        user        => $puppet::process_user_server,
+        argument    => $puppet::process_args_server,
+        tool        => $puppet::monitor_tool,
+        enable      => $puppet::manage_monitor,
+        config_hash => $puppet::monitor_config_hash_server,
       }
     }
   }
@@ -93,5 +149,8 @@ class puppet::server inherits puppet {
 
   ### Manage Passenger
   if $puppet::bool_passenger == true { include puppet::server::passenger }
+
+  ### Manage Unicorn
+  if $puppet::bool_unicorn == true { include puppet::server::unicorn }
 
 }
