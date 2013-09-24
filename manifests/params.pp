@@ -157,7 +157,7 @@ class puppet::params {
     '0.2' => 'puppetd',
     '2.x' => $::operatingsystem ? {
       /(?i:RedHat|Centos|Scientific|Fedora|Linux)/ => 'puppetd',
-      /(?i:Solaris)/                               => 'puppet',
+      /(?i:Solaris)/                               => 'ruby18',
       default                                      => 'puppet',
     }
   }
