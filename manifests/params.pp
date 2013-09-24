@@ -162,8 +162,13 @@ class puppet::params {
     }
   }
 
+  if $::puppetversion >= 2.7.21 and $::osfamily == 'Solaris' {
+    $solaris_process_args = '/opt/csw/bin/puppet'
+  } else {
+    $solaris_process_args = '/opt/csw/sbin/puppetd'
+  }
   $process_args = $::operatingsystem ? {
-    /(?i:Solaris)/ => '/opt/csw/bin/puppet agent',
+    /(?i:Solaris)/ => $solaris_process_args,
     default        => '',
   }
 
