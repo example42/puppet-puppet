@@ -163,7 +163,7 @@ class puppet::params {
   }
 
   $process_args = $::operatingsystem ? {
-    /(?i:Solaris)/ => '/opt/csw/sbin/puppet agent',
+    /(?i:Solaris)/ => '/opt/csw/bin/puppet agent',
     default        => '',
   }
 
