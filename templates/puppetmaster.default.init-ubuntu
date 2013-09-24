@@ -1,0 +1,16 @@
+# File Managed by Puppet
+
+# Defaults for puppetmaster - sourced by /etc/init.d/puppetmaster
+
+# Enable puppetmaster service?
+# Setting this to "yes" allows the puppet master service to run.
+# Setting this to "no" keeps the puppet master service from running.
+#
+# If you are using Passenger, you should have this set to "no."
+START=<% if scope.lookupvar('puppet::bool_passenger') || scope.lookupvar('puppet::bool_unicorn') -%>no<% else %>yes<% end %>
+
+# Startup options
+DAEMON_OPTS="<%= scope.lookupvar('puppet::server_daemon_opts') -%>"
+
+# On what port should the puppet master listen? (default: 8140)
+PORT=8140

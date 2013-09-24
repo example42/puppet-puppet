@@ -67,6 +67,14 @@ class puppet::params {
   $postrun_command = ''
   $externalnodes = false
   $passenger = false
+  $unicorn = false
+  $unicorn_worker_processes = '2'
+  $unicorn_socket_path = '/var/run/unicorn_puppetmaster.sock'
+  $unicorn_socket_backlog = '32'
+  $unicorn_pid_path = '/var/run/unicorn_puppetmaster.pid'
+  $unicorn_stderr_path = '/var/log/puppet/unicorn.stderr.log'
+  $unicorn_stdout_path = '/var/log/puppet/unicorn.stdout.log'
+  $unicorn_timeout_secs = '300'
   $autosign = false
   $storeconfigs = true
   $storeconfigs_thin = true
@@ -110,6 +118,16 @@ class puppet::params {
   }
 
   $version_server = 'present'
+
+  $certname_server = ''
+
+  $purge_server_certs = false
+
+  $reportfrom = ''
+
+  $smtpserver = ''
+
+  $reports = 'log'
 
   $service_server_autorestart = false
 
@@ -208,6 +226,11 @@ class puppet::params {
     default                   => '/etc/sysconfig/puppet',
   }
 
+  $config_file_server_init = $::operatingsystem ? {
+    /(?i:Debian|Ubuntu|Mint)/ => '/etc/default/puppetmaster',
+    default                   => '/etc/sysconfig/puppetmaster',
+  }
+
   $pid_file = $major_version ? {
     '0.2' => $::operatingsystem ? {
       /(?i:OpenBSD)/ => '/var/puppet/run/puppet.pid',
@@ -244,6 +267,7 @@ class puppet::params {
   $http_proxy_port = ''
 
   $client_daemon_opts = ''
+  $server_daemon_opts = ''
 
   $manifest_path = '$confdir/manifests/site.pp'
   $module_path   = '/etc/puppet/modules:/usr/share/puppet/modules'

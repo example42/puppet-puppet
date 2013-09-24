@@ -51,9 +51,19 @@
   environment = <%= scope.lookupvar('puppet::environment') %>
   manifest    = <%= scope.lookupvar('puppet::manifest_path') %>
   modulepath  = <%= scope.lookupvar('puppet::module_path') %>
+  certname    = <%= scope.lookupvar('puppet::manage_certname_server') %>
 
 <% if scope.lookupvar('puppet::dns_alt_names') != '' -%>
   dns_alt_names = <%= scope.lookupvar('puppet::dns_alt_names') %>
+<% end -%>
+
+
+<% unless scope.lookupvar('puppet::reportfrom').nil? || scope.lookupvar('puppet::reportfrom').empty? -%>
+  reportfrom = <%= scope.lookupvar('puppet::reportfrom') %>
+<% end -%>
+
+<% unless scope.lookupvar('puppet::smtpserver').nil? || scope.lookupvar('puppet::smtpserver').empty? -%>
+  smtpserver = <%= scope.lookupvar('puppet::smtpserver') %>
 <% end -%>
 
 <% if scope.lookupvar('puppet::db') == "sqlite" -%>
@@ -75,17 +85,13 @@
 <% end -%>
 
   # Reporting
-<% if scope.lookupvar('puppet::nodetool') == "foreman" -%>
-  reports = store, foreman
-<% elsif scope.lookupvar('puppet::nodetool') == "dashboard" -%>
-  reports = store, http
+  reports = <%= [scope.lookupvar('puppet::manage_reports')].flatten.join(',') %>
+<% if scope.lookupvar('puppet::nodetool') == 'dashboard' -%>
   reporturl = <%= scope.lookupvar('puppet::reporturl') %>
-<% else -%>
-  reports = log
 <% end -%>
 
 <% if scope.lookupvar('puppet::inventoryserver') == "localhost" -%>
-  # Local Inventory Service 
+  # Local Inventory Service
   facts_terminus = active_record
 <% else -%>
 <% if scope.lookupvar('puppet::inventoryserver') != "" -%>
