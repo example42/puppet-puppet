@@ -162,11 +162,12 @@ class puppet::params {
     }
   }
 
-  if $::puppetversion >= 2.7.21 and $::osfamily == 'Solaris' {
+  if $::osfamily == 'Solaris' and versioncmp("$::puppetversion",'2.7.21) >= 0 {
     $solaris_process_args = '/opt/csw/bin/puppet',
   } else {
     $solaris_process_args = '/opt/csw/sbin/puppetd',
   }
+
   $process_args = $::operatingsystem ? {
     /(?i:Solaris)/ => $solaris_process_args,
     default        => '',
