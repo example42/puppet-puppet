@@ -85,7 +85,10 @@
 <% end -%>
 
   # Reporting
-  reports = <%= [scope.lookupvar('puppet::reports')].flatten.join(',') %>
+  reports = <%= [scope.lookupvar('puppet::manage_reports')].flatten.join(',') %>
+<% if scope.lookupvar('puppet::nodetool') == 'dashboard' -%>
+  reporturl = <%= scope.lookupvar('puppet::reporturl') %>
+<% end -%>
 
 <% if scope.lookupvar('puppet::inventoryserver') == "localhost" -%>
   # Local Inventory Service

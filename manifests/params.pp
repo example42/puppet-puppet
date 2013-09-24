@@ -46,6 +46,7 @@ class puppet::params {
   $bindaddress = '0.0.0.0'
   $listen = false
   $port_listen = '8139'
+  $nodetool = ''
   $runmode = 'service'
   $runinterval = '1800'
   $tmp_cronminute = fqdn_rand(30)
@@ -119,6 +120,8 @@ class puppet::params {
   $version_server = 'present'
 
   $certname_server = ''
+
+  $purge_server_certs = false
 
   $reportfrom = ''
 

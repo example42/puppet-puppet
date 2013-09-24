@@ -28,6 +28,8 @@
 #
 # [*port_listen*]
 #
+# [*nodetool*]
+#
 # [*runmode*]
 #   One of 'cron', 'manual', or 'service'.
 #
@@ -114,6 +116,10 @@
 #   different names
 #
 # [*certname_server*]
+#
+# [*purge_server_certs*]
+#   Set this to 'true' if you want to purge the ssl certs on your puppetmaster
+#   if $certname_server or $dns_alt_names changes
 #
 # [*reportfrom*]
 #
@@ -383,6 +389,7 @@ class puppet (
   $bindaddress                = params_lookup( 'bindaddress' ),
   $listen                     = params_lookup( 'listen' ),
   $port_listen                = params_lookup( 'port_listen' ),
+  $nodetool                   = params_lookup( 'nodetool' ),
   $runmode                    = params_lookup( 'runmode' ),
   $runinterval                = params_lookup( 'runinterval' ),
   $croninterval               = params_lookup( 'croninterval' ),
@@ -419,6 +426,7 @@ class puppet (
   $service_server_autorestart = params_lookup( 'service_server_autorestart' ),
   $dns_alt_names              = params_lookup( 'dns_alt_names' ),
   $certname_server            = params_lookup( 'certname_server' ),
+  $purge_server_certs         = params_lookup( 'purge_server_certs' ),
   $reportfrom                 = params_lookup( 'reportfrom' ),
   $smtpserver                 = params_lookup( 'smtpserver' ),
   $reports                    = params_lookup( 'reports' ),
@@ -487,6 +495,7 @@ class puppet (
   $bool_externalnodes=any2bool($externalnodes)
   $bool_passenger=any2bool($passenger)
   $bool_unicorn=any2bool($unicorn)
+  $bool_purge_server_certs=any2bool($purge_server_certs)
   $bool_storeconfigs=any2bool($storeconfigs)
   $bool_storeconfigs_thin=any2bool($storeconfigs_thin)
   $bool_service_server_autorestart=any2bool($service_server_autorestart)
@@ -617,6 +626,12 @@ class puppet (
   $manage_certname_server = $puppet::certname_server ? {
     ''        => $::fqdn,
     default   => $puppet::certname_server,
+  }
+
+  $manage_reports = $puppet::nodetool ? {
+    'foreman'   => [ 'store', 'foreman' ],
+    'dashboard' => [ 'store', 'http' ],
+    default     => $puppet::reports,
   }
 
   $manage_file_content = $puppet::template ? {

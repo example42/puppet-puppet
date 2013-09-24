@@ -1,8 +1,10 @@
 #!/bin/bash
 
+<% if scope.lookupvar('puppet::bool_purge_server_certs') == true -%>
 # Clean all old Certs
 puppet cert clean --all
 find /var/lib/puppet/ssl -type f -delete
+<% end -%>
 # Generate the new Certs
 puppet ca generate <%= scope.lookupvar('puppet::manage_certname_server') %><% unless scope.lookupvar('puppet::dns_alt_names').empty? %> --dns_alt_names=<%= scope.lookupvar('puppet::dns_alt_names') %><% end %>
 <% unless scope.lookupvar('puppet::manage_certname_server') == scope.lookupvar('::fqdn') -%>
