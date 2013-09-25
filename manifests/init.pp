@@ -251,6 +251,8 @@
 # [*package*]
 #   The name of puppet package
 #
+# [*package_provider*]
+#
 # [*service*]
 #   The name of puppet service
 #
@@ -409,6 +411,7 @@ class puppet (
   $debug               = params_lookup( 'debug' , 'global' ),
   $audit_only          = params_lookup( 'audit_only' , 'global' ),
   $package             = params_lookup( 'package' ),
+  $package_provider    = params_lookup( 'package_provider' ),
   $service             = params_lookup( 'service' ),
   $service_status      = params_lookup( 'service_status' ),
   $process             = params_lookup( 'process' ),
@@ -602,8 +605,9 @@ class puppet (
 
   ### Managed resources
   package { 'puppet':
-    ensure => $puppet::manage_package,
-    name   => $puppet::package,
+    ensure   => $puppet::manage_package,
+    name     => $puppet::package,
+    provider => $puppet::package_provider,
   }
 
   service { 'puppet':
