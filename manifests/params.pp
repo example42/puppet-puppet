@@ -21,6 +21,8 @@ class puppet::params {
   }
 
   $mode = 'client'
+
+  ### Check if TheForeman ENC is present
   if $::puppetmaster {
     $server = $::puppetmaster
   } else {
@@ -29,11 +31,13 @@ class puppet::params {
       default => "puppet.$::domain",
     }
   }
+
   if $::foreman_env {
     $environment = $::foreman_env
   } else {
     $environment = 'production'
   }
+
   $allow = $::domain ? {
     ''      => [ '127.0.0.1' ],
     default => [ "*.$::domain" , '127.0.0.1' ],
@@ -137,6 +141,11 @@ class puppet::params {
   $package = $::operatingsystem ? {
     /(?i:OpenBSD)/ => 'ruby-puppet',
     default        => 'puppet',
+  }
+
+  $package_provider = $::operatingsystem ? {
+    /(?i:Solaris)/ => 'pkgutil',
+    default        => undef,
   }
 
   $service = $::operatingsystem ? {
