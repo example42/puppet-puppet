@@ -11,9 +11,10 @@ class puppet::server inherits puppet {
 
   ### Managed resources
   package { 'puppet_server':
-    ensure => $puppet::manage_package_server,
-    name   => $puppet::package_server,
-    notify => $puppet::manage_service_server_autorestart,
+    ensure   => $puppet::manage_package_server,
+    name     => $puppet::package_server,
+    notify   => $puppet::manage_service_server_autorestart,
+    provider => $puppet::package_provider,
   }
 
   service { 'puppet_server':
