@@ -117,6 +117,7 @@ class puppet::params {
   }
 
   $version_server = 'present'
+  $version_puppetdb_terminus = 'present'
 
   $service_server_autorestart = false
 

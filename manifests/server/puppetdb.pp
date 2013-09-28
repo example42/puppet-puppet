@@ -7,7 +7,7 @@ class puppet::server::puppetdb {
   require puppet
 
   package { 'puppetdb_terminus':
-    ensure => $puppet::manage_package_server,
+    ensure => $puppet::manage_package_puppetdb_terminus,
     name   => 'puppetdb-terminus',
   }
 
