@@ -6,8 +6,14 @@
 class puppet::server::passenger {
   require puppet
 
-  include apache::ssl
-  include apache::passenger
+  case $puppet::passenger_type {
+    apache: {
+      include apache::ssl
+      include apache::passenger
+    }
+    nginx: { }
+    default: { }
+  }
 
   file { ['/etc/puppet/rack',
           '/etc/puppet/rack/public',
@@ -30,13 +36,30 @@ class puppet::server::passenger {
     content => $passenger_file_content,
   }
 
-  apache::vhost { 'puppetmaster':
-    port     => '8140',
-    priority => '10',
-    docroot  => '/etc/puppet/rack/public/',
-    ssl      => true,
-    template => $puppet::template_passenger,
-    require  => Exec['puppetmaster-ca-generate'],
-  }
+  $vhost_priority = 10
+  $rack_location = '/etc/puppet/rack/public/'
 
+  case $puppet::passenger_type {
+    apache: {
+      apache::vhost { $puppet::server:
+		    port     => $puppet::port,
+		    priority => $vhost_priority,
+		    docroot  => $rack_location,
+		    ssl      => true,
+		    template => $puppet::template_passenger,
+		    require  => Exec['puppetmaster-ca-generate'],
+		  }
+    }
+    nginx: {
+      nginx::vhost { $puppet::server:
+        port           => $puppet::port,
+        priority       => $vhost_priority,
+        docroot        => $rack_location,
+        create_docroot => false,
+        template       => $puppet::template_passenger_nginx,
+        require        => Exec['puppetmaster-ca-generate'],
+      }
+    }
+    default: { }
+  }
 }

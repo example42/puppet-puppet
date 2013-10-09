@@ -71,6 +71,7 @@ class puppet::params {
   $postrun_command = ''
   $externalnodes = false
   $passenger = false
+  $passenger_type = 'apache'
   $autosign = false
   $storeconfigs = true
   $storeconfigs_thin = true
@@ -143,6 +144,7 @@ class puppet::params {
   $template_auth = ''
   $template_fileserver = ''
   $template_passenger = 'puppet/passenger/puppet-passenger.conf.erb'
+  $template_passenger_nginx = 'puppet/passenger/puppet-passenger-nginx.conf.erb'
 
   ### Application related parameters
 

@@ -48,6 +48,10 @@
 #
 # [*passenger*]
 #
+# [*passenger_type*]
+#   The type of server that runs passenger (Default: apache)
+#   Can be one of: apache, nginx, ""
+#
 # [*autosign*]
 #
 # [*storeconfigs*]
@@ -114,6 +118,8 @@
 # [*template_fileserver*]
 #
 # [*template_passenger*]
+#
+# [*template_passenger_nginx*]
 #
 # [*run_dir*]
 #
@@ -361,6 +367,7 @@ class puppet (
   $postrun_command     = params_lookup( 'postrun_command' ),
   $externalnodes       = params_lookup( 'externalnodes' ),
   $passenger           = params_lookup( 'passenger' ),
+  $passenger_type      = params_lookup( 'passenger_type' ),
   $autosign            = params_lookup( 'autosign' ),
   $storeconfigs        = params_lookup( 'storeconfigs' ),
   $storeconfigs_thin   = params_lookup( 'storeconfigs_thin' ),
@@ -388,6 +395,7 @@ class puppet (
   $template_auth       = params_lookup( 'template_auth' ),
   $template_fileserver = params_lookup( 'template_fileserver' ),
   $template_passenger  = params_lookup( 'template_passenger' ),
+  $template_passenger_nginx = params_lookup( 'template_passenger_nginx' ),
   $template_cron       = params_lookup( 'template_cron' ),
   $run_dir             = params_lookup( 'run_dir' ),
   $reporturl           = params_lookup( 'reporturl' ),
