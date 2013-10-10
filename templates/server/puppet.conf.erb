@@ -36,7 +36,7 @@
 <% if scope.lookupvar('puppet::bindaddress') != '' -%>
   bindaddress = <%= scope.lookupvar('puppet::bindaddress') %>
 <% end -%>
-<% if scope.lookupvar('puppet::bool_passenger') == true -%>
+<% if scope.lookupvar('puppet::bool_passenger') == true && scope.lookupvar('puppet::passenger_type') != 'nginx' -%>
   ssl_client_header = SSL_CLIENT_S_DN
   ssl_client_verify_header = SSL_CLIENT_VERIFY
 <% end -%>
