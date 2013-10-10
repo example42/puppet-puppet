@@ -23,8 +23,6 @@ class puppet::server::passenger {
     group  => $puppet::process_user_server,
   }
 
-
-
   file { '/etc/puppet/rack/config.ru':
     ensure  => present,
     owner   => $puppet::process_user_server,
