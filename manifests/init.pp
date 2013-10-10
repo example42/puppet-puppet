@@ -119,6 +119,8 @@
 #
 # [*template_passenger*]
 #
+# [*template_rack_config*]
+#
 # [*template_passenger_nginx*]
 #
 # [*run_dir*]
@@ -396,6 +398,7 @@ class puppet (
   $template_fileserver = params_lookup( 'template_fileserver' ),
   $template_passenger  = params_lookup( 'template_passenger' ),
   $template_passenger_nginx = params_lookup( 'template_passenger_nginx' ),
+  $template_rack_config = params_lookup( 'template_rack_config' ),
   $template_cron       = params_lookup( 'template_cron' ),
   $run_dir             = params_lookup( 'run_dir' ),
   $reporturl           = params_lookup( 'reporturl' ),

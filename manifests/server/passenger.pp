@@ -23,17 +23,14 @@ class puppet::server::passenger {
     group  => $puppet::process_user_server,
   }
 
-  $passenger_file_content = $puppet::version_major ? {
-    3       => template('puppet/passenger/config.ru_3'),
-    default => template('puppet/passenger/config.ru_3'),
-  }
+
 
   file { '/etc/puppet/rack/config.ru':
     ensure  => present,
     owner   => $puppet::process_user_server,
     group   => $puppet::process_user_server,
     mode    => '0644',
-    content => $passenger_file_content,
+    content => template($puppet::template_rack_config),
   }
 
   $vhost_priority = 10

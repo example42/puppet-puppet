@@ -146,6 +146,13 @@ class puppet::params {
   $template_passenger = 'puppet/passenger/puppet-passenger.conf.erb'
   $template_passenger_nginx = 'puppet/passenger/puppet-passenger-nginx.conf.erb'
 
+  $version_puppet = split($::puppetversion, '[.]')
+  $version_major = $version_puppet[0]
+  $template_rack_config = $version_major ? {
+    3       => 'puppet/passenger/config.ru_3',
+    default => 'puppet/passenger/config.ru_3',
+  }
+
   ### Application related parameters
 
   $package = $::operatingsystem ? {
