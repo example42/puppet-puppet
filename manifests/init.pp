@@ -477,12 +477,12 @@ class puppet (
     default => $puppet::reports,
   }
 
-  $real_template_passenger = $template_passenger ? {
-    '' => $passenger_type ? {
+  $real_template_passenger = $puppet::template_passenger ? {
+    '' => $puppet::passenger_type ? {
       'nginx'  => 'puppet/passenger/puppet-passenger-nginx.conf.erb',
       default  => 'puppet/passenger/puppet-passenger.conf.erb',
     },
-    default => $template_passenger,
+    default => $puppet::template_passenger,
   }
 
   ### Definition of some variables used in the module
