@@ -144,8 +144,7 @@ class puppet::params {
   $template_namespaceauth = ''
   $template_auth = ''
   $template_fileserver = ''
-  $template_passenger = 'puppet/passenger/puppet-passenger.conf.erb'
-  $template_passenger_nginx = 'puppet/passenger/puppet-passenger-nginx.conf.erb'
+  $template_passenger = ''
 
   $version_puppet = split($::puppetversion, '[.]')
   $version_major = $version_puppet[0]

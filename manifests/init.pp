@@ -124,8 +124,6 @@
 #
 # [*template_rack_config*]
 #
-# [*template_passenger_nginx*]
-#
 # [*run_dir*]
 #
 # [*reporturl*]
@@ -401,7 +399,6 @@ class puppet (
   $template_auth       = params_lookup( 'template_auth' ),
   $template_fileserver = params_lookup( 'template_fileserver' ),
   $template_passenger  = params_lookup( 'template_passenger' ),
-  $template_passenger_nginx = params_lookup( 'template_passenger_nginx' ),
   $template_rack_config = params_lookup( 'template_rack_config' ),
   $template_cron       = params_lookup( 'template_cron' ),
   $run_dir             = params_lookup( 'run_dir' ),
@@ -478,6 +475,14 @@ class puppet (
       default     => 'log',
     },
     default => $puppet::reports,
+  }
+
+  $real_template_passenger = $template_passenger ? {
+    '' => $passenger_type ? {
+      'nginx'  => 'puppet/passenger/puppet-passenger-nginx.conf.erb',
+      default  => 'puppet/passenger/puppet-passenger.conf.erb',
+    },
+    default => $template_passenger,
   }
 
   ### Definition of some variables used in the module

@@ -41,7 +41,7 @@ class puppet::server::passenger {
 		    priority => $vhost_priority,
 		    docroot  => $rack_location,
 		    ssl      => true,
-		    template => $puppet::template_passenger,
+		    template => $puppet::real_template_passenger,
 		    require  => Exec['puppetmaster-ca-generate'],
 		  }
     }
@@ -51,7 +51,7 @@ class puppet::server::passenger {
         priority       => $vhost_priority,
         docroot        => $rack_location,
         create_docroot => false,
-        template       => $puppet::template_passenger_nginx,
+        template       => $puppet::real_template_passenger,
         require        => Exec['puppetmaster-ca-generate'],
       }
     }
