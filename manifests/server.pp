@@ -8,7 +8,6 @@
 # The parameters used in this class are defined for the main puppet class
 #
 class puppet::server inherits puppet {
-
   ### Managed resources
   package { 'puppet_server':
     ensure   => $puppet::manage_package_server,

@@ -75,13 +75,9 @@
 <% end -%>
 
   # Reporting
-<% if scope.lookupvar('puppet::nodetool') == "foreman" -%>
-  reports = store, foreman
-<% elsif scope.lookupvar('puppet::nodetool') == "dashboard" -%>
-  reports = store, http
+  reports = <%= scope.lookupvar('puppet::reports_value') %>
+<% if scope.lookupvar('puppet::reporturl') != '' -%>
   reporturl = <%= scope.lookupvar('puppet::reporturl') %>
-<% else -%>
-  reports = log
 <% end -%>
 
 <% if scope.lookupvar('puppet::inventoryserver') == "localhost" -%>

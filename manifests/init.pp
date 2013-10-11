@@ -44,6 +44,9 @@
 #
 # [*postrun_command*]
 #
+# [*reports*]
+#   Value of 'reports' config option, or leave blank to auto-determine
+#
 # [*externalnodes*]
 #
 # [*passenger*]
@@ -361,6 +364,7 @@ class puppet (
   $listen              = params_lookup( 'listen' ),
   $port_listen         = params_lookup( 'port_listen' ),
   $nodetool            = params_lookup( 'nodetool' ),
+  $reports             = params_lookup( 'reports' ),
   $runmode             = params_lookup( 'runmode' ),
   $runinterval         = params_lookup( 'runinterval' ),
   $croninterval        = params_lookup( 'croninterval' ),
@@ -466,6 +470,15 @@ class puppet (
   $bool_firewall=any2bool($firewall)
   $bool_debug=any2bool($debug)
   $bool_audit_only=any2bool($audit_only)
+
+  $reports_value = $puppet::reports ? {
+    '' => $puppet::nodetool ? {
+      'foreman'   => 'store,foreman',
+      'dashboard' => 'store,http',
+      default     => 'log',
+    },
+    default => $puppet::reports,
+  }
 
   ### Definition of some variables used in the module
   $manage_package = $puppet::bool_absent ? {

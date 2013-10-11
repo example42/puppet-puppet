@@ -51,6 +51,7 @@ class puppet::params {
   $listen = false
   $port_listen = '8139'
   $nodetool = ''
+  $reports = ''
   $runmode = 'service'
   $runinterval = '1800'
   $tmp_cronminute = fqdn_rand(30)
