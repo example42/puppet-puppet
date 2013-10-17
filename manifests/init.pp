@@ -44,9 +44,16 @@
 #
 # [*postrun_command*]
 #
+# [*reports*]
+#   Value of 'reports' config option, or leave blank to auto-determine
+#
 # [*externalnodes*]
 #
 # [*passenger*]
+#
+# [*passenger_type*]
+#   The type of server that runs passenger (Default: apache)
+#   Can be one of: apache, nginx, ""
 #
 # [*autosign*]
 #
@@ -114,6 +121,8 @@
 # [*template_fileserver*]
 #
 # [*template_passenger*]
+#
+# [*template_rack_config*]
 #
 # [*run_dir*]
 #
@@ -353,6 +362,7 @@ class puppet (
   $listen              = params_lookup( 'listen' ),
   $port_listen         = params_lookup( 'port_listen' ),
   $nodetool            = params_lookup( 'nodetool' ),
+  $reports             = params_lookup( 'reports' ),
   $runmode             = params_lookup( 'runmode' ),
   $runinterval         = params_lookup( 'runinterval' ),
   $croninterval        = params_lookup( 'croninterval' ),
@@ -361,6 +371,7 @@ class puppet (
   $postrun_command     = params_lookup( 'postrun_command' ),
   $externalnodes       = params_lookup( 'externalnodes' ),
   $passenger           = params_lookup( 'passenger' ),
+  $passenger_type      = params_lookup( 'passenger_type' ),
   $autosign            = params_lookup( 'autosign' ),
   $storeconfigs        = params_lookup( 'storeconfigs' ),
   $storeconfigs_thin   = params_lookup( 'storeconfigs_thin' ),
@@ -388,6 +399,7 @@ class puppet (
   $template_auth       = params_lookup( 'template_auth' ),
   $template_fileserver = params_lookup( 'template_fileserver' ),
   $template_passenger  = params_lookup( 'template_passenger' ),
+  $template_rack_config = params_lookup( 'template_rack_config' ),
   $template_cron       = params_lookup( 'template_cron' ),
   $run_dir             = params_lookup( 'run_dir' ),
   $reporturl           = params_lookup( 'reporturl' ),
@@ -455,6 +467,23 @@ class puppet (
   $bool_firewall=any2bool($firewall)
   $bool_debug=any2bool($debug)
   $bool_audit_only=any2bool($audit_only)
+
+  $reports_value = $puppet::reports ? {
+    '' => $puppet::nodetool ? {
+      'foreman'   => 'store,foreman',
+      'dashboard' => 'store,http',
+      default     => 'log',
+    },
+    default => $puppet::reports,
+  }
+
+  $real_template_passenger = $puppet::template_passenger ? {
+    '' => $puppet::passenger_type ? {
+      'nginx'  => 'puppet/passenger/puppet-passenger-nginx.conf.erb',
+      default  => 'puppet/passenger/puppet-passenger.conf.erb',
+    },
+    default => $puppet::template_passenger,
+  }
 
   ### Definition of some variables used in the module
   $manage_package = $puppet::bool_absent ? {
