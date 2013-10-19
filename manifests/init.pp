@@ -340,6 +340,18 @@
 # [*template_dir*]
 #   Location of the templates
 #
+# [*future_parser*]
+#   Bool. Enable the future (v3.2+) parser. Defaults to false
+#
+# [*hiera_path*]
+#   Sets the hiera_config directive.
+#   The hiera configuration file. Puppet only reads this file on startup, so you must restart the puppet master every time you edit it.
+#   Default: $confdir/hiera.yaml
+#
+# [*fileserver_path*]
+#   Sets the fileserverconfig directive.
+#   Where the fileserver configuration is stored.
+#   Default: $confdir/fileserver.conf
 #
 # == Examples
 #
@@ -448,7 +460,10 @@ class puppet (
   $protocol            = params_lookup( 'protocol' ),
   $manifest_path       = params_lookup( 'manifest_path' ),
   $module_path         = params_lookup( 'module_path' ),
-  $template_dir        = params_lookup( 'template_dir' )
+  $template_dir        = params_lookup( 'template_dir' ),
+  $future_parser       = params_lookup( 'future_parser' ),
+  $hiera_path          = params_lookup( 'hiera_path' ),
+  $fileserver_path     = params_lookup( 'fileserver_path' )
   ) inherits puppet::params {
 
   $bool_listen=any2bool($listen)
@@ -467,6 +482,7 @@ class puppet (
   $bool_firewall=any2bool($firewall)
   $bool_debug=any2bool($debug)
   $bool_audit_only=any2bool($audit_only)
+  $bool_future_parser=any2bool($future_parser)
 
   $reports_value = $puppet::reports ? {
     '' => $puppet::nodetool ? {
