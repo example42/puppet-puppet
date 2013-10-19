@@ -281,11 +281,12 @@ class puppet::params {
 
   $client_daemon_opts = ''
 
-  $manifest_path    = '$confdir/manifests/site.pp'
-  $module_path      = '/etc/puppet/modules:/usr/share/puppet/modules'
-  $template_dir     = '/var/lib/puppet/templates'
-  $hiera_path       = '$confdir/hiera.yaml'
-  $fileserver_path  = '$confdir/fileserver.conf'
+  $manifest_dir_path = '$confdir/manifests'
+  $manifest_path     = '$confdir/manifests/site.pp'
+  $module_path       = '/etc/puppet/modules:/usr/share/puppet/modules'
+  $template_dir      = '/var/lib/puppet/templates'
+  $hiera_path        = '$confdir/hiera.yaml'
+  $fileserver_path   = '$confdir/fileserver.conf'
 
   # DB package resources
   $mysql_conn_package = $::operatingsystem ? {

@@ -331,8 +331,14 @@
 #   This is used by monitor, firewall and puppi (optional) components
 #   Can be defined also by the (top scope) variable $puppet_protocol
 #
+# [*manifest_dir_path*]
+#   Where puppet master looks for its manifests.
+#   Default: $confdir/manifests
+#
 # [*manifest_path*]
-#   Path to the manifests
+#   The entry-point manifest for puppet master.
+#     Default: $confdir/manifests/site.pp
+#         (deviates from Puppetlabs standard: $manifestdir/site.pp)
 #
 # [*module_path*]
 #   Location of the modules
@@ -458,6 +464,7 @@ class puppet (
   $http_proxy_host     = params_lookup( 'http_proxy_host' ),
   $http_proxy_port     = params_lookup( 'http_proxy_port' ),
   $protocol            = params_lookup( 'protocol' ),
+  $manifest_dir_path   = params_lookup( 'manifest_dir_path' ),
   $manifest_path       = params_lookup( 'manifest_path' ),
   $module_path         = params_lookup( 'module_path' ),
   $template_dir        = params_lookup( 'template_dir' ),
