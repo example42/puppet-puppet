@@ -9,7 +9,7 @@
   user = <%= scope.lookupvar('puppet::process_user') %>
   group = <%= scope.lookupvar('puppet::process_group') %>
 <% if scope.lookupvar('puppet::bool_future_parser') %>
-  future = parser
+  parser = future
 <% end -%>
   
 

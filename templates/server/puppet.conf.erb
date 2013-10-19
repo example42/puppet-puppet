@@ -48,11 +48,11 @@
 <% end -%>
 <% end -%>
 <% if scope.lookupvar('puppet::bool_future_parser') %>
-  future = parser
+  parser = future
 <% end -%>
 
   environment      = <%= scope.lookupvar('puppet::environment') %>
-  manifest         = <%= scope.lookupvar('puppet::manifest_path') %>
+  manifestdir      = <%= scope.lookupvar('puppet::manifest_path') %>
   modulepath       = <%= scope.lookupvar('puppet::module_path') %>
   hiera_config     = <%= scope.lookupvar('puppet::hiera_path') %>
   fileserverconfig = <%= scope.lookupvar('puppet::fileserver_path') %>
