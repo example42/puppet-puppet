@@ -470,7 +470,8 @@ class puppet (
   $template_dir        = params_lookup( 'template_dir' ),
   $future_parser       = params_lookup( 'future_parser' ),
   $hiera_path          = params_lookup( 'hiera_path' ),
-  $fileserver_path     = params_lookup( 'fileserver_path' )
+  $fileserver_path     = params_lookup( 'fileserver_path' ),
+  $firewall_remote = ''
   ) inherits puppet::params {
 
   $bool_listen=any2bool($listen)
@@ -815,8 +816,7 @@ class puppet (
   if $puppet::bool_firewall == true {
     
     firewall::rule { "puppet_${puppet::protocol}_${puppet::port}-out":
-      destination    => $puppet::server,
-      destination_v6 => $puppet::server,
+      destination_v6 => $puppet::firewall_remote,
       protocol       => $puppet::protocol,
       port           => $puppet::port,
       action         => 'allow',
@@ -825,8 +825,7 @@ class puppet (
     }
 
     firewall::rule { "puppet_${puppet::protocol}_${puppet::port}-in":
-      source                    => $puppet::server,
-      source_v6                 => $puppet::server,
+      source_v6                 => $puppet::firewall_remote,
       protocol                  => $puppet::protocol,
       port                      => $puppet::port,
       action                    => 'allow',
