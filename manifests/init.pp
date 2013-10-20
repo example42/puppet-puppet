@@ -812,17 +812,39 @@ class puppet (
 
 
   ### Firewall management, if enabled ( firewall => true )
-  if $puppet::bool_firewall == true
-  and $puppet::bool_listen == true {
-    firewall { "puppet_${puppet::protocol}_${puppet::port_listen}":
-      source      => $puppet::firewall_src,
-      destination => $puppet::firewall_dst,
-      protocol    => $puppet::protocol,
-      port        => $puppet::port_listen,
-      action      => 'allow',
-      direction   => 'input',
-      tool        => $puppet::firewall_tool,
-      enable      => $puppet::manage_firewall,
+  if $puppet::bool_firewall == true {
+    
+    firewall::rule { "puppet_${puppet::protocol}_${puppet::port}-out":
+      destination    => $puppet::server,
+      destination_v6 => $puppet::server,
+      protocol       => $puppet::protocol,
+      port           => $puppet::port,
+      action         => 'allow',
+      direction      => 'output',
+      enable         => $puppet::manage_firewall,
+    }
+
+    firewall::rule { "puppet_${puppet::protocol}_${puppet::port}-in":
+      source                    => $puppet::server,
+      source_v6                 => $puppet::server,
+      protocol                  => $puppet::protocol,
+      port                      => $puppet::port,
+      action                    => 'allow',
+      direction                 => 'input',
+      iptables_explicit_matches => { 'state' => { 'state' => 'RELATED,ESTABLISHED' } },
+      enable                    => $puppet::manage_firewall,
+    }
+
+    if $puppet::bool_listen == true {
+      firewall::rule { "puppet_${puppet::protocol}_${puppet::port_listen}":
+        source      => $puppet::firewall_src,
+        destination => $puppet::firewall_dst,
+        protocol    => $puppet::protocol,
+        port        => $puppet::port_listen,
+        action      => 'allow',
+        direction   => 'input',
+        enable      => $puppet::manage_firewall,
+      }
     }
   }
 
