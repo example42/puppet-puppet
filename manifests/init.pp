@@ -66,9 +66,11 @@
 # [*db_name*]
 #
 # [*db_server*]
+#   Location of the db-server. Defaults to $::fqdn.
 #
 # [*db_port*]
-#   DB port to connect to (Used only for puppetdb)
+#   DB port to connect to (Used only for puppetdb).
+#   Defaults to 8081 (by default used for ssl connections)
 #
 # [*db_user*]
 #
