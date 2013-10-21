@@ -78,8 +78,8 @@ class puppet::params {
   $storeconfigs_thin = true
   $db = 'sqlite'
   $db_name = 'puppet'
-  $db_server = 'localhost'
-  $db_port = '8080'
+  $db_server = $::fqdn
+  $db_port = '8081'
   $db_user = 'root'
   $db_password = ''
   $inventoryserver = 'localhost'
