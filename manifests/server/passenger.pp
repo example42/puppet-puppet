@@ -37,13 +37,13 @@ class puppet::server::passenger {
   case $puppet::passenger_type {
     apache: {
       apache::vhost { $puppet::server:
-		    port     => $puppet::port,
-		    priority => $vhost_priority,
-		    docroot  => $rack_location,
-		    ssl      => true,
-		    template => $puppet::real_template_passenger,
-		    require  => Exec['puppetmaster-ca-generate'],
-		  }
+        port     => $puppet::port,
+        priority => $vhost_priority,
+        docroot  => $rack_location,
+        ssl      => true,
+        template => $puppet::real_template_passenger,
+        require  => Exec['puppetmaster-ca-generate'],
+      }
     }
     nginx: {
       nginx::vhost { $puppet::server:
