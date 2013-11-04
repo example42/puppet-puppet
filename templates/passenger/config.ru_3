@@ -17,6 +17,10 @@ ARGV << "--rack"
 ARGV << "--confdir" << "/etc/puppet"
 ARGV << "--vardir"  << "/var/lib/puppet"
 
+# https://projects.puppetlabs.com/issues/20897
+Encoding.default_external = Encoding::UTF_8
+Encoding.default_internal = Encoding::UTF_8
+
 # NOTE: it's unfortunate that we have to use the "CommandLine" class
 #  here to launch the app, but it contains some initialization logic
 #  (such as triggering the parsing of the config file) that is very
