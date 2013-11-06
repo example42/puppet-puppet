@@ -570,6 +570,11 @@ class puppet (
     default => 'present',
   }
 
+  $manage_directory = $puppet::bool_absent ? {
+    true    => 'absent',
+    default => 'directory',
+  }
+
   $manage_file_cron = $puppet::runmode ? {
     'cron'  => 'present',
     default => 'absent',
@@ -710,6 +715,23 @@ class puppet (
     content => $puppet::manage_file_auth_content,
     replace => $puppet::manage_file_replace,
     audit   => $puppet::manage_audit,
+  }
+
+  file { 'puppet.log.dir':
+    ensure  => $puppet::manage_directory,
+    path    => $puppet::log_dir,
+    mode    => 0750,
+    owner   => $puppet::config_file_owner,
+    group   => $puppet::config_file_group,
+    require => Package['puppet'],
+    audit   => $puppet::manage_audit,
+  }
+
+  file { 'ssl.dir':
+    path    => $ssl_dir,
+    owner   => $puppet::config_file_owner,
+    group   => $puppet::config_file_group,
+    recurse => true,
   }
 
   # The whole puppet configuration directory can be recursively overriden
