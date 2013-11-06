@@ -36,7 +36,7 @@ class puppet::server::passenger {
 
   case $puppet::passenger_type {
     apache: {
-      apache::vhost { $puppet::server:
+      apache::vhost { 'puppetmaster':
         port     => $puppet::port,
         priority => $vhost_priority,
         docroot  => $rack_location,
