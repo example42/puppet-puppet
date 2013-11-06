@@ -763,6 +763,7 @@ class puppet (
   }
 
   file { 'ssl.dir':
+    ensure  => $puppet::manage_directory,
     path    => $ssl_dir,
     owner   => $puppet::config_file_owner,
     group   => $puppet::config_file_group,
@@ -772,7 +773,7 @@ class puppet (
   # The whole puppet configuration directory can be recursively overriden
   if $puppet::source_dir {
     file { 'puppet.dir':
-      ensure  => directory,
+      ensure  => $puppet::manage_directory,
       path    => $puppet::config_dir,
       require => Package['puppet'],
       notify  => $puppet::manage_service_autorestart,
