@@ -556,6 +556,17 @@ class puppet (
     },
   }
 
+  # Log dir needs to belong to puppet if running with passenger
+  $real_log_dir_owner = $puppet::bool_passenger ? {
+    true  => $puppet::process_user_server,
+    false => $puppet::config_file_owner,
+  }
+
+  $real_log_dir_group = $puppet::bool_passenger ? {
+    true  => $puppet::process_user_server,
+    false => $puppet::config_file_group,
+  }
+
   $manage_service_ensure = $puppet::bool_disable ? {
     true    => 'stopped',
     default =>  $puppet::bool_absent ? {
@@ -745,8 +756,8 @@ class puppet (
     ensure  => $puppet::manage_directory,
     path    => $puppet::log_dir,
     mode    => 0750,
-    owner   => $puppet::config_file_owner,
-    group   => $puppet::config_file_group,
+    owner   => $puppet::real_log_dir_owner,
+    group   => $puppet::real_log_dir_group,
     require => Package['puppet'],
     audit   => $puppet::manage_audit,
   }
