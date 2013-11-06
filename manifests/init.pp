@@ -731,19 +731,11 @@ class puppet (
   file { 'puppet.log.dir':
     ensure  => $puppet::manage_directory,
     path    => $puppet::log_dir,
-    mode    => 0750,
+    mode    => '0750',
     owner   => $puppet::real_log_dir_owner,
     group   => $puppet::real_log_dir_group,
     require => Package['puppet'],
     audit   => $puppet::manage_audit,
-  }
-
-  file { 'ssl.dir':
-    ensure  => $puppet::manage_directory,
-    path    => $ssl_dir,
-    owner   => $puppet::config_file_owner,
-    group   => $puppet::config_file_group,
-    recurse => true,
   }
 
   # The whole puppet configuration directory can be recursively overriden
