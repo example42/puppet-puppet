@@ -833,7 +833,6 @@ class puppet (
       action         => 'allow',
       direction      => 'output',
       enable         => $puppet::manage_firewall,
-      enable_v4      => false,
     }
 
     firewall::rule { "puppet_${puppet::protocol}_${puppet::port}-in":
@@ -844,7 +843,6 @@ class puppet (
       direction                 => 'input',
       iptables_explicit_matches => { 'state' => { 'state' => 'RELATED,ESTABLISHED' } },
       enable                    => $puppet::manage_firewall,
-      enable_v4                 => false,
     }
 
     if $puppet::bool_listen == true {
