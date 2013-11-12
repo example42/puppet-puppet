@@ -8,6 +8,10 @@
   usecacheonfailure = true
   user = <%= scope.lookupvar('puppet::process_user') %>
   group = <%= scope.lookupvar('puppet::process_group') %>
+<% if scope.lookupvar('puppet::bool_future_parser') %>
+  parser = future
+<% end -%>
+  
 
   masterport = <%= scope.lookupvar('puppet::port') %>
 
