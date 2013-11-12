@@ -342,6 +342,12 @@
 # [*template_dir*]
 #   Location of the templates
 #
+# [*ca_server*]
+#   The CA server to use (optional)
+#
+# [*is_ca*]
+#   Whether this Puppet Master should act as Certificate Authority
+#   (optional, Puppet defaults to true)
 #
 # == Examples
 #
@@ -450,7 +456,9 @@ class puppet (
   $protocol            = params_lookup( 'protocol' ),
   $manifest_path       = params_lookup( 'manifest_path' ),
   $module_path         = params_lookup( 'module_path' ),
-  $template_dir        = params_lookup( 'template_dir' )
+  $template_dir        = params_lookup( 'template_dir' ),
+  $ca_server           = params_lookup( 'ca_server' ),
+  $is_ca               = params_lookup( 'is_ca' ),
   ) inherits puppet::params {
 
   $bool_listen=any2bool($listen)
@@ -469,6 +477,7 @@ class puppet (
   $bool_firewall=any2bool($firewall)
   $bool_debug=any2bool($debug)
   $bool_audit_only=any2bool($audit_only)
+  $bool_is_ca=any2bool($is_ca)
 
   $reports_value = $puppet::reports ? {
     '' => $puppet::nodetool ? {

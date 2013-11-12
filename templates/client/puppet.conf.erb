@@ -39,3 +39,6 @@
   runinterval = <%= scope.lookupvar('puppet::runinterval') %>
   classfile = $vardir/classes.txt
   localconfig = $vardir/localconfig
+<% if scope.lookupvar('puppet::ca_server') != '' -%>
+  ca_server = <%= scope.lookupvar('puppet::ca_server') %>
+<% end -%>
