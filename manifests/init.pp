@@ -481,7 +481,7 @@ class puppet (
   $future_parser       = params_lookup( 'future_parser' ),
   $hiera_path          = params_lookup( 'hiera_path' ),
   $fileserver_path     = params_lookup( 'fileserver_path' ),
-  $show_diffs          = false,
+  $show_diff           = false,
   $firewall_remote = ''
   ) inherits puppet::params {
 
@@ -503,7 +503,7 @@ class puppet (
   $bool_audit_only=any2bool($audit_only)
   $bool_is_ca=any2bool($is_ca)
   $bool_future_parser=any2bool($future_parser)
-  $bool_show_diffs=any2bool($show_diffs)
+  $bool_show_diff=any2bool($show_diff)
 
   $reports_value = $puppet::reports ? {
     '' => $puppet::nodetool ? {
