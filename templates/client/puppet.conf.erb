@@ -46,6 +46,6 @@
 <% if scope.lookupvar('puppet::ca_server') != '' -%>
   ca_server = <%= scope.lookupvar('puppet::ca_server') %>
 <% end -%>
-<% if scope.lookupvar('puppet::bool_show_diffs') -%>
+<% if scope.lookupvar('puppet::bool_show_diff') -%>
   show_diff = true
 <% end -%>
