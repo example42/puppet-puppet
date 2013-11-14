@@ -33,6 +33,9 @@
 <% if scope.lookupvar('puppet::ca_server') != '' -%>
   ca_server = <%= scope.lookupvar('puppet::ca_server') %>
 <% end -%>
+<% if scope.lookupvar('puppet::bool_show_diffs') -%>
+  show_diffs = true
+<% end -%>
 
 <% if scope.lookupvar('puppet::params::major_version') == "0.2" -%>[puppetmasterd]<% else -%>[master]<% end %>
   masterport = <%= scope.lookupvar('puppet::port') %>
