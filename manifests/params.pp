@@ -159,7 +159,6 @@ class puppet::params {
 
   $package = $::operatingsystem ? {
     /(?i:OpenBSD)/ => 'ruby-puppet',
-    /(?i:FreeBSD)/ => 'any/puppet',
     /(?i:Windows)/ => 'Puppet',
     default        => 'puppet',
   }
