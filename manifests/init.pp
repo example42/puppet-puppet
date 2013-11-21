@@ -568,9 +568,10 @@ class puppet (
   }
 
   # Log dir needs to belong to puppet if running with passenger
-  $real_log_dir_owner = $puppet::bool_passenger and $mode == server ? {
-    true  => $puppet::process_user_server,
-    false => $puppet::config_file_owner,
+  $bool_passenger_mode = $puppet::bool_passenger == true and $mode == 'server'
+  $real_log_dir_owner = bool_passenger_mode ? {
+    true    => $puppet::process_user_server,
+    default => $puppet::config_file_owner,
   }
 
   $real_log_dir_group = $puppet::bool_passenger ? {
@@ -763,15 +764,15 @@ class puppet (
     audit   => $puppet::manage_audit,
   }
 
-  file { 'puppet.log.dir':
-    ensure  => $puppet::manage_directory,
-    path    => $puppet::log_dir,
-    mode    => '0750',
-    owner   => $puppet::real_log_dir_owner,
-    group   => $puppet::real_log_dir_group,
-    require => Package['puppet'],
-    audit   => $puppet::manage_audit,
-  }
+#  file { 'puppet.log.dir':
+#    ensure  => $puppet::manage_directory,
+#    path    => $puppet::log_dir,
+#    mode    => '0750',
+#    owner   => $puppet::real_log_dir_owner,
+#    group   => $puppet::real_log_dir_group,
+#    require => Package['puppet'],
+#    audit   => $puppet::manage_audit,
+#  }
 
   # The whole puppet configuration directory can be recursively overriden
   if $puppet::source_dir {
