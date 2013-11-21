@@ -136,6 +136,7 @@ class puppet::params {
   }
 
   $ssl_dir = $::operatingsystem ? {
+    /(?i:FreeBSD)/ => '/var/puppet/ssl',
     /(?i:OpenBSD)/ => '/etc/puppet/ssl',
     /(?i:Windows)/ => "${win_basedir}/etc/ssl",
     default        => '/var/lib/puppet/ssl',
@@ -209,17 +210,19 @@ class puppet::params {
   }
 
   $process_group = $::operatingsystem ? {
-    /(?i:OpenBSD)/ => 'wheel',
-    default        => 'root',
+    /(?i:OpenBSD|FreeBSD)/ => 'wheel',
+    default                => 'root',
   }
 
   $config_dir = $::operatingsystem ? {
     /(?i:Windows)/ => "${win_basedir}/etc",
+    /(?i:FreeBSD)/ => '/usr/local/etc/puppet',
     default        => '/etc/puppet',
   }
 
   $config_file = $::operatingsystem ? {
     /(?i:Windows)/ => "${win_basedir}/etc/puppet.conf",
+    /(?i:FreeBSD)/ => "/usr/local/etc/puppet/puppet.conf",
     default        => '/etc/puppet/puppet.conf',
   }
 
@@ -234,9 +237,9 @@ class puppet::params {
   }
 
   $config_file_group = $::operatingsystem ? {
-    /(?i:OpenBSD)/ => 'wheel',
-    /(?i:Windows)/ => 'S-1-5-18',
-    default        => 'root',
+    /(?i:OpenBSD|FreeBSD)/ => 'wheel',
+    /(?i:Windows)/         => 'S-1-5-18',
+    default                => 'root',
   }
 
   $config_file_init = $::operatingsystem ? {
@@ -258,6 +261,7 @@ class puppet::params {
 
   $data_dir = $::operatingsystem ? {
     /(?i:OpenBSD)/ => '/var/puppet',
+    /(?i:FreeBSD)/ => '/var/puppet',
     /(?i:Windows)/ => "${win_basedir}/var/lib",
     default        => '/var/lib/puppet',
   }
