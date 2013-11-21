@@ -333,8 +333,14 @@
 #   This is used by monitor, firewall and puppi (optional) components
 #   Can be defined also by the (top scope) variable $puppet_protocol
 #
+# [*manifest_dir_path*]
+#   Where puppet master looks for its manifests.
+#   Default: $confdir/manifests
+#
 # [*manifest_path*]
-#   Path to the manifests
+#   The entry-point manifest for puppet master.
+#     Default: $confdir/manifests/site.pp
+#         (deviates from Puppetlabs standard: $manifestdir/site.pp)
 #
 # [*module_path*]
 #   Location of the modules
@@ -342,6 +348,24 @@
 # [*template_dir*]
 #   Location of the templates
 #
+# [*ca_server*]
+#   The CA server to use (optional)
+#
+# [*is_ca*]
+#   Whether this Puppet Master should act as Certificate Authority
+#   (optional, Puppet defaults to true)
+# [*future_parser*]
+#   Bool. Enable the future (v3.2+) parser. Defaults to false
+#
+# [*hiera_path*]
+#   Sets the hiera_config directive.
+#   The hiera configuration file. Puppet only reads this file on startup, so you must restart the puppet master every time you edit it.
+#   Default: $confdir/hiera.yaml
+#
+# [*fileserver_path*]
+#   Sets the fileserverconfig directive.
+#   Where the fileserver configuration is stored.
+#   Default: $confdir/fileserver.conf
 #
 # == Examples
 #
@@ -448,9 +472,17 @@ class puppet (
   $http_proxy_host     = params_lookup( 'http_proxy_host' ),
   $http_proxy_port     = params_lookup( 'http_proxy_port' ),
   $protocol            = params_lookup( 'protocol' ),
+  $manifest_dir_path   = params_lookup( 'manifest_dir_path' ),
   $manifest_path       = params_lookup( 'manifest_path' ),
   $module_path         = params_lookup( 'module_path' ),
-  $template_dir        = params_lookup( 'template_dir' )
+  $template_dir        = params_lookup( 'template_dir' ),
+  $ca_server           = params_lookup( 'ca_server' ),
+  $is_ca               = params_lookup( 'is_ca' ),
+  $future_parser       = params_lookup( 'future_parser' ),
+  $hiera_path          = params_lookup( 'hiera_path' ),
+  $fileserver_path     = params_lookup( 'fileserver_path' ),
+  $show_diff           = false,
+  $firewall_remote = ''
   ) inherits puppet::params {
 
   $bool_listen=any2bool($listen)
@@ -469,6 +501,9 @@ class puppet (
   $bool_firewall=any2bool($firewall)
   $bool_debug=any2bool($debug)
   $bool_audit_only=any2bool($audit_only)
+  $bool_is_ca=any2bool($is_ca)
+  $bool_future_parser=any2bool($future_parser)
+  $bool_show_diff=any2bool($show_diff)
 
   $reports_value = $puppet::reports ? {
     '' => $puppet::nodetool ? {
@@ -738,6 +773,13 @@ class puppet (
     audit   => $puppet::manage_audit,
   }
 
+#  file { 'ssl.dir':
+#    path    => $ssl_dir,
+#    owner   => $puppet::config_file_owner,
+#    group   => $puppet::config_file_group,
+#    recurse => true,
+#  }
+
   # The whole puppet configuration directory can be recursively overriden
   if $puppet::source_dir {
     file { 'puppet.dir':
@@ -795,17 +837,37 @@ class puppet (
 
 
   ### Firewall management, if enabled ( firewall => true )
-  if $puppet::bool_firewall == true
-  and $puppet::bool_listen == true {
-    firewall { "puppet_${puppet::protocol}_${puppet::port_listen}":
-      source      => $puppet::firewall_src,
-      destination => $puppet::firewall_dst,
-      protocol    => $puppet::protocol,
-      port        => $puppet::port_listen,
-      action      => 'allow',
-      direction   => 'input',
-      tool        => $puppet::firewall_tool,
-      enable      => $puppet::manage_firewall,
+  if $puppet::bool_firewall == true {
+    
+    firewall::rule { "puppet_${puppet::protocol}_${puppet::port}-out":
+      destination_v6 => $puppet::firewall_remote,
+      protocol       => $puppet::protocol,
+      port           => $puppet::port,
+      action         => 'allow',
+      direction      => 'output',
+      enable         => $puppet::manage_firewall,
+    }
+
+    firewall::rule { "puppet_${puppet::protocol}_${puppet::port}-in":
+      source_v6                 => $puppet::firewall_remote,
+      protocol                  => $puppet::protocol,
+      port                      => $puppet::port,
+      action                    => 'allow',
+      direction                 => 'input',
+      iptables_explicit_matches => { 'state' => { 'state' => 'RELATED,ESTABLISHED' } },
+      enable                    => $puppet::manage_firewall,
+    }
+
+    if $puppet::bool_listen == true {
+      firewall::rule { "puppet_${puppet::protocol}_${puppet::port_listen}":
+        source      => $puppet::firewall_src,
+        destination => $puppet::firewall_dst,
+        protocol    => $puppet::protocol,
+        port        => $puppet::port_listen,
+        action      => 'allow',
+        direction   => 'input',
+        enable      => $puppet::manage_firewall,
+      }
     }
   }
 
