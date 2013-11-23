@@ -26,6 +26,8 @@ class puppet::params {
   }
 
   $mode = 'client'
+
+  ### Check if TheForeman ENC is present
   if $::puppetmaster {
     $server = $::puppetmaster
   } else {
@@ -34,11 +36,13 @@ class puppet::params {
       default => "puppet.${::domain}",
     }
   }
+
   if $::foreman_env {
     $environment = $::foreman_env
   } else {
     $environment = 'production'
   }
+
   $allow = $::domain ? {
     ''      => [ '127.0.0.1' ],
     default => [ "*.${::domain}" , '127.0.0.1' ],
@@ -47,6 +51,7 @@ class puppet::params {
   $listen = false
   $port_listen = '8139'
   $nodetool = ''
+  $reports = ''
   $runmode = 'service'
   $runinterval = '1800'
   $tmp_cronminute = fqdn_rand(30)
@@ -67,13 +72,14 @@ class puppet::params {
   $postrun_command = ''
   $externalnodes = false
   $passenger = false
+  $passenger_type = 'apache'
   $autosign = false
   $storeconfigs = true
   $storeconfigs_thin = true
   $db = 'sqlite'
   $db_name = 'puppet'
-  $db_server = 'localhost'
-  $db_port = '8080'
+  $db_server = $::fqdn
+  $db_port = '8081'
   $db_user = 'root'
   $db_password = ''
   $inventoryserver = 'localhost'
@@ -81,16 +87,19 @@ class puppet::params {
 
   $package_server = $::operatingsystem ? {
     /(?i:Debian|Ubuntu|Mint)/ => 'puppetmaster',
+    /(?i:Solaris)/            => 'puppetmaster',
     default                   => 'puppet-server',
   }
 
   $service_server = $::operatingsystem ? {
-    default => 'puppetmaster',
+    /(?i:Solaris)/ => 'cswpuppetmasterd',
+    default        => 'puppetmaster',
   }
 
   $process_server = $::operatingsystem ? {
     /(?i:Debian|Mint)/ => 'ruby',
     /(?i:Ubuntu)/      => 'puppet',
+    /(?i:Solaris)/     => 'puppetmasterd',
     default            => 'puppet',
   }
 
@@ -110,12 +119,14 @@ class puppet::params {
   }
 
   $version_server = 'present'
+  $version_puppetdb_terminus = 'present'
 
   $service_server_autorestart = false
 
   $basedir = $::operatingsystem ? {
     /(?i:RedHat|Centos|Scientific|Fedora|Linux)/ => '/usr/lib/ruby/site_ruby/1.8/puppet',
-    default                                => '/usr/lib/ruby/1.8/puppet',
+    /(?i:Solaris)/                               => '/opt/csw/lib/ruby/site_ruby/1.8/puppet',
+    default                                      => '/usr/lib/ruby/1.8/puppet',
   }
 
   $run_dir = $::operatingsystem ? {
@@ -133,7 +144,14 @@ class puppet::params {
   $template_namespaceauth = ''
   $template_auth = ''
   $template_fileserver = ''
-  $template_passenger = 'puppet/passenger/puppet-passenger.conf.erb'
+  $template_passenger = ''
+
+  $version_puppet = split($::puppetversion, '[.]')
+  $version_major = $version_puppet[0]
+  $template_rack_config = $version_major ? {
+    3       => 'puppet/passenger/config.ru_3',
+    default => 'puppet/passenger/config.ru_3',
+  }
 
   ### Application related parameters
 
@@ -143,8 +161,14 @@ class puppet::params {
     default        => 'puppet',
   }
 
+  $package_provider = $::operatingsystem ? {
+    /(?i:Solaris)/ => 'pkgutil',
+    default        => undef,
+  }
+
   $service = $::operatingsystem ? {
     /(?i:OpenBSD)/ => 'puppetd',
+    /(?i:Solaris)/ => 'cswpuppetd',
     default        => 'puppet',
   }
 
@@ -160,12 +184,20 @@ class puppet::params {
     '0.2' => 'puppetd',
     '2.x' => $::operatingsystem ? {
       /(?i:RedHat|Centos|Scientific|Fedora|Linux)/ => 'puppetd',
-      default                                => 'puppet',
+      /(?i:Solaris)/                               => 'ruby18',
+      default                                      => 'puppet',
     }
   }
 
+  if $::osfamily == 'Solaris' and versioncmp($::puppetversion,'2.7.21') >= 0 {
+    $solaris_process_args = '/opt/csw/bin/puppet'
+  } else {
+    $solaris_process_args = '/opt/csw/sbin/puppetd'
+  }
+
   $process_args = $::operatingsystem ? {
-    default => '',
+    /(?i:Solaris)/ => $solaris_process_args,
+    default        => '',
   }
 
   $process_user = $::operatingsystem ? {
@@ -205,6 +237,7 @@ class puppet::params {
 
   $config_file_init = $::operatingsystem ? {
     /(?i:Debian|Ubuntu|Mint)/ => '/etc/default/puppet',
+    /(?i:Solaris)/            => '',
     default                   => '/etc/sysconfig/puppet',
   }
 
@@ -234,6 +267,7 @@ class puppet::params {
   $log_file = $::operatingsystem ? {
     /(?i:Debian|Ubuntu|Mint)/ => '/var/log/syslog',
     /(?i:Windows)/            => "${win_basedir}/var/log/windows.log",
+    /(?i:Solaris)/            => '/var/adm/messages',
     default                   => '/var/log/messages',
   }
 
@@ -253,23 +287,25 @@ class puppet::params {
   # DB package resources
   $mysql_conn_package = $::operatingsystem ? {
     /(?i:RedHat|Centos|Scientific|Fedora|Linux)/  => 'ruby-mysql',
-    default                                 => 'libmysql-ruby',
+    /(?i:Solaris)/                                => 'rb18_mysql_2_8_1',
+    default                                       => 'libmysql-ruby',
   }
 
   $sqlite_package = $::osfamily ? {
     /(?i:RedHat)/ => 'rubygem-sqlite3-ruby',
-    /Debian/    => 'ruby-sqlite3',
-    /Gentoo/    => 'dev-ruby/sqlite3',
-    /(?i:SuSE)/ => $::operatingsystem ? {
+    /Debian/      => 'ruby-sqlite3',
+    /Gentoo/      => 'dev-ruby/sqlite3',
+    /(?i:SuSE)/   => $::operatingsystem ? {
         /(?:OpenSuSE)/ => 'rubygem-sqlite3',
         default        => 'sqlite3-ruby',
     },
     # older Facter versions don't report a Gentoo OS family
-    /Linux/     => $::operatingsystem ? {
+    /Linux/        => $::operatingsystem ? {
         /Gentoo/ => 'dev-ruby/sqlite3',
         default  => 'sqlite3-ruby',
     },
-    default     => 'sqlite3-ruby',
+    /(?i:Solaris)/ => '',
+    default        => 'sqlite3-ruby',
   }
 
   # General Settings

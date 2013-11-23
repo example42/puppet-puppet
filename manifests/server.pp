@@ -8,12 +8,12 @@
 # The parameters used in this class are defined for the main puppet class
 #
 class puppet::server inherits puppet {
-
   ### Managed resources
   package { 'puppet_server':
-    ensure => $puppet::manage_package_server,
-    name   => $puppet::package_server,
-    notify => $puppet::manage_service_server_autorestart,
+    ensure   => $puppet::manage_package_server,
+    name     => $puppet::package_server,
+    notify   => $puppet::manage_service_server_autorestart,
+    provider => $puppet::package_provider,
   }
 
   service { 'puppet_server':
@@ -39,8 +39,8 @@ class puppet::server inherits puppet {
   }
 
   exec { 'puppetmaster-ca-generate':
-    creates => "${puppet::data_dir}/ssl/private_keys/${::fqdn}.pem",
-    command => "/usr/bin/puppet ca generate ${::fqdn}",
+    creates => "${puppet::data_dir}/ssl/private_keys/${puppet::server}.pem",
+    command => "/usr/bin/puppet ca generate ${puppet::server}",
     require => Package['puppet'],
   }
 

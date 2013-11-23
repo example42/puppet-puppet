@@ -44,9 +44,16 @@
 #
 # [*postrun_command*]
 #
+# [*reports*]
+#   Value of 'reports' config option, or leave blank to auto-determine
+#
 # [*externalnodes*]
 #
 # [*passenger*]
+#
+# [*passenger_type*]
+#   The type of server that runs passenger (Default: apache)
+#   Can be one of: apache, nginx, ""
 #
 # [*autosign*]
 #
@@ -59,9 +66,11 @@
 # [*db_name*]
 #
 # [*db_server*]
+#   Location of the db-server. Defaults to $::fqdn.
 #
 # [*db_port*]
-#   DB port to connect to (Used only for puppetdb)
+#   DB port to connect to (Used only for puppetdb).
+#   Defaults to 8081 (by default used for ssl connections)
 #
 # [*db_user*]
 #
@@ -82,6 +91,8 @@
 # [*process_user_server*]
 #
 # [*version_server*]
+#
+# [*version_puppetdb_terminus*]
 #
 # [*service_server_autorestart*]
 #
@@ -112,6 +123,8 @@
 # [*template_fileserver*]
 #
 # [*template_passenger*]
+#
+# [*template_rack_config*]
 #
 # [*run_dir*]
 #
@@ -251,6 +264,8 @@
 # [*package*]
 #   The name of puppet package
 #
+# [*package_provider*]
+#
 # [*service*]
 #   The name of puppet service
 #
@@ -349,6 +364,7 @@ class puppet (
   $listen              = params_lookup( 'listen' ),
   $port_listen         = params_lookup( 'port_listen' ),
   $nodetool            = params_lookup( 'nodetool' ),
+  $reports             = params_lookup( 'reports' ),
   $runmode             = params_lookup( 'runmode' ),
   $runinterval         = params_lookup( 'runinterval' ),
   $croninterval        = params_lookup( 'croninterval' ),
@@ -357,6 +373,7 @@ class puppet (
   $postrun_command     = params_lookup( 'postrun_command' ),
   $externalnodes       = params_lookup( 'externalnodes' ),
   $passenger           = params_lookup( 'passenger' ),
+  $passenger_type      = params_lookup( 'passenger_type' ),
   $autosign            = params_lookup( 'autosign' ),
   $storeconfigs        = params_lookup( 'storeconfigs' ),
   $storeconfigs_thin   = params_lookup( 'storeconfigs_thin' ),
@@ -374,6 +391,7 @@ class puppet (
   $process_args_server = params_lookup( 'process_args_server' ),
   $process_user_server = params_lookup( 'process_user_server' ),
   $version_server      = params_lookup( 'version_server' ),
+  $version_puppetdb_terminus  = params_lookup( 'version_puppetdb_terminus' ),
   $service_server_autorestart = params_lookup( 'service_server_autorestart' ),
   $dns_alt_names       = params_lookup( 'dns_alt_names' ),
   $client_daemon_opts  = params_lookup( 'client_daemon_opts' ),
@@ -383,6 +401,7 @@ class puppet (
   $template_auth       = params_lookup( 'template_auth' ),
   $template_fileserver = params_lookup( 'template_fileserver' ),
   $template_passenger  = params_lookup( 'template_passenger' ),
+  $template_rack_config = params_lookup( 'template_rack_config' ),
   $template_cron       = params_lookup( 'template_cron' ),
   $run_dir             = params_lookup( 'run_dir' ),
   $reporturl           = params_lookup( 'reporturl' ),
@@ -409,6 +428,7 @@ class puppet (
   $debug               = params_lookup( 'debug' , 'global' ),
   $audit_only          = params_lookup( 'audit_only' , 'global' ),
   $package             = params_lookup( 'package' ),
+  $package_provider    = params_lookup( 'package_provider' ),
   $service             = params_lookup( 'service' ),
   $service_status      = params_lookup( 'service_status' ),
   $process             = params_lookup( 'process' ),
@@ -425,8 +445,8 @@ class puppet (
   $log_dir             = params_lookup( 'log_dir' ),
   $log_file            = params_lookup( 'log_file' ),
   $port                = params_lookup( 'port' ),
-  $http_proxy_host     = params_lookup( 'http_proxy_host' ),
-  $http_proxy_port     = params_lookup( 'http_proxy_port' ),
+  $http_proxy_host     = params_lookup( 'http_proxy_host' , 'global' ),
+  $http_proxy_port     = params_lookup( 'http_proxy_port' , 'global' ),
   $protocol            = params_lookup( 'protocol' ),
   $manifest_path       = params_lookup( 'manifest_path' ),
   $module_path         = params_lookup( 'module_path' ),
@@ -450,6 +470,23 @@ class puppet (
   $bool_debug=any2bool($debug)
   $bool_audit_only=any2bool($audit_only)
 
+  $reports_value = $puppet::reports ? {
+    '' => $puppet::nodetool ? {
+      'foreman'   => 'store,foreman',
+      'dashboard' => 'store,http',
+      default     => 'log',
+    },
+    default => $puppet::reports,
+  }
+
+  $real_template_passenger = $puppet::template_passenger ? {
+    '' => $puppet::passenger_type ? {
+      'nginx'  => 'puppet/passenger/puppet-passenger-nginx.conf.erb',
+      default  => 'puppet/passenger/puppet-passenger.conf.erb',
+    },
+    default => $puppet::template_passenger,
+  }
+
   ### Definition of some variables used in the module
   $manage_package = $puppet::bool_absent ? {
     true  => 'absent',
@@ -459,6 +496,11 @@ class puppet (
   $manage_package_server = $puppet::bool_absent ? {
     true  => 'absent',
     false => $puppet::version_server,
+  }
+
+  $manage_package_puppetdb_terminus = $puppet::bool_absent ? {
+    true  => 'absent',
+    false => $puppet::version_puppetdb_terminus,
   }
 
   $manage_service_enable = $puppet::bool_disableboot ? {
@@ -488,6 +530,17 @@ class puppet (
         },
       },
     },
+  }
+
+  # Log dir needs to belong to puppet if running with passenger
+  $real_log_dir_owner = $puppet::bool_passenger ? {
+    true  => $puppet::process_user_server,
+    false => $puppet::config_file_owner,
+  }
+
+  $real_log_dir_group = $puppet::bool_passenger ? {
+    true  => $puppet::process_user_server,
+    false => $puppet::config_file_group,
   }
 
   $manage_service_ensure = $puppet::bool_disable ? {
@@ -528,6 +581,11 @@ class puppet (
     default => 'present',
   }
 
+  $manage_directory = $puppet::bool_absent ? {
+    true    => 'absent',
+    default => 'directory',
+  }
+
   $manage_file_cron = $puppet::runmode ? {
     'cron'  => 'present',
     default => 'absent',
@@ -535,6 +593,7 @@ class puppet (
 
   if $puppet::bool_absent == true
   or $puppet::bool_disable == true
+  or $puppet::bool_monitor == false
   or $puppet::bool_disableboot == true {
     $manage_monitor = false
   } else {
@@ -601,8 +660,9 @@ class puppet (
 
   ### Managed resources
   package { 'puppet':
-    ensure => $puppet::manage_package,
-    name   => $puppet::package,
+    ensure   => $puppet::manage_package,
+    name     => $puppet::package,
+    provider => $puppet::package_provider,
   }
 
   service { 'puppet':
@@ -668,10 +728,20 @@ class puppet (
     audit   => $puppet::manage_audit,
   }
 
+  file { 'puppet.log.dir':
+    ensure  => $puppet::manage_directory,
+    path    => $puppet::log_dir,
+    mode    => '0750',
+    owner   => $puppet::real_log_dir_owner,
+    group   => $puppet::real_log_dir_group,
+    require => Package['puppet'],
+    audit   => $puppet::manage_audit,
+  }
+
   # The whole puppet configuration directory can be recursively overriden
   if $puppet::source_dir {
     file { 'puppet.dir':
-      ensure  => directory,
+      ensure  => $puppet::manage_directory,
       path    => $puppet::config_dir,
       require => Package['puppet'],
       notify  => $puppet::manage_service_autorestart,
@@ -702,7 +772,7 @@ class puppet (
 
 
   ### Service monitoring, if enabled ( monitor => true )
-  if $puppet::bool_monitor == true and $puppet::runmode == 'service' {
+  if $puppet::monitor_tool and $puppet::runmode == 'service' {
     if $puppet::bool_listen == true {
       monitor::port { "puppet_${puppet::protocol}_${puppet::port_listen}":
         protocol => $puppet::protocol,
