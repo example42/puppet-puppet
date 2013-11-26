@@ -190,6 +190,7 @@ class puppet::params {
     '2.x' => $::operatingsystem ? {
       /(?i:RedHat|Centos|Scientific|Fedora|Linux)/ => 'puppetd',
       /(?i:Solaris)/                               => 'ruby18',
+      /(?i:FreeBSD)/                               => 'ruby19',
       default                                      => 'puppet',
     }
   }
@@ -201,6 +202,7 @@ class puppet::params {
   }
 
   $process_args = $::operatingsystem ? {
+    /(?i:FreeBSD)/ => 'puppet agent',
     /(?i:Solaris)/ => $solaris_process_args,
     default        => '',
   }
