@@ -17,9 +17,11 @@ ARGV << "--rack"
 ARGV << "--confdir" << "/etc/puppet"
 ARGV << "--vardir"  << "/var/lib/puppet"
 
+<% if @rubyversion[0..2].to_f >= 1.9 -%>
 # https://projects.puppetlabs.com/issues/20897
 Encoding.default_external = Encoding::UTF_8
 Encoding.default_internal = Encoding::UTF_8
+<% end -%>
 
 # NOTE: it's unfortunate that we have to use the "CommandLine" class
 #  here to launch the app, but it contains some initialization logic
