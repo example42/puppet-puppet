@@ -293,7 +293,10 @@ class puppet::params {
 
   $sqlite_package = $::osfamily ? {
     /(?i:RedHat)/ => 'rubygem-sqlite3-ruby',
-    /Debian/      => 'ruby-sqlite3',
+    /Debian/      => $::lsbmajdistrelease ? {
+      6       => 'libsqlite3-ruby',
+      default => 'ruby-sqlite3',
+    },
     /Gentoo/      => 'dev-ruby/sqlite3',
     /(?i:SuSE)/   => $::operatingsystem ? {
         /(?:OpenSuSE)/ => 'rubygem-sqlite3',

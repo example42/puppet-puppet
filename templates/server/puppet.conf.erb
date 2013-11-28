@@ -15,6 +15,10 @@
 <% if scope.lookupvar('puppet::postrun_command') != '' -%>
   postrun_command = "<%= scope.lookupvar('puppet::postrun_command') -%>"
 <% end -%>
+<% if scope.lookupvar('puppet::nodetool') == "foreman" -%>
+  privatekeydir = $ssldir/private_keys { group = service }
+  hostprivkey = $privatekeydir/$certname.pem { mode = 640 }
+<% end -%>
 
 <% if scope.lookupvar('puppet::params::major_version') == "0.2" -%># [puppet]<% else -%># [user]<% end %>
 
@@ -28,7 +32,6 @@
   graph = true
   listen = <%= scope.lookupvar('puppet::bool_listen') %>
   runinterval = <%= scope.lookupvar('puppet::runinterval') %>
-  classfile = $vardir/classes.txt
   localconfig = $vardir/localconfig
 
 <% if scope.lookupvar('puppet::params::major_version') == "0.2" -%>[puppetmasterd]<% else -%>[master]<% end %>
