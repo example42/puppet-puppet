@@ -292,6 +292,7 @@ class puppet::params {
   $mysql_conn_package = $::operatingsystem ? {
     /(?i:RedHat|Centos|Scientific|Fedora|Linux)/  => 'ruby-mysql',
     /(?i:Solaris)/                                => 'rb18_mysql_2_8_1',
+    /(?i:Debian|Ubuntu|Mint)/                     => 'ruby-mysql',
     default                                       => 'libmysql-ruby',
   }
 
