@@ -834,7 +834,7 @@ class puppet (
   ### Firewall management, if enabled ( firewall => true )
   if $puppet::bool_firewall == true {
     
-    firewall::rule { "puppet_${puppet::protocol}_${puppet::port}-out":
+    firewall { "puppet_${puppet::protocol}_${puppet::port}-out":
       destination_v6 => $puppet::firewall_remote,
       protocol       => $puppet::protocol,
       port           => $puppet::port,
@@ -843,7 +843,7 @@ class puppet (
       enable         => $puppet::manage_firewall,
     }
 
-    firewall::rule { "puppet_${puppet::protocol}_${puppet::port}-in":
+    firewall { "puppet_${puppet::protocol}_${puppet::port}-in":
       source_v6                 => $puppet::firewall_remote,
       protocol                  => $puppet::protocol,
       port                      => $puppet::port,
@@ -854,7 +854,7 @@ class puppet (
     }
 
     if $puppet::bool_listen == true {
-      firewall::rule { "puppet_${puppet::protocol}_${puppet::port_listen}":
+      firewall { "puppet_${puppet::protocol}_${puppet::port_listen}":
         source      => $puppet::firewall_src,
         destination => $puppet::firewall_dst,
         protocol    => $puppet::protocol,
