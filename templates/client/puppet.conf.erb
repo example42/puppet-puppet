@@ -8,6 +8,10 @@
   usecacheonfailure = true
   user = <%= scope.lookupvar('puppet::process_user') %>
   group = <%= scope.lookupvar('puppet::process_group') %>
+<% if scope.lookupvar('puppet::bool_future_parser') %>
+  parser = future
+<% end -%>
+  
 
   masterport = <%= scope.lookupvar('puppet::port') %>
 
@@ -38,3 +42,9 @@
   listen = <%= scope.lookupvar('puppet::bool_listen') %>
   runinterval = <%= scope.lookupvar('puppet::runinterval') %>
   localconfig = $vardir/localconfig
+<% if scope.lookupvar('puppet::ca_server') != '' -%>
+  ca_server = <%= scope.lookupvar('puppet::ca_server') %>
+<% end -%>
+<% if scope.lookupvar('puppet::bool_show_diff') -%>
+  show_diff = true
+<% end -%>
