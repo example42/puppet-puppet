@@ -797,16 +797,16 @@ class puppet (
   }
 
 
-  ### Service monitoring, if enabled ( monitor => true )
+  ### Service monitoring, if enabled ( monitor => true ) Agent only!
   if $puppet::monitor_tool and $puppet::runmode == 'service' {
-    monitor::port { "puppet_${puppet::protocol}_${puppet::port}":
-      protocol => $puppet::protocol,
-      port     => $puppet::port,
-      target   => $puppet::monitor_target,
-      tool     => $puppet::monitor_tool,
-      enable   => $puppet::manage_monitor,
-    }
-    monitor::process { 'puppet_process':
+#    monitor::port { "puppet_${puppet::protocol}_${puppet::port}":
+#      protocol => $puppet::protocol,
+#      port     => $puppet::port,
+#      target   => $puppet::monitor_target,
+#      tool     => $puppet::monitor_tool,
+#      enable   => $puppet::manage_monitor,
+#    }
+    monitor::process { 'puppet_process_agent':
       process  => $puppet::process,
       service  => $puppet::service,
       pidfile  => $puppet::pid_file,
@@ -820,13 +820,12 @@ class puppet (
 
   ### Firewall management, if enabled ( firewall => true )
   if $puppet::bool_firewall == true {
-    firewall { "puppet_${puppet::protocol}_${puppet::port}":
-      source      => $puppet::firewall_src,
-      destination => $puppet::firewall_dst,
+    firewall { "puppet_${puppet::protocol}_${puppet::port}-agent":
+      destination => $puppet::server,
       protocol    => $puppet::protocol,
       port        => $puppet::port,
       action      => 'allow',
-      direction   => 'input',
+      direction   => 'output',
       tool        => $pgpool::firewall_tool,
       enable      => $puppet::manage_firewall,
     }
