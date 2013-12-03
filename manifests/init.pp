@@ -22,12 +22,6 @@
 #   The allow directive in the server file namespaceauth.conf.
 #   Default: *.$domain and localhost
 #
-# [*bindaddress*]
-#
-# [*listen*]
-#
-# [*port_listen*]
-#
 # [*nodetool*]
 #
 # [*runmode*]
@@ -384,9 +378,6 @@ class puppet (
   $server              = params_lookup( 'server' ),
   $environment         = params_lookup( 'environment' ),
   $allow               = params_lookup( 'allow' ),
-  $bindaddress         = params_lookup( 'bindaddress' ),
-  $listen              = params_lookup( 'listen' ),
-  $port_listen         = params_lookup( 'port_listen' ),
   $nodetool            = params_lookup( 'nodetool' ),
   $reports             = params_lookup( 'reports' ),
   $runmode             = params_lookup( 'runmode' ),
@@ -482,11 +473,9 @@ class puppet (
   $future_parser       = params_lookup( 'future_parser' ),
   $hiera_path          = params_lookup( 'hiera_path' ),
   $fileserver_path     = params_lookup( 'fileserver_path' ),
-  $show_diff           = false,
-  $firewall_remote = ''
+  $show_diff           = false
   ) inherits puppet::params {
 
-  $bool_listen=any2bool($listen)
   $bool_externalnodes=any2bool($externalnodes)
   $bool_passenger=any2bool($passenger)
   $bool_storeconfigs=any2bool($storeconfigs)
@@ -810,14 +799,12 @@ class puppet (
 
   ### Service monitoring, if enabled ( monitor => true )
   if $puppet::monitor_tool and $puppet::runmode == 'service' {
-    if $puppet::bool_listen == true {
-      monitor::port { "puppet_${puppet::protocol}_${puppet::port_listen}":
-        protocol => $puppet::protocol,
-        port     => $puppet::port_listen,
-        target   => $puppet::monitor_target,
-        tool     => $puppet::monitor_tool,
-        enable   => $puppet::manage_monitor,
-      }
+    monitor::port { "puppet_${puppet::protocol}_${puppet::port}":
+      protocol => $puppet::protocol,
+      port     => $puppet::port,
+      target   => $puppet::monitor_target,
+      tool     => $puppet::monitor_tool,
+      enable   => $puppet::manage_monitor,
     }
     monitor::process { 'puppet_process':
       process  => $puppet::process,
@@ -833,36 +820,15 @@ class puppet (
 
   ### Firewall management, if enabled ( firewall => true )
   if $puppet::bool_firewall == true {
-    
-    firewall { "puppet_${puppet::protocol}_${puppet::port}-out":
-      destination_v6 => $puppet::firewall_remote,
-      protocol       => $puppet::protocol,
-      port           => $puppet::port,
-      action         => 'allow',
-      direction      => 'output',
-      enable         => $puppet::manage_firewall,
-    }
-
-    firewall { "puppet_${puppet::protocol}_${puppet::port}-in":
-      source_v6                 => $puppet::firewall_remote,
-      protocol                  => $puppet::protocol,
-      port                      => $puppet::port,
-      action                    => 'allow',
-      direction                 => 'input',
-      iptables_explicit_matches => { 'state' => { 'state' => 'RELATED,ESTABLISHED' } },
-      enable                    => $puppet::manage_firewall,
-    }
-
-    if $puppet::bool_listen == true {
-      firewall { "puppet_${puppet::protocol}_${puppet::port_listen}":
-        source      => $puppet::firewall_src,
-        destination => $puppet::firewall_dst,
-        protocol    => $puppet::protocol,
-        port        => $puppet::port_listen,
-        action      => 'allow',
-        direction   => 'input',
-        enable      => $puppet::manage_firewall,
-      }
+    firewall { "puppet_${puppet::protocol}_${puppet::port}":
+      source      => $puppet::firewall_src,
+      destination => $puppet::firewall_dst,
+      protocol    => $puppet::protocol,
+      port        => $puppet::port,
+      action      => 'allow',
+      direction   => 'input',
+      tool        => $pgpool::firewall_tool,
+      enable      => $puppet::manage_firewall,
     }
   }
 
