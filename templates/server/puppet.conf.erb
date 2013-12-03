@@ -33,6 +33,9 @@
   listen = <%= scope.lookupvar('puppet::bool_listen') %>
   runinterval = <%= scope.lookupvar('puppet::runinterval') %>
   localconfig = $vardir/localconfig
+<% if scope.lookupvar('puppet::ca_server') != '' -%>
+  ca_server = <%= scope.lookupvar('puppet::ca_server') %>
+<% end -%>
 
 <% if scope.lookupvar('puppet::params::major_version') == "0.2" -%>[puppetmasterd]<% else -%>[master]<% end %>
   masterport = <%= scope.lookupvar('puppet::port') %>
@@ -52,6 +55,9 @@
 <% end -%>
 <% if scope.lookupvar('puppet::bool_future_parser') %>
   parser = future
+<% end -%>
+<% if ! scope.lookupvar( 'puppet::bool_is_ca' ) -%>
+  ca = false
 <% end -%>
 
   environment      = <%= scope.lookupvar('puppet::environment') %>

@@ -147,6 +147,8 @@ class puppet::params {
   $template_passenger = ''
   
   $future_parser = false
+  $is_ca = true
+  $ca_server = ''
 
   $version_puppet = split($::puppetversion, '[.]')
   $version_major = $version_puppet[0]

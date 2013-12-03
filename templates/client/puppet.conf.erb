@@ -42,3 +42,6 @@
   listen = <%= scope.lookupvar('puppet::bool_listen') %>
   runinterval = <%= scope.lookupvar('puppet::runinterval') %>
   localconfig = $vardir/localconfig
+<% if scope.lookupvar('puppet::ca_server') != '' -%>
+  ca_server = <%= scope.lookupvar('puppet::ca_server') %>
+<% end -%>
