@@ -29,73 +29,55 @@ describe 'puppet' do
   end
 
   describe 'Test standard installation with monitoring and firewalling' do
-    let(:params) { {:monitor => true , :monitor_tool => 'puppi' , :firewall => true, :mode => 'server', :port => '42', :protocol => 'tcp' } }
-
+    let(:params) { {:monitor => true , :firewall => true, :mode => 'server', :port => '42', :protocol => 'tcp' } }
     it { should contain_package('puppet').with_ensure('present') }
     it { should contain_service('puppet').with_ensure('running') }
     it { should contain_service('puppet').with_enable('true') }
     it { should contain_file('puppet.conf').with_ensure('present') }
-    it 'should monitor the process' do
-      content = catalogue.resource('monitor::process', 'puppet_process').send(:parameters)[:enable]
-      content.should == true
-    end
-    it 'should place a firewall rule' do
-      content = catalogue.resource('firewall', 'puppet_tcp_42').send(:parameters)[:enable]
-      content.should == true
-    end
+    it 'should monitor the process' do should contain_monitor__process('puppet_process').with_enable('true') end
+    it 'should place a firewall rule' do should contain_firewall('puppet_tcp_42').with_enable('true') end
   end
 
   describe 'Test decommissioning - absent' do
-    let(:params) { {:absent => true, :monitor => true , :monitor_tool => 'puppi' , :firewall => true, :mode => 'server', :port => '42', :protocol => 'tcp'} }
-
+    let(:params) { {:absent => true, :monitor => true , :firewall => true, :mode => 'server', :port => '42', :protocol => 'tcp'} }
     it 'should remove Package[puppet]' do should contain_package('puppet').with_ensure('absent') end 
     it 'should stop Service[puppet]' do should contain_service('puppet').with_ensure('stopped') end
     it 'should not enable at boot Service[puppet]' do should contain_service('puppet').with_enable('false') end
     it 'should remove puppet configuration file' do should contain_file('puppet.conf').with_ensure('absent') end
-    it 'should not monitor the process' do
-      content = catalogue.resource('monitor::process', 'puppet_process').send(:parameters)[:enable]
-      content.should == false
-    end
-    it 'should remove a firewall rule' do
-      content = catalogue.resource('firewall', 'puppet_tcp_42').send(:parameters)[:enable]
-      content.should == false
-    end
+    it 'should not monitor the process' do should contain_monitor__process('puppet_process').with_enable('false') end
+    it 'should remove a firewall rule' do should contain_firewall('puppet_tcp_42').with_enable('false') end
   end
 
   describe 'Test decommissioning - disable' do
-    let(:params) { {:disable => true, :monitor => true , :monitor_tool => 'puppi' , :firewall => true, :mode => 'server', :port => '42', :protocol => 'tcp'} }
-
+    let(:params) { {:disable => true, :monitor => true , :firewall => true, :mode => 'server', :port => '42', :protocol => 'tcp'} }
     it { should contain_package('puppet').with_ensure('present') }
     it 'should stop Service[puppet]' do should contain_service('puppet').with_ensure('stopped') end
     it 'should not enable at boot Service[puppet]' do should contain_service('puppet').with_enable('false') end
     it { should contain_file('puppet.conf').with_ensure('present') }
-    it 'should not monitor the process' do
-      content = catalogue.resource('monitor::process', 'puppet_process').send(:parameters)[:enable]
-      content.should == false
-    end
-    it 'should remove a firewall rule' do
-      content = catalogue.resource('firewall', 'puppet_tcp_42').send(:parameters)[:enable]
-      content.should == false
-    end
+    it 'should not monitor the process' do should contain_monitor__process('puppet_process').with_enable('false') end
+    it 'should keep a firewall rule' do should contain_firewall('puppet_tcp_42').with_enable('false') end
   end
 
   describe 'Test decommissioning - disableboot' do
-    let(:params) { {:disableboot => true, :monitor => true , :monitor_tool => 'puppi' , :firewall => true, :mode => 'server', :port => '42', :protocol => 'tcp'} }
-  
+    let(:params) { {:disableboot => true, :monitor => true , :firewall => true, :mode => 'server', :port => '42', :protocol => 'tcp'} }
     it { should contain_package('puppet').with_ensure('present') }
     it { should_not contain_service('puppet').with_ensure('present') }
     it { should_not contain_service('puppet').with_ensure('absent') }
     it 'should not enable at boot Service[puppet]' do should contain_service('puppet').with_enable('false') end
     it { should contain_file('puppet.conf').with_ensure('present') }
-    it 'should not monitor the process locally' do
-      content = catalogue.resource('monitor::process', 'puppet_process').send(:parameters)[:enable]
-      content.should == false
-    end
-    it 'should keep a firewall rule' do
-      content = catalogue.resource('firewall', 'puppet_tcp_42').send(:parameters)[:enable]
-      content.should == true
-    end
-  end 
+    it 'should not monitor the process' do should contain_monitor__process('puppet_process').with_enable('false') end
+    it 'should keep a firewall rule' do should contain_firewall('puppet_tcp_42').with_enable('true') end
+  end
+
+  describe 'Test noops mode' do
+    let(:params) { {:noops => true, :monitor => true , :firewall => true, :mode => 'server', :port => '42', :protocol => 'tcp'} }
+    it { should contain_package('puppet').with_noop('true') }
+    it { should contain_service('puppet').with_noop('true') }
+    it { should contain_file('puppet.conf').with_noop('true') }
+    it { should contain_monitor__process('puppet_process').with_noop('true') }
+    it { should contain_monitor__port('puppet_tcp_42').with_noop('true') }
+    it { should contain_firewall('puppet_tcp_42').with_noop('true') }
+  end
 
   describe 'Test customizations - template' do
     let(:params) { {:template => "puppet/spec.erb" , :options => { 'opt_a' => 'value_a' } } }
