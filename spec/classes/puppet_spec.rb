@@ -30,7 +30,7 @@ describe 'puppet' do
 
   describe 'Test standard installation with monitoring and firewalling' do
     let(:facts) { { :ipaddress => '10.42.42.42', :concat_basedir => '/var/lib/puppet/concat'} }
-    let(:params) { {:monitor => true , :firewall => true, :mode => 'server', :port => '42', :protocol => 'tcp' } }
+    let(:params) { {:monitor => true , :firewall => true, :mode => 'server', :port => '42', :protocol => 'tcp', :runmode => 'service' } }
     it { should contain_package('puppet').with_ensure('present') }
     it { should contain_service('puppet').with_ensure('running') }
     it { should contain_service('puppet').with_enable('true') }
@@ -42,31 +42,31 @@ describe 'puppet' do
 
   describe 'Test decommissioning - absent' do
     let(:facts) { { :ipaddress => '10.42.42.42', :concat_basedir => '/var/lib/puppet/concat'} }
-    let(:params) { {:absent => true, :monitor => true , :firewall => true, :mode => 'server', :port => '42', :protocol => 'tcp'} }
+    let(:params) { {:absent => true, :monitor => true , :firewall => true, :mode => 'server', :port => '42', :protocol => 'tcp', :runmode => 'service' } }
     it 'should remove Package[puppet]' do should contain_package('puppet').with_ensure('absent') end 
     it 'should stop Service[puppet]' do should contain_service('puppet').with_ensure('stopped') end
     it 'should not enable at boot Service[puppet]' do should contain_service('puppet').with_enable('false') end
     it 'should remove puppet configuration file' do should contain_file('puppet.conf').with_ensure('absent') end
-    it 'should not monitor the process' do should contain_monitor__process('puppet_process_agent').with_enable('false') end
-    it 'should not monitor the process' do should contain_monitor__process('puppet_process_server').with_enable('false') end
+    it 'should not monitor the agent process' do should contain_monitor__process('puppet_process_agent').with_enable('false') end
+    it 'should not monitor the server process' do should contain_monitor__process('puppet_process_server').with_enable('false') end
     it 'should remove a firewall rule' do should contain_firewall('puppet_tcp_42').with_enable('false') end
   end
 
   describe 'Test decommissioning - disable' do
     let(:facts) { { :ipaddress => '10.42.42.42', :concat_basedir => '/var/lib/puppet/concat'} }
-    let(:params) { {:disable => true, :monitor => true , :firewall => true, :mode => 'server', :port => '42', :protocol => 'tcp'} }
+    let(:params) { {:disable => true, :monitor => true , :firewall => true, :mode => 'server', :port => '42', :protocol => 'tcp', :runmode => 'service' } }
     it { should contain_package('puppet').with_ensure('present') }
     it 'should stop Service[puppet]' do should contain_service('puppet').with_ensure('stopped') end
     it 'should not enable at boot Service[puppet]' do should contain_service('puppet').with_enable('false') end
     it { should contain_file('puppet.conf').with_ensure('present') }
-    it 'should not monitor the process' do should contain_monitor__process('puppet_process_agent').with_enable('false') end
-    it 'should not monitor the process' do should contain_monitor__process('puppet_process_server').with_enable('false') end
+    it 'should not monitor the agent process' do should contain_monitor__process('puppet_process_agent').with_enable('false') end
+    it 'should not monitor the server process' do should contain_monitor__process('puppet_process_server').with_enable('false') end
     it 'should keep a firewall rule' do should contain_firewall('puppet_tcp_42').with_enable('false') end
   end
 
   describe 'Test decommissioning - disableboot' do
     let(:facts) { { :ipaddress => '10.42.42.42', :concat_basedir => '/var/lib/puppet/concat'} }
-    let(:params) { {:disableboot => true, :monitor => true , :firewall => true, :mode => 'server', :port => '42', :protocol => 'tcp'} }
+    let(:params) { {:disableboot => true, :monitor => true , :firewall => true, :mode => 'server', :port => '42', :protocol => 'tcp', :runmode => 'service' } }
     it { should contain_package('puppet').with_ensure('present') }
     it { should_not contain_service('puppet').with_ensure('present') }
     it { should_not contain_service('puppet').with_ensure('absent') }
@@ -140,7 +140,7 @@ describe 'puppet' do
   end
 
   describe 'Test Monitoring Tools Integration' do
-    let(:params) { {:monitor => true, :monitor_tool => "puppi" } }
+    let(:params) { {:monitor => true, :monitor_tool => "puppi", :runmode => 'service' } }
     it { should contain_monitor__process('puppet_process_agent').with_tool('puppi') }
   end
 
@@ -156,7 +156,7 @@ describe 'puppet' do
 
   describe 'Test OldGen Module Set Integration' do
     let(:facts) { { :ipaddress => '10.42.42.42', :concat_basedir => '/var/lib/puppet/concat'} }
-    let(:params) { {:monitor => "yes" , :monitor_tool => "puppi" , :firewall => "yes" , :mode => 'server' , :firewall_tool => "iptables" , :puppi => "yes" , :port => "42" , :protocol => 'tcp' } }
+    let(:params) { {:monitor => "yes" , :monitor_tool => "puppi" , :firewall => "yes" , :mode => 'server' , :firewall_tool => "iptables" , :puppi => "yes" , :port => "42" , :protocol => 'tcp', :runmode => 'service' } }
     it { should contain_monitor__process('puppet_process_agent').with_tool('puppi') }
     it { should contain_monitor__process('puppet_process_server').with_tool('puppi') }
     it { should contain_firewall('puppet_tcp_42').with_tool('iptables') }
@@ -165,25 +165,25 @@ describe 'puppet' do
 
   describe 'Test params lookup' do
     let(:facts) { { :monitor => true , :ipaddress => '10.42.42.42' } }
-    let(:params) { { :port => '42' } }
+    let(:params) { { :port => '42', :runmode => 'service' } }
     it 'should honour top scope global vars' do should contain_monitor__process('puppet_process_agent').with_enable('true') end
   end
 
   describe 'Test params lookup' do
     let(:facts) { { :puppet_monitor => true , :ipaddress => '10.42.42.42' } }
-    let(:params) { { :port => '42' } }
+    let(:params) { { :port => '42', :runmode => 'service' } }
     it 'should honour module specific vars' do should contain_monitor__process('puppet_process_agent').with_enable('true') end
   end
 
   describe 'Test params lookup' do
     let(:facts) { { :monitor => false , :puppet_monitor => true , :ipaddress => '10.42.42.42' } }
-    let(:params) { { :port => '42' } }
+    let(:params) { { :port => '42', :runmode => 'service' } }
     it 'should honour top scope module specific over global vars' do should contain_monitor__process('puppet_process_agent').with_enable('true') end
   end
 
   describe 'Test params lookup' do
     let(:facts) { { :monitor => false , :ipaddress => '10.42.42.42' } }
-    let(:params) { { :monitor => true , :port => '42' } }
+    let(:params) { { :monitor => true , :port => '42', :runmode => 'service' } }
     it 'should honour passed params over global vars' do should contain_monitor__process('puppet_process_agent').with_enable('true') end
   end
 

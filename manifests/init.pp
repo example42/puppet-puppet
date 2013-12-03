@@ -799,21 +799,16 @@ class puppet (
 
   ### Service monitoring, if enabled ( monitor => true ) Agent only!
   if $puppet::monitor_tool and $puppet::runmode == 'service' {
-#    monitor::port { "puppet_${puppet::protocol}_${puppet::port}":
-#      protocol => $puppet::protocol,
-#      port     => $puppet::port,
-#      target   => $puppet::monitor_target,
-#      tool     => $puppet::monitor_tool,
-#      enable   => $puppet::manage_monitor,
-#    }
-    monitor::process { 'puppet_process_agent':
-      process  => $puppet::process,
-      service  => $puppet::service,
-      pidfile  => $puppet::pid_file,
-      user     => $puppet::process_user,
-      argument => $puppet::process_args,
-      tool     => $puppet::monitor_tool,
-      enable   => $puppet::manage_monitor,
+    if $puppet::service != '' {
+      monitor::process { 'puppet_process_agent':
+        process  => $puppet::process,
+        service  => $puppet::service,
+        pidfile  => $puppet::pid_file,
+        user     => $puppet::process_user,
+        argument => $puppet::process_args,
+        tool     => $puppet::monitor_tool,
+        enable   => $puppet::manage_monitor,
+      }
     }
   }
 
