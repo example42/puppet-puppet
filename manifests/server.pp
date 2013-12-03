@@ -39,7 +39,7 @@ class puppet::server inherits puppet {
   }
 
   exec { 'puppetmaster-ca-generate':
-    creates => "${puppet::data_dir}/ssl/private_keys/${puppet::server}.pem",
+    creates => "${puppet::ssl_dir}/private_keys/${puppet::server}.pem",
     command => "/usr/bin/puppet ca generate ${puppet::server}",
     require => Package['puppet'],
   }
