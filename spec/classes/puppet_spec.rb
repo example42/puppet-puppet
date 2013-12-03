@@ -119,10 +119,7 @@ describe 'puppet' do
   end
 
   describe 'Test service autorestart' do
-    it 'should not automatically restart the service, by default' do
-      content = catalogue.resource('file', 'puppet.conf').send(:parameters)[:notify]
-      content.should be_nil
-    end
+    it { should contain_file('puppet.conf').with_notify('Service[puppet]') }
   end
 
   describe 'Test service autorestart' do
@@ -153,6 +150,7 @@ describe 'puppet' do
   end
 
   describe 'Test Firewall Tools Integration' do
+    let(:facts) { { :ipaddress => '10.42.42.42', :concat_basedir => '/var/lib/puppet/concat'} }
     let(:params) { {:firewall => true, :mode => 'server', :firewall_tool => "iptables" , :protocol => "tcp" , :port => "42" } }
 
     it 'should generate correct firewall define' do
@@ -162,6 +160,7 @@ describe 'puppet' do
   end
 
   describe 'Test OldGen Module Set Integration' do
+    let(:facts) { { :ipaddress => '10.42.42.42', :concat_basedir => '/var/lib/puppet/concat'} }
     let(:params) { {:monitor => "yes" , :monitor_tool => "puppi" , :firewall => "yes" , :mode => 'server', :firewall_tool => "iptables" , :puppi => "yes" , :port => "42" , :protocol => 'tcp' } }
 
     it 'should generate monitor resources' do
