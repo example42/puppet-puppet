@@ -33,6 +33,12 @@
   listen = <%= scope.lookupvar('puppet::bool_listen') %>
   runinterval = <%= scope.lookupvar('puppet::runinterval') %>
   localconfig = $vardir/localconfig
+<% if scope.lookupvar('puppet::ca_server') != '' -%>
+  ca_server = <%= scope.lookupvar('puppet::ca_server') %>
+<% end -%>
+<% if scope.lookupvar('puppet::bool_show_diff') -%>
+  show_diff = true
+<% end -%>
 
 <% if scope.lookupvar('puppet::params::major_version') == "0.2" -%>[puppetmasterd]<% else -%>[master]<% end %>
   masterport = <%= scope.lookupvar('puppet::port') %>
@@ -50,10 +56,19 @@
   thin_storeconfigs = true
 <% end -%>
 <% end -%>
+<% if ! scope.lookupvar( 'puppet::bool_is_ca' ) -%>
+  ca = false
+<% end -%>
+<% if scope.lookupvar('puppet::bool_future_parser') %>
+  parser = future
+<% end -%>
 
-  environment = <%= scope.lookupvar('puppet::environment') %>
-  manifest    = <%= scope.lookupvar('puppet::manifest_path') %>
-  modulepath  = <%= scope.lookupvar('puppet::module_path') %>
+  environment      = <%= scope.lookupvar('puppet::environment') %>
+  manifestdir      = <%= scope.lookupvar('puppet::manifest_dir_path') %>
+  manifest         = <%= scope.lookupvar('puppet::manifest_path') %>
+  modulepath       = <%= scope.lookupvar('puppet::module_path') %>
+  hiera_config     = <%= scope.lookupvar('puppet::hiera_path') %>
+  fileserverconfig = <%= scope.lookupvar('puppet::fileserver_path') %>
 
 <% if scope.lookupvar('puppet::dns_alt_names') != '' -%>
   dns_alt_names = <%= scope.lookupvar('puppet::dns_alt_names') %>
