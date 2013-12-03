@@ -559,7 +559,7 @@ class puppet (
 
   # Log dir needs to belong to puppet if running with passenger
   $bool_passenger_mode = $puppet::bool_passenger == true and $mode == 'server'
-  $real_log_dir_owner = bool_passenger_mode ? {
+  $real_log_dir_owner = $bool_passenger_mode ? {
     true    => $puppet::process_user_server,
     default => $puppet::config_file_owner,
   }
