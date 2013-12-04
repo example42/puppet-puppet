@@ -22,6 +22,12 @@
 #   The allow directive in the server file namespaceauth.conf.
 #   Default: *.$domain and localhost
 #
+# [*bindaddress*]
+#
+# [*listen*]
+#
+# [*port_listen*]
+#
 # [*nodetool*]
 #
 # [*runmode*]
@@ -378,6 +384,9 @@ class puppet (
   $server              = params_lookup( 'server' ),
   $environment         = params_lookup( 'environment' ),
   $allow               = params_lookup( 'allow' ),
+  $bindaddress         = params_lookup( 'bindaddress' ),
+  $listen              = params_lookup( 'listen' ),
+  $port_listen         = params_lookup( 'port_listen' ),
   $nodetool            = params_lookup( 'nodetool' ),
   $reports             = params_lookup( 'reports' ),
   $runmode             = params_lookup( 'runmode' ),
@@ -476,6 +485,7 @@ class puppet (
   $show_diff           = false
   ) inherits puppet::params {
 
+  $bool_listen=any2bool($listen)
   $bool_externalnodes=any2bool($externalnodes)
   $bool_passenger=any2bool($passenger)
   $bool_storeconfigs=any2bool($storeconfigs)
@@ -809,19 +819,28 @@ class puppet (
         tool     => $puppet::monitor_tool,
         enable   => $puppet::manage_monitor,
       }
+      if $puppet::bool_listen == true {
+        monitor::port { "puppet_${puppet::protocol}_${puppet::port_listen}_agent":
+          protocol => $puppet::protocol,
+          port     => $puppet::port_listen,
+          target   => $puppet::monitor_target,
+          tool     => $puppet::monitor_tool,
+          enable   => $puppet::manage_monitor,
+        }
+      }
     }
   }
 
 
   ### Firewall management, if enabled ( firewall => true )
-  if $puppet::bool_firewall == true {
-    firewall { "puppet_${puppet::protocol}_${puppet::port}-agent":
-      destination => $puppet::server,
+  if $puppet::bool_firewall and $puppet::bool_listen {
+    firewall { "puppet_${puppet::protocol}_${puppet::port_listen}_agent":
+      source      => $puppet::firewall_src,
+      destination => $puppet::firewall_dst,
       protocol    => $puppet::protocol,
-      port        => $puppet::port,
+      port        => $puppet::port_listen,
       action      => 'allow',
-      direction   => 'output',
-      tool        => $pgpool::firewall_tool,
+      direction   => 'input',
       enable      => $puppet::manage_firewall,
     }
   }

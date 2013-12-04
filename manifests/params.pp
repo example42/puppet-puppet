@@ -47,6 +47,9 @@ class puppet::params {
     ''      => [ '127.0.0.1' ],
     default => [ "*.${::domain}" , '127.0.0.1' ],
   }
+  $bindaddress = '0.0.0.0'
+  $listen = false
+  $port_listen = '8139'
   $nodetool = ''
   $reports = ''
   $runmode = 'service'
@@ -143,7 +146,7 @@ class puppet::params {
   $template_auth = ''
   $template_fileserver = ''
   $template_passenger = ''
-
+  
   $future_parser = false
   $is_ca = true
   $ca_server = ''
