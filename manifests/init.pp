@@ -128,6 +128,8 @@
 #
 # [*run_dir*]
 #
+# [*ssl_dir*]
+#
 # [*reporturl*]
 #
 # Extra Database settings
@@ -404,6 +406,7 @@ class puppet (
   $template_rack_config = params_lookup( 'template_rack_config' ),
   $template_cron       = params_lookup( 'template_cron' ),
   $run_dir             = params_lookup( 'run_dir' ),
+  $ssl_dir             = params_lookup( 'ssl_dir' ),
   $reporturl           = params_lookup( 'reporturl' ),
   $my_class            = params_lookup( 'my_class' ),
   $source              = params_lookup( 'source' ),
