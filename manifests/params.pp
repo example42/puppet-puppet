@@ -42,6 +42,7 @@ class puppet::params {
   } else {
     $environment = 'production'
   }
+  $master_environment = 'production'
 
   $allow = $::domain ? {
     ''      => [ '127.0.0.1' ],
