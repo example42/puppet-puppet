@@ -156,7 +156,10 @@ class puppet::params {
   ### Application related parameters
 
   $package = $::operatingsystem ? {
-    /(?i:OpenBSD)/ => 'ruby-puppet',
+    /(?i:OpenBSD)/ => $::operatingsystemrelease ? {
+      '5.4'   => 'puppet',
+      default => 'ruby-puppet',
+    },
     /(?i:Windows)/ => 'Puppet',
     default        => 'puppet',
   }
