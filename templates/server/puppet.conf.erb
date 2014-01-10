@@ -33,6 +33,9 @@
   listen = <%= scope.lookupvar('puppet::bool_listen') %>
   runinterval = <%= scope.lookupvar('puppet::runinterval') %>
   localconfig = $vardir/localconfig
+<% if scope.lookupvar('puppet::master_environment') != '' -%>
+  environment = <%= scope.lookupvar('puppet::master_environment') %>
+<% end -%> 
 
 <% if scope.lookupvar('puppet::params::major_version') == "0.2" -%>[puppetmasterd]<% else -%>[master]<% end %>
   masterport = <%= scope.lookupvar('puppet::port') %>

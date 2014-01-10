@@ -16,7 +16,10 @@
 #   if $domain fact is blank
 #
 # [*environment*]
-#   The default environmentset in puppet.conf. Default: production
+#   The default environment set in puppet.conf. Default: production
+#
+# [*master_environment*]
+#   The default environment set in puppet.conf in the agent section for the master. Default: production
 #
 # [*allow*]
 #   The allow directive in the server file namespaceauth.conf.
@@ -361,6 +364,7 @@ class puppet (
   $mode                = params_lookup( 'mode' ),
   $server              = params_lookup( 'server' ),
   $environment         = params_lookup( 'environment' ),
+  $master_environment  = params_lookup( 'master_environment' ),
   $allow               = params_lookup( 'allow' ),
   $bindaddress         = params_lookup( 'bindaddress' ),
   $listen              = params_lookup( 'listen' ),
