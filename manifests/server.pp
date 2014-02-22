@@ -38,9 +38,15 @@ class puppet::server inherits puppet {
     audit   => $puppet::manage_audit,
   }
 
+  $ca_generate_command = $puppet::dns_alt_names ? {
+    undef => "/usr/bin/puppet ca generate ${puppet::server}",
+    ''    => "/usr/bin/puppet ca generate ${puppet::server}",
+    default => "/usr/bin/puppet ca generate --dns-alt-names ${puppet::dns_alt_names} ${puppet::server}",
+  }
+
   exec { 'puppetmaster-ca-generate':
     creates => "${puppet::ssl_dir}/private_keys/${puppet::server}.pem",
-    command => "/usr/bin/puppet ca generate ${puppet::server}",
+    command => $ca_generate_command,
     require => Package['puppet'],
   }
 
