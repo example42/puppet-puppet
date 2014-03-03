@@ -651,6 +651,11 @@ class puppet (
     default   => template($puppet::template_fileserver),
   }
 
+  $manage_log_dir_owner = $puppet::mode ? {
+    server => $puppet::process_user_server,
+    client => $puppet::process_user,
+  }
+
   $version_puppet = split($::puppetversion, '[.]')
   $version_major = $version_puppet[0]
 
@@ -728,8 +733,8 @@ class puppet (
     ensure  => $puppet::manage_directory,
     path    => $puppet::log_dir,
     mode    => '0750',
-    owner   => $puppet::process_user_server,
-    group   => $puppet::process_user_server,
+    owner   => $puppet::manage_log_dir_owner,
+    group   => $puppet::manage_log_dir_owner,
     require => Package['puppet'],
     audit   => $puppet::manage_audit,
   }
