@@ -400,6 +400,7 @@ class puppet (
   $version_puppetdb_terminus  = params_lookup( 'version_puppetdb_terminus' ),
   $service_server_autorestart = params_lookup( 'service_server_autorestart' ),
   $dns_alt_names       = params_lookup( 'dns_alt_names' ),
+  $certname            = params_lookup( 'certname' ),
   $client_daemon_opts  = params_lookup( 'client_daemon_opts' ),
   $mysql_conn_package  = params_lookup( 'mysql_conn_package' ),
   $basedir             = params_lookup( 'basedir' ),
@@ -556,7 +557,7 @@ class puppet (
     default =>  $puppet::bool_absent ? {
       true    => 'stopped',
       default => $puppet::bool_passenger ? {
-        true  => undef,
+        true  => 'stopped',
         false => 'running',
       },
     },

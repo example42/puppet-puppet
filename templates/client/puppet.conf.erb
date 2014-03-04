@@ -27,7 +27,7 @@
 <% end -%>
 
 <% if scope.lookupvar('puppet::params::major_version') == "0.2" -%>[puppetd]<% else -%>[agent]<% end %>
-  certname = <%= scope.lookupvar('clientcert') %>
+  certname = <%= scope.lookupvar('puppet::certname') %>
   server = <%= scope.lookupvar('puppet::server') %>
   environment = <%= scope.lookupvar('puppet::environment') %>
   pluginsync = true

@@ -47,7 +47,7 @@ class puppet::server inherits puppet {
   exec { 'puppetmaster-ca-generate':
     creates => "${puppet::ssl_dir}/private_keys/${puppet::server}.pem",
     command => $ca_generate_command,
-    require => Package['puppet'],
+    require => [ Package['puppet'] , File['puppet.conf'] ],
   }
 
   ### Service monitoring, if enabled ( monitor => true )

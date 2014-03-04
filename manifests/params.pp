@@ -330,6 +330,7 @@ class puppet::params {
 
   ### Enable setting of dns_alt_names
   $dns_alt_names = ''
+  $certname = $clientcert
 
   ### General module variables that can have a site or per module default
   $monitor = false
