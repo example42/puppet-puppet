@@ -127,13 +127,13 @@ class puppet::params {
 
   $run_dir = $::operatingsystem ? {
     /(?i:OpenBSD)/ => '/var/puppet/run',
-    /(?i:Windows)/ => "${common_appdata}\\PuppetLabs\\puppet\\var\\run",
+    /(?i:Windows)/ => "${windows_common_appdata}\\PuppetLabs\\puppet\\var\\run",
     default        => '/var/run/puppet',
   }
 
   $ssl_dir = $::operatingsystem ? {
     /(?i:OpenBSD)/ => '/etc/puppet/ssl',
-    /(?i:Windows)/ => "${common_appdata}\\PuppetLabs\\puppet\\etc\\ssl",
+    /(?i:Windows)/ => "${windows_common_appdata}\\PuppetLabs\\puppet\\etc\\ssl",
     default        => '/var/lib/puppet/ssl',
   }
 
@@ -209,12 +209,12 @@ class puppet::params {
   }
 
   $config_dir = $::operatingsystem ? {
-    /(?i:Windows)/ => "${common_appdata}\\PuppetLabs\\puppet\\etc",
+    /(?i:Windows)/ => "${windows_common_appdata}\\PuppetLabs\\puppet\\etc",
     default        => '/etc/puppet',
   }
 
   $config_file = $::operatingsystem ? {
-    /(?i:Windows)/ => "${common_appdata}\\PuppetLabs\\puppet\\etc\\puppet.conf",
+    /(?i:Windows)/ => "${windows_common_appdata}\\PuppetLabs\\puppet\\etc\\puppet.conf",
     default        => '/etc/puppet/puppet.conf',
   }
 
@@ -253,19 +253,19 @@ class puppet::params {
 
   $data_dir = $::operatingsystem ? {
     /(?i:OpenBSD)/ => '/var/puppet',
-    /(?i:Windows)/ => "${common_appdata}\\PuppetLabs\\puppet\\var",
+    /(?i:Windows)/ => "${windows_common_appdata}\\PuppetLabs\\puppet\\var",
     default        => '/var/lib/puppet',
   }
 
   $log_dir = $::operatingsystem ? {
     /(?i:OpenBSD)/ => '/var/puppet/log',
-    /(?i:Windows)/ => "${common_appdata}\\PuppetLabs\\puppet\\var\\log",
+    /(?i:Windows)/ => "${windows_common_appdata}\\PuppetLabs\\puppet\\var\\log",
     default        => '/var/log/puppet',
   }
 
   $log_file = $::operatingsystem ? {
     /(?i:Debian|Ubuntu|Mint)/ => '/var/log/syslog',
-    /(?i:Windows)/            => "${common_appdata}\\PuppetLabs\\puppet\\var\\log\\windows.log",
+    /(?i:Windows)/            => "${windows_common_appdata}\\PuppetLabs\\puppet\\var\\log\\windows.log",
     /(?i:Solaris)/            => '/var/adm/messages',
     default                   => '/var/log/messages',
   }
