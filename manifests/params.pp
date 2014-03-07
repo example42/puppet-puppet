@@ -253,7 +253,7 @@ class puppet::params {
 
   $data_dir = $::operatingsystem ? {
     /(?i:OpenBSD)/ => '/var/puppet',
-    /(?i:Windows)/ => "${common_appdata}\\PuppetLabs\\puppet\\var\\lib",
+    /(?i:Windows)/ => "${common_appdata}\\PuppetLabs\\puppet\\var",
     default        => '/var/lib/puppet',
   }
 
