@@ -451,6 +451,7 @@ class puppet (
   $pid_file            = params_lookup( 'pid_file' ),
   $data_dir            = params_lookup( 'data_dir' ),
   $log_dir             = params_lookup( 'log_dir' ),
+  $log_dir_mode        = params_lookup( 'log_dir_mode' ),
   $log_file            = params_lookup( 'log_file' ),
   $port                = params_lookup( 'port' ),
   $http_proxy_host     = params_lookup( 'http_proxy_host' , 'global' ),
@@ -733,7 +734,7 @@ class puppet (
   file { 'puppet.log.dir':
     ensure  => $puppet::manage_directory,
     path    => $puppet::log_dir,
-    mode    => '0750',
+    mode    => $puppet::log_dir_mode,
     owner   => $puppet::manage_log_dir_owner,
     group   => $puppet::manage_log_dir_owner,
     require => Package['puppet'],

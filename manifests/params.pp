@@ -200,7 +200,8 @@ class puppet::params {
   }
 
   $process_user = $::operatingsystem ? {
-    default => 'root',
+    /(?i:Windows)/ => 'S-1-5-32-544',
+    default        => 'root',
   }
 
   $process_group = $::operatingsystem ? {
@@ -261,6 +262,11 @@ class puppet::params {
     /(?i:OpenBSD)/ => '/var/puppet/log',
     /(?i:Windows)/ => "${windows_common_appdata}\\PuppetLabs\\puppet\\var\\log",
     default        => '/var/log/puppet',
+  }
+
+  $log_dir_mode = $::operatingsystem ? {
+    /(?i:Windows)/ => '0770',
+    default        => '0750',
   }
 
   $log_file = $::operatingsystem ? {
