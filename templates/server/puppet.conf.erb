@@ -20,46 +20,11 @@
   hostprivkey = $privatekeydir/$certname.pem { mode = 640 }
 <% end -%>
   masterport = <%= scope.lookupvar('puppet::port') %>
-
-<% if scope.lookupvar('puppet::params::major_version') == "0.2" -%># [puppet]<% else -%># [user]<% end %>
-
-<% if scope.lookupvar('puppet::params::major_version') == "0.2" -%>[puppetd]<% else -%>[agent]<% end %>
   certname = <%= scope.lookupvar('puppet::certname') %>
-  server = <%= scope.lookupvar('puppet::server') %>
-  pluginsync = true
-  report = true
-  reportserver = <%= scope.lookupvar('puppet::server') %>
-  summarize = true
-  graph = true
-  listen = <%= scope.lookupvar('puppet::bool_listen') %>
-  runinterval = <%= scope.lookupvar('puppet::runinterval') %>
-  localconfig = $vardir/localconfig
-<% if scope.lookupvar('puppet::master_environment') != '' -%>
-  environment = <%= scope.lookupvar('puppet::master_environment') %>
-<% end -%> 
-
-<% if scope.lookupvar('puppet::params::major_version') == "0.2" -%>[puppetmasterd]<% else -%>[master]<% end %>
-<% if scope.lookupvar('puppet::bindaddress') != '' -%>
-  bindaddress = <%= scope.lookupvar('puppet::bindaddress') %>
-<% end -%>
-<% if scope.lookupvar('puppet::bool_passenger') == true && scope.lookupvar('puppet::passenger_type') != 'nginx' -%>
-  ssl_client_header = SSL_CLIENT_S_DN
-  ssl_client_verify_header = SSL_CLIENT_VERIFY
-<% end -%>
-  autosign = <%= scope.lookupvar('puppet::autosign') %>
-<% if scope.lookupvar('puppet::bool_storeconfigs') == true or scope.lookupvar('puppet::db') == "puppetdb" -%>
+<% if scope.lookupvar('puppet::bool_storeconfigs') or scope.lookupvar('puppet::db') == "puppetdb" -%>
   storeconfigs = true
 <% if scope.lookupvar('puppet::bool_storeconfigs_thin') == true and scope.lookupvar('puppet::db') != "puppetdb" %>
   thin_storeconfigs = true
-<% end -%>
-<% end -%>
-
-  environment = <%= scope.lookupvar('puppet::environment') %>
-  manifest    = <%= scope.lookupvar('puppet::manifest_path') %>
-  modulepath  = <%= scope.lookupvar('puppet::module_path') %>
-
-<% if scope.lookupvar('puppet::dns_alt_names') != '' -%>
-  dns_alt_names = <%= scope.lookupvar('puppet::dns_alt_names') %>
 <% end -%>
 
 <% if scope.lookupvar('puppet::db') == "sqlite" -%>
@@ -84,6 +49,39 @@
   reports = <%= scope.lookupvar('puppet::reports_value') %>
 <% if scope.lookupvar('puppet::reporturl') != '' -%>
   reporturl = <%= scope.lookupvar('puppet::reporturl') %>
+<% end -%>
+
+[agent]
+  server = <%= scope.lookupvar('puppet::server') %>
+  pluginsync = true
+  report = true
+  reportserver = <%= scope.lookupvar('puppet::server') %>
+  summarize = true
+  graph = true
+  listen = <%= scope.lookupvar('puppet::bool_listen') %>
+  runinterval = <%= scope.lookupvar('puppet::runinterval') %>
+  localconfig = $vardir/localconfig
+<% if scope.lookupvar('puppet::master_environment') != '' -%>
+  environment = <%= scope.lookupvar('puppet::master_environment') %>
+<% end -%> 
+
+[master]
+<% if scope.lookupvar('puppet::bindaddress') != '' -%>
+  bindaddress = <%= scope.lookupvar('puppet::bindaddress') %>
+<% end -%>
+<% if scope.lookupvar('puppet::bool_passenger') == true && scope.lookupvar('puppet::passenger_type') != 'nginx' -%>
+  ssl_client_header = SSL_CLIENT_S_DN
+  ssl_client_verify_header = SSL_CLIENT_VERIFY
+<% end -%>
+  autosign = <%= scope.lookupvar('puppet::autosign') %>
+<% end -%>
+
+  environment = <%= scope.lookupvar('puppet::environment') %>
+  manifest    = <%= scope.lookupvar('puppet::manifest_path') %>
+  modulepath  = <%= scope.lookupvar('puppet::module_path') %>
+
+<% if scope.lookupvar('puppet::dns_alt_names') != '' -%>
+  dns_alt_names = <%= scope.lookupvar('puppet::dns_alt_names') %>
 <% end -%>
 
 <% if scope.lookupvar('puppet::inventoryserver') == "localhost" -%>
