@@ -1,5 +1,5 @@
 name 'example42-puppet'
-version '2.0.14'
+version '2.0.15'
 
 author 'Alessandro Franceschi'
 license 'Apache2'
