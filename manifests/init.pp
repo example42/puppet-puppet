@@ -305,6 +305,9 @@
 # [*config_file_init*]
 #   Path of configuration file sourced by init script
 #
+# [*config_file_init_template*]
+#   Template for the init config file
+#
 # [*pid_file*]
 #   Path of pid file. Used by monitor
 #
@@ -449,6 +452,7 @@ class puppet (
   $config_file_owner   = params_lookup( 'config_file_owner' ),
   $config_file_group   = params_lookup( 'config_file_group' ),
   $config_file_init    = params_lookup( 'config_file_init' ),
+  $config_file_init_template = params_lookup ( 'config_file_init_template' ),
   $pid_file            = params_lookup( 'pid_file' ),
   $data_dir            = params_lookup( 'data_dir' ),
   $log_dir             = params_lookup( 'log_dir' ),
@@ -684,12 +688,13 @@ class puppet (
   }
 
   if ($::operatingsystem == 'Ubuntu'
-  or $::operatingsystem == 'Debian') {
+  or $::operatingsystem == 'Debian'
+  or $::operatingsystem == 'SLES') {
     file { 'default-puppet':
       ensure  => $puppet::manage_file,
       path    => $puppet::config_file_init,
       require => Package[puppet],
-      content => template('puppet/default.init-ubuntu'),
+      content => template($puppet::config_file_init_template),
       mode    => $puppet::config_file_mode,
       owner   => $puppet::config_file_owner,
       group   => $puppet::config_file_group,

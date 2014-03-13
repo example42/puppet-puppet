@@ -247,6 +247,12 @@ class puppet::params {
     default                   => '/etc/sysconfig/puppet',
   }
 
+  $config_file_init_template = $::operatingsystem ? {
+    /(?i:Debian|Ubuntu|Mint)/ => 'puppet/default.init-debian',
+    /(?i:SLES)/               => 'puppet/default.init-sles',
+    default                   => '',
+  }
+
   $pid_file = $major_version ? {
     '0.2' => $::operatingsystem ? {
       /(?i:OpenBSD)/ => '/var/puppet/run/puppet.pid',
