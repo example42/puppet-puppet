@@ -111,7 +111,13 @@ class puppet::params {
   }
 
   $process_user_server = $::operatingsystem ? {
-    default => 'puppet',
+    /(?i:OpenBSD)/ => '_puppet',
+    default        => 'puppet',
+  }
+
+  $process_group_server = $::operatingsystem ? {
+    /(?i:OpenBSD)/ => '_puppet',
+    default        => 'puppet',
   }
 
   $version_server = 'present'

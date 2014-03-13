@@ -396,6 +396,7 @@ class puppet (
   $pid_file_server     = params_lookup( 'pid_file_server' ),
   $process_args_server = params_lookup( 'process_args_server' ),
   $process_user_server = params_lookup( 'process_user_server' ),
+  $process_group_server = params_lookup( 'process_group_server' ),
   $version_server      = params_lookup( 'version_server' ),
   $version_puppetdb_terminus  = params_lookup( 'version_puppetdb_terminus' ),
   $service_server_autorestart = params_lookup( 'service_server_autorestart' ),
@@ -658,6 +659,11 @@ class puppet (
     client => $puppet::process_user,
   }
 
+  $manage_log_dir_group = $puppet::mode ? {
+    server => $puppet::process_group_server,
+    client => $puppet::process_group,
+  }
+
   $version_puppet = split($::puppetversion, '[.]')
   $version_major = $version_puppet[0]
 
@@ -736,7 +742,7 @@ class puppet (
     path    => $puppet::log_dir,
     mode    => $puppet::log_dir_mode,
     owner   => $puppet::manage_log_dir_owner,
-    group   => $puppet::manage_log_dir_owner,
+    group   => $puppet::manage_log_dir_group,
     require => Package['puppet'],
     audit   => $puppet::manage_audit,
   }
