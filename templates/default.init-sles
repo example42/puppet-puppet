@@ -1,0 +1,30 @@
+## Path:        System/Management
+## Description: A network tool for managing many disparate systems
+## Type:        string
+## Default: puppet
+## ServiceReload: puppet
+#
+# The puppetmaster server
+#
+PUPPET_SERVER=<%= scope.lookupvar('puppet::server') %>
+
+## Type:        integer
+## Default: 8140
+#
+# If you wish to specify the port to connect to do so here
+#
+PUPPET_PORT=8140
+
+## Type:        string
+## Default: "/var/log/puppet/puppet.log"
+#
+# Where to log to. Specify syslog to send log messages to the system log.
+#
+PUPPET_LOG=/var/log/puppet/puppet.log
+
+## Type:        string
+## Default:
+#
+# You may specify other parameters to the puppet client here
+#
+PUPPET_EXTRA_OPTS=""
