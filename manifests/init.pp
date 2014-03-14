@@ -177,8 +177,8 @@
 #
 # [*service_autorestart*]
 #   Automatically restarts the puppet service when there is a change in
-#   configuration files. Default: true, Set to false if you don't want to
-#   automatically restart the service.
+#   configuration files. Default: false, to avoid race condition of restartin
+#   puppet during a puppet run.  Setting to true may create unpredictable results
 #
 # [*version*]
 #   The package version, used in the ensure parameter of package type.
