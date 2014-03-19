@@ -477,6 +477,7 @@ class puppet (
   $template_dir        = params_lookup( 'template_dir' )
   ) inherits puppet::params {
 
+  $bool_enc_backup=any2bool($enc_backup)
   $bool_listen=any2bool($listen)
   $bool_externalnodes=any2bool($externalnodes)
   $bool_passenger=any2bool($passenger)
@@ -511,7 +512,7 @@ class puppet (
     default => $puppet::template_passenger,
   }
 
-  $real_external_nodes_script = $puppet::enc_backup ? {
+  $real_external_nodes_script = $puppet::bool_enc_backup ? {
     true  => '/etc/puppet/node.sh',
     false => $external_nodes_script,
   }
@@ -675,12 +676,12 @@ class puppet (
 
   $manage_log_dir_owner = $puppet::mode ? {
     server => $puppet::process_user_server,
-    client => $puppet::process_user,
+    client => undef,
   }
 
   $manage_log_dir_group = $puppet::mode ? {
     server => $puppet::process_group_server,
-    client => $puppet::process_group,
+    client => undef,
   }
 
   $version_puppet = split($::puppetversion, '[.]')

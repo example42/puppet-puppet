@@ -50,7 +50,7 @@ class puppet::server inherits puppet {
     require => [ Package['puppet'] , File['puppet.conf'] ],
   }
 
-  if $puppet::enc_backup {
+  if $puppet::bool_enc_backup {
     file { '/etc/puppet/node.sh':
       ensure  => present,
       owner   => root,
