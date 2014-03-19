@@ -55,7 +55,7 @@ class puppet::server inherits puppet {
       ensure  => present,
       owner   => root,
       group   => root,
-      mode    => 0755,
+      mode    => '0755',
       content => template('puppet/server/node.sh.erb'),
     }
   }
