@@ -1,0 +1,11 @@
+#!/bin/bash
+
+BACKUPDIR=/var/lib/puppet/yaml/encbackup
+
+[ -d $BACKUPDIR ] || /bin/mkdir -p $BACKUPDIR
+
+<%= scope.lookupvar('puppet::external_nodes_script') %> ${1} > $BACKUPDIR/${1}.yaml.temp
+if [ "$?" -eq 0 ]; then
+  /bin/mv $BACKUPDIR/${1}.yaml.temp $BACKUPDIR/${1}.yaml
+fi
+/bin/cat $BACKUPDIR/${1}.yaml

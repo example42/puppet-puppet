@@ -7,6 +7,14 @@
 #
 # Module specific parameters
 #
+# [*enc_backup*]
+#   Boolean. Default: false
+#   If set to true the enc external_nodes script is wrapped by another script
+#   that caches successfull nodes yaml files and uses them in case
+#   of failure of the enc. Use this as a simple and automatic failover
+#   method when the ENC is down (in this case the script returns the last
+#   valid yaml file retrieved from the enc
+#
 # [*mode*]
 #   Define if to install just the client (mode = client) or both server
 #   and client (mode = server ). Default: client
@@ -364,6 +372,7 @@
 #   Alessandro Franceschi <al@lab42.it/>
 #
 class puppet (
+  $enc_backup          = params_lookup( 'enc_backup' ),
   $mode                = params_lookup( 'mode' ),
   $server              = params_lookup( 'server' ),
   $environment         = params_lookup( 'environment' ),
@@ -381,6 +390,7 @@ class puppet (
   $prerun_command      = params_lookup( 'prerun_command' ),
   $postrun_command     = params_lookup( 'postrun_command' ),
   $externalnodes       = params_lookup( 'externalnodes' ),
+  $external_nodes_script = params_lookup( 'external_nodes_script' ),
   $passenger           = params_lookup( 'passenger' ),
   $passenger_type      = params_lookup( 'passenger_type' ),
   $autosign            = params_lookup( 'autosign' ),
@@ -499,6 +509,11 @@ class puppet (
       default  => 'puppet/passenger/puppet-passenger.conf.erb',
     },
     default => $puppet::template_passenger,
+  }
+
+  $real_external_nodes_script = $puppet::enc_backup ? {
+    true  => '/etc/puppet/node.sh',
+    false => $external_nodes_script,
   }
 
   ### Definition of some variables used in the module

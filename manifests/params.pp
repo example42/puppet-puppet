@@ -15,6 +15,8 @@
 class puppet::params {
 
   ### Module's specific variables
+  $enc_backup = false
+
   $major_version = $::puppetversion ? {
     /(^0.)/   => '0.2',
     default   => '2.x',
@@ -67,6 +69,7 @@ class puppet::params {
   $prerun_command = ''
   $postrun_command = ''
   $externalnodes = false
+  $external_nodes_script = '/etc/puppet/node.rb'
   $passenger = false
   $passenger_type = 'apache'
   $autosign = false

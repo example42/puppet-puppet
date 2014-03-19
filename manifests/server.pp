@@ -50,6 +50,15 @@ class puppet::server inherits puppet {
     require => [ Package['puppet'] , File['puppet.conf'] ],
   }
 
+  if $puppet::enc_backup {
+    file { '/etc/puppet/node.sh':
+      ensure  => present,
+      owner   => root,
+      group   => root,
+      mode    => 0755,
+      content => template('puppet/server/node.sh.erb'),
+    }
+  }
   ### Service monitoring, if enabled ( monitor => true )
   if $puppet::bool_monitor == true {
     monitor::port { "puppet_${puppet::protocol}_${puppet::port}":
