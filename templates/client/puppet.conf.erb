@@ -8,7 +8,7 @@
   usecacheonfailure = true
   user = <%= scope.lookupvar('puppet::process_user') %>
   group = <%= scope.lookupvar('puppet::process_group') %>
-
+  configtimeout = <%= scope.lookupvar('puppet::configtimeout') %>
   masterport = <%= scope.lookupvar('puppet::port') %>
 
 <% if scope.lookupvar('puppet::http_proxy_host') != '' -%>

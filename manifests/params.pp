@@ -24,6 +24,8 @@ class puppet::params {
 
   $mode = 'client'
 
+  $configtimeout = '120'
+
   ### Check if TheForeman ENC is present
   if $::puppetmaster {
     $server = $::puppetmaster

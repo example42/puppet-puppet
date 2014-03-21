@@ -389,6 +389,7 @@ class puppet (
   $croncommand         = params_lookup( 'croncommand' ),
   $prerun_command      = params_lookup( 'prerun_command' ),
   $postrun_command     = params_lookup( 'postrun_command' ),
+  $configtimeout       = params_lookup( 'configtimeout' ),
   $externalnodes       = params_lookup( 'externalnodes' ),
   $external_nodes_script = params_lookup( 'external_nodes_script' ),
   $passenger           = params_lookup( 'passenger' ),
