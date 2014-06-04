@@ -15,15 +15,15 @@ class puppet::server::passenger {
     default: { }
   }
 
-  file { ['/etc/puppet/rack',
-          '/etc/puppet/rack/public',
-          '/etc/puppet/rack/tmp']:
+  file { [$puppet::passenger_approot,
+          "${puppet::passenger_approot}/public",
+          "${puppet::passenger_approot}/tmp"]:
     ensure => directory,
     owner  => $puppet::process_user_server,
     group  => $puppet::process_user_server,
   }
 
-  file { '/etc/puppet/rack/config.ru':
+  file { "${puppet::passenger_approot}/config.ru":
     ensure  => present,
     owner   => $puppet::process_user_server,
     group   => $puppet::process_user_server,
@@ -32,7 +32,7 @@ class puppet::server::passenger {
   }
 
   $vhost_priority = 10
-  $rack_location = '/etc/puppet/rack/public/'
+  $rack_location = "${puppet::passenger_approot}/public/"
 
   case $puppet::passenger_type {
     apache: {

@@ -394,6 +394,7 @@ class puppet (
   $external_nodes_script = params_lookup( 'external_nodes_script' ),
   $passenger           = params_lookup( 'passenger' ),
   $passenger_type      = params_lookup( 'passenger_type' ),
+  $passenger_approot   = params_lookup( 'passenger_approot' ),
   $autosign            = params_lookup( 'autosign' ),
   $storeconfigs        = params_lookup( 'storeconfigs' ),
   $storeconfigs_thin   = params_lookup( 'storeconfigs_thin' ),
