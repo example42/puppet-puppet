@@ -74,6 +74,7 @@ class puppet::params {
   $external_nodes_script = '/etc/puppet/node.rb'
   $passenger = false
   $passenger_type = 'apache'
+  $passenger_approot = '/etc/puppet/rack'
   $autosign = false
   $storeconfigs = true
   $storeconfigs_thin = true
