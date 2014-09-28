@@ -68,6 +68,11 @@ auth no
 method find, search
 allow <%= scope.lookupvar('puppet::server') %>
 
+# Access to Environments list, needed to import environments in Foreman
+path /v2.0/environments
+method find
+allow *
+
 # this one is not strictly necessary, but it has the merit
 # to show the default policy which is deny everything else
 path /

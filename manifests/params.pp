@@ -74,6 +74,7 @@ class puppet::params {
   $external_nodes_script = '/etc/puppet/node.rb'
   $passenger = false
   $passenger_type = 'apache'
+  $passenger_approot = '/etc/puppet/rack'
   $autosign = false
   $storeconfigs = true
   $storeconfigs_thin = true
@@ -164,8 +165,8 @@ class puppet::params {
 
   $package = $::operatingsystem ? {
     /(?i:OpenBSD)/ => $::operatingsystemrelease ? {
-      '5.4'   => 'puppet',
-      default => 'ruby-puppet',
+      /(?i:5\.[0-4])/ => 'ruby-puppet',
+      default         => 'puppet',
     },
     /(?i:Windows)/ => 'Puppet',
     default        => 'puppet',
