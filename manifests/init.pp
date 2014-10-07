@@ -589,7 +589,7 @@ class puppet (
   }
 
   $manage_service_autorestart = $puppet::bool_service_autorestart ? {
-    true    => 'Service[puppet]',
+    true    => Service[puppet],
     false   => undef,
   }
 
