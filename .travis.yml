@@ -5,7 +5,6 @@ rvm:
 script:
   - "rake spec SPEC_OPTS='--format documentation'"
 env:
-  - PUPPET_VERSION="~> 2.6.0"
   - PUPPET_VERSION="~> 2.7.0"
   - PUPPET_VERSION="~> 3.0.0"
   - PUPPET_VERSION="~> 3.1.0"
@@ -14,11 +13,7 @@ env:
 matrix:
   exclude:
     - rvm: 1.9.3
-      env: PUPPET_VERSION="~> 2.6.0"
-      gemfile: .gemfile
-    - rvm: 1.9.3
       env: PUPPET_VERSION="~> 2.7.0"
-      gemfile: .gemfile
 notifications:
   email:
     - al@lab42.it
