@@ -112,7 +112,7 @@ class puppet::server inherits puppet {
   ### remove stored reports after a week
   if $puppet::nodetool == "foreman" or $puppet::nodetool == "dashboard" {
     tidy { $puppet::reports_dir:
-      age     => "1w",
+      age     => $puppet::reports_retention_age,
       recurse => true,
       rmdirs  => true,
       type    => ctime;
