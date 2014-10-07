@@ -93,14 +93,14 @@ describe 'puppet' do
     it { should contain_file('puppet.conf').with_content(/fqdn: rspec.example42.com/) }
   end
 
-  describe 'Test service autorestart' do
-    it { should contain_file('puppet.conf').with_notify('Service[puppet]') }
+  describe 'Test service autorestart default (false)' do
+    it { should contain_file('puppet.conf').without_notify('Service[puppet]') }
   end
 
-  describe 'Test service autorestart' do
+  describe 'Test service autorestart=true' do
     let(:params) { {:service_autorestart => true } }
 
-    it { should contain_file('puppet.conf').without_notify('Service[puppet]') }
+    it { should contain_file('puppet.conf').with_notify('Service[puppet]') }
   end
 
   describe 'Test Puppi Integration' do
