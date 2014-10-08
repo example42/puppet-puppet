@@ -305,6 +305,8 @@ class puppet::params {
   $manifest_path = '$confdir/manifests/site.pp'
   $module_path   = '/etc/puppet/modules:/usr/share/puppet/modules'
 
+  $reports_dir = '/var/lib/puppet/reports'
+  $reports_retention_age = '1w'
 
   # DB package resources
   $mysql_conn_package = $::operatingsystem ? {
