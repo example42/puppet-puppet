@@ -7,3 +7,6 @@ Session.vim
 spec/fixtures
 .*.sw[a-z]
 *.un~
+
+# conflicts with setting various PUPPET_VERSIONs on travis-ci
+/Gemfile.lock

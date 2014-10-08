@@ -4,7 +4,6 @@
   vardir      = <%= scope.lookupvar('puppet::data_dir') %>
   logdir      = <%= scope.lookupvar('puppet::log_dir') %>
   rundir      = <%= scope.lookupvar('puppet::run_dir') %>
-  templatedir = <%= scope.lookupvar('puppet::template_dir') %>
   ssldir      = <%= scope.lookupvar('puppet::ssl_dir') %>
   usecacheonfailure = true
   user = <%= scope.lookupvar('puppet::process_user_server') %>
