@@ -72,7 +72,7 @@
 #
 # [*storeconfigs_thin*]
 #
-# [*rails*]
+# [*manage_rails*]
 #
 # [*db*]
 #
@@ -397,7 +397,7 @@ class puppet (
   $autosign            = params_lookup( 'autosign' ),
   $storeconfigs        = params_lookup( 'storeconfigs' ),
   $storeconfigs_thin   = params_lookup( 'storeconfigs_thin' ),
-  $rails               = params_lookup( 'rails' ),
+  $manage_rails        = params_lookup( 'manage_rails' ),
   $db                  = params_lookup( 'db' ),
   $db_name             = params_lookup( 'db_name' ),
   $db_server           = params_lookup( 'db_server' ),
@@ -487,7 +487,7 @@ class puppet (
   $bool_passenger=any2bool($passenger)
   $bool_storeconfigs=any2bool($storeconfigs)
   $bool_storeconfigs_thin=any2bool($storeconfigs_thin)
-  $bool_rails=any2bool($rails)
+  $bool_manage_rails=any2bool($manage_rails)
   $bool_service_server_autorestart=any2bool($service_server_autorestart)
   $bool_source_dir_purge=any2bool($source_dir_purge)
   $bool_service_autorestart=any2bool($service_autorestart)
