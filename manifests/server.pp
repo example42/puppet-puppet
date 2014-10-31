@@ -97,7 +97,7 @@ class puppet::server inherits puppet {
   }
 
   ### Rails required when storeconfigs activated
-  if $puppet::bool_storeconfigs == true { include puppet::rails }
+  if $puppet::bool_storeconfigs == true and $puppet::manage_bool_rails { include puppet::rails }
 
   ### Manage database for storeconfigs
   case $puppet::db {

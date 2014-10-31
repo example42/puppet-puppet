@@ -78,6 +78,7 @@ class puppet::params {
   $autosign = false
   $storeconfigs = true
   $storeconfigs_thin = true
+  $manage_rails = true
   $db = 'sqlite'
   $db_name = 'puppet'
   $db_server = $::fqdn
