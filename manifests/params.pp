@@ -87,6 +87,8 @@ class puppet::params {
   $db_password = ''
   $inventoryserver = 'localhost'
   $reporturl = 'http://localhost:3000/reports'
+  $tagmail = false
+  $template_tagmail = ''
 
   $package_server = $::operatingsystem ? {
     /(?i:Debian|Ubuntu|Mint)/ => 'puppetmaster',

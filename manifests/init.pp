@@ -145,6 +145,10 @@
 #
 # [*reporturl*]
 #
+# [*tagmail*]
+#
+# [*template_tagmail*]
+#
 # Extra Database settings
 #
 # [*mysql_conn_package*]
@@ -429,6 +433,8 @@ class puppet (
   $run_dir             = params_lookup( 'run_dir' ),
   $ssl_dir             = params_lookup( 'ssl_dir' ),
   $reporturl           = params_lookup( 'reporturl' ),
+  $tagmail             = params_lookup( 'tagmail' ),
+  $template_tagmail    = params_lookup( 'template_tagmail' ),
   $my_class            = params_lookup( 'my_class' ),
   $source              = params_lookup( 'source' ),
   $source_dir          = params_lookup( 'source_dir' ),
@@ -502,9 +508,18 @@ class puppet (
 
   $reports_value = $puppet::reports ? {
     '' => $puppet::nodetool ? {
-      'foreman'   => 'store,foreman',
-      'dashboard' => 'store,http',
-      default     => 'log',
+      'foreman'   => $puppet::tagmail ? {
+        true  => 'store,foreman,tagmail',
+        false => 'store,foreman',
+      },
+      'dashboard' => $puppet::tagmail ? {
+        true  => 'store,http,tagmail',
+        false => 'store,http',
+      },
+      default     => $puppet::tagmail ? {
+        true  => 'log,tagmail',
+        false => 'log',
+      },
     },
     default => $puppet::reports,
   }
@@ -679,6 +694,16 @@ class puppet (
     default   => template($puppet::template_fileserver),
   }
 
+  $manage_file_tagmail = $puppet::tagmail ? {
+    true  => 'present',
+    false => 'absent',
+  }
+
+  $manage_file_tagmail_content = $puppet::template_tagmail ? {
+    ''      => '',
+    default => template($puppet::template_tagmail),
+  }
+
   $manage_log_dir_owner = $puppet::mode ? {
     server => $puppet::process_user_server,
     client => undef,
@@ -759,6 +784,19 @@ class puppet (
     require => Package['puppet'],
     notify  => $puppet::manage_service_autorestart,
     content => $puppet::manage_file_auth_content,
+    replace => $puppet::manage_file_replace,
+    audit   => $puppet::manage_audit,
+  }
+
+  file { 'tagmail.conf':
+    ensure  => $puppet::manage_file_tagmail,
+    path    => "${puppet::config_dir}/tagmail.conf",
+    mode    => $puppet::config_file_mode,
+    owner   => $puppet::config_file_owner,
+    group   => $puppet::config_file_group,
+    require => Package['puppet'],
+    notify  => $puppet::manage_service_autorestart,
+    content => $puppet::manage_file_tagmail_content,
     replace => $puppet::manage_file_replace,
     audit   => $puppet::manage_audit,
   }
