@@ -718,10 +718,16 @@ class puppet (
   $version_major = $version_puppet[0]
 
   ### Managed resources
+  $real_package_provider = $package_provider ? {
+    ''      => undef,
+    undef   => undef,
+    default => $package_provider,
+  }
+
   package { 'puppet':
     ensure   => $puppet::manage_package,
     name     => $puppet::package,
-    provider => $puppet::package_provider,
+    provider => $real_package_provider,
   }
 
   service { 'puppet':
@@ -812,7 +818,7 @@ class puppet (
   }
 
   # The whole puppet configuration directory can be recursively overriden
-  if $puppet::source_dir {
+  if $puppet::source_dir and $puppet::source_dir != '' {
     file { 'puppet.dir':
       ensure  => $puppet::manage_directory,
       path    => $puppet::config_dir,
