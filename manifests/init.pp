@@ -851,7 +851,7 @@ class puppet (
 
 
   ### Service monitoring, if enabled ( monitor => true )
-  if $puppet::monitor_tool and $puppet::runmode == 'service' {
+  if $puppet::monitor == true and $puppet::monitor_tool and $puppet::runmode == 'service' {
     if $puppet::bool_listen == true {
       monitor::port { "puppet_${puppet::protocol}_${puppet::port_listen}":
         protocol => $puppet::protocol,
