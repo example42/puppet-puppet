@@ -506,60 +506,60 @@ class puppet (
   $bool_debug=any2bool($debug)
   $bool_audit_only=any2bool($audit_only)
 
-  $reports_value = $puppet::reports ? {
-    '' => $puppet::nodetool ? {
-      'foreman'   => $puppet::tagmail ? {
+  $reports_value = $reports ? {
+    '' => $nodetool ? {
+      'foreman'   => $tagmail ? {
         true  => 'store,foreman,tagmail',
         false => 'store,foreman',
       },
-      'dashboard' => $puppet::tagmail ? {
+      'dashboard' => $tagmail ? {
         true  => 'store,http,tagmail',
         false => 'store,http',
       },
-      default     => $puppet::tagmail ? {
+      default     => $tagmail ? {
         true  => 'log,tagmail',
         false => 'log',
       },
     },
-    default => $puppet::reports,
+    default => $reports,
   }
 
-  $real_template_passenger = $puppet::template_passenger ? {
-    '' => $puppet::passenger_type ? {
+  $real_template_passenger = $template_passenger ? {
+    '' => $passenger_type ? {
       'nginx'  => 'puppet/passenger/puppet-passenger-nginx.conf.erb',
       default  => 'puppet/passenger/puppet-passenger.conf.erb',
     },
-    default => $puppet::template_passenger,
+    default => $template_passenger,
   }
 
-  $real_external_nodes_script = $puppet::bool_enc_backup ? {
+  $real_external_nodes_script = $bool_enc_backup ? {
     true  => '/etc/puppet/node.sh',
     false => $external_nodes_script,
   }
 
   ### Definition of some variables used in the module
-  $manage_package = $puppet::bool_absent ? {
+  $manage_package = $bool_absent ? {
     true  => 'absent',
-    false => $puppet::version,
+    false => $version,
   }
 
-  $manage_package_server = $puppet::bool_absent ? {
+  $manage_package_server = $bool_absent ? {
     true  => 'absent',
-    false => $puppet::version_server,
+    false => $version_server,
   }
 
-  $manage_package_puppetdb_terminus = $puppet::bool_absent ? {
+  $manage_package_puppetdb_terminus = $bool_absent ? {
     true  => 'absent',
-    false => $puppet::version_puppetdb_terminus,
+    false => $version_puppetdb_terminus,
   }
 
-  $manage_service_enable = $puppet::bool_disableboot ? {
+  $manage_service_enable = $bool_disableboot ? {
     true    => false,
-    default => $puppet::bool_disable ? {
+    default => $bool_disable ? {
       true    => false,
-      default => $puppet::bool_absent ? {
+      default => $bool_absent ? {
         true  => false,
-        false => $puppet::runmode ? {
+        false => $runmode ? {
           cron    => false,
           manual  => false,
           service => true,
@@ -568,13 +568,13 @@ class puppet (
     },
   }
 
-  $manage_service_server_enable = $puppet::bool_disableboot ? {
+  $manage_service_server_enable = $bool_disableboot ? {
     true    => false,
-    default => $puppet::bool_disable ? {
+    default => $bool_disable ? {
       true    => false,
-      default => $puppet::bool_absent ? {
+      default => $bool_absent ? {
         true  => false,
-        false => $puppet::bool_passenger ? {
+        false => $bool_passenger ? {
           true  => false,
           false => true,
         },
@@ -582,11 +582,11 @@ class puppet (
     },
   }
 
-  $manage_service_ensure = $puppet::bool_disable ? {
+  $manage_service_ensure = $bool_disable ? {
     true    => 'stopped',
-    default =>  $puppet::bool_absent ? {
+    default =>  $bool_absent ? {
       true    => 'stopped',
-      default => $puppet::runmode ? {
+      default => $runmode ? {
         cron    => 'stopped',
         manual  => 'stopped',
         service => 'running',
@@ -594,123 +594,123 @@ class puppet (
     },
   }
 
-  $manage_service_server_ensure = $puppet::bool_disable ? {
+  $manage_service_server_ensure = $bool_disable ? {
     true    => 'stopped',
-    default =>  $puppet::bool_absent ? {
+    default =>  $bool_absent ? {
       true    => 'stopped',
-      default => $puppet::bool_passenger ? {
+      default => $bool_passenger ? {
         true  => 'stopped',
         false => 'running',
       },
     },
   }
 
-  $manage_service_autorestart = $puppet::bool_service_autorestart ? {
+  $manage_service_autorestart = $bool_service_autorestart ? {
     true    => Service[puppet],
     false   => undef,
   }
 
-  $manage_service_server_autorestart = $puppet::bool_service_server_autorestart ? {
+  $manage_service_server_autorestart = $bool_service_server_autorestart ? {
     true    => 'Service[puppet_server]',
     false   => undef,
   }
 
-  $manage_file = $puppet::bool_absent ? {
+  $manage_file = $bool_absent ? {
     true    => 'absent',
     default => 'present',
   }
 
-  $manage_directory = $puppet::bool_absent ? {
+  $manage_directory = $bool_absent ? {
     true    => 'absent',
     default => 'directory',
   }
 
-  $manage_file_cron = $puppet::runmode ? {
+  $manage_file_cron = $runmode ? {
     'cron'  => 'present',
     default => 'absent',
   }
 
-  if $puppet::bool_absent == true
-  or $puppet::bool_disable == true
-  or $puppet::bool_monitor == false
-  or $puppet::bool_disableboot == true {
+  if $bool_absent == true
+  or $bool_disable == true
+  or $bool_monitor == false
+  or $bool_disableboot == true {
     $manage_monitor = false
   } else {
     $manage_monitor = true
   }
 
-  if $puppet::bool_absent == true
-  or $puppet::bool_disable == true {
+  if $bool_absent == true
+  or $bool_disable == true {
     $manage_firewall = false
   } else {
     $manage_firewall = true
   }
 
-  $manage_audit = $puppet::bool_audit_only ? {
+  $manage_audit = $bool_audit_only ? {
     true  => 'all',
     false => undef,
   }
 
-  $manage_file_replace = $puppet::bool_audit_only ? {
+  $manage_file_replace = $bool_audit_only ? {
     true  => false,
     false => true,
   }
 
-  $manage_file_source = $puppet::source ? {
+  $manage_file_source = $source ? {
     ''        => undef,
-    default   => $puppet::source,
+    default   => $source,
   }
 
-  $manage_file_content = $puppet::template ? {
-    ''        => $puppet::mode ? {
+  $manage_file_content = $template ? {
+    ''        => $mode ? {
       client => template('puppet/client/puppet.conf.erb'),
       server => template('puppet/server/puppet.conf.erb'),
     },
     'absent'  => undef,
-    default   => template($puppet::template),
+    default   => template($template),
   }
 
-  $manage_file_namespaceauth_content = $puppet::template_namespaceauth ? {
-    ''        => $puppet::mode ? {
+  $manage_file_namespaceauth_content = $template_namespaceauth ? {
+    ''        => $mode ? {
       client => template('puppet/client/namespaceauth.conf.erb'),
       server => template('puppet/server/namespaceauth.conf.erb'),
     },
-    default   => template($puppet::template_namespaceauth),
+    default   => template($template_namespaceauth),
   }
 
-  $manage_file_auth_content = $puppet::template_auth ? {
-    ''        => $puppet::mode ? {
+  $manage_file_auth_content = $template_auth ? {
+    ''        => $mode ? {
       client => template('puppet/client/auth.conf.erb'),
       server => template('puppet/server/auth.conf.erb'),
     },
-    default   => template($puppet::template_auth),
+    default   => template($template_auth),
   }
 
-  $manage_file_fileserver_content = $puppet::template_fileserver ? {
-    ''        => $puppet::mode ? {
+  $manage_file_fileserver_content = $template_fileserver ? {
+    ''        => $mode ? {
       client => template('puppet/client/fileserver.conf.erb'),
       server => template('puppet/server/fileserver.conf.erb'),
     },
-    default   => template($puppet::template_fileserver),
+    default   => template($template_fileserver),
   }
 
-  $manage_file_tagmail = $puppet::tagmail ? {
+  $manage_file_tagmail = $tagmail ? {
     true  => 'present',
     false => 'absent',
   }
 
-  $manage_file_tagmail_content = $puppet::template_tagmail ? {
+  $manage_file_tagmail_content = $template_tagmail ? {
     ''      => '',
-    default => template($puppet::template_tagmail),
+    default => template($template_tagmail),
   }
 
-  $manage_log_dir_owner = $puppet::mode ? {
-    server => $puppet::process_user_server,
+  $manage_log_dir_owner = $mode ? {
+    server => $process_user_server,
     client => undef,
   }
 
-  $manage_log_dir_group = $puppet::mode ? {
-    server => $puppet::process_group_server,
+  $manage_log_dir_group = $mode ? {
+    server => $process_group_server,
     client => undef,
   }
 
@@ -725,17 +725,17 @@ class puppet (
   }
 
   package { 'puppet':
-    ensure   => $puppet::manage_package,
-    name     => $puppet::package,
+    ensure   => $manage_package,
+    name     => $package,
     provider => $real_package_provider,
   }
 
   service { 'puppet':
-    ensure     => $puppet::manage_service_ensure,
-    name       => $puppet::service,
-    enable     => $puppet::manage_service_enable,
-    hasstatus  => $puppet::service_status,
-    pattern    => $puppet::process,
+    ensure     => $manage_service_ensure,
+    name       => $service,
+    enable     => $manage_service_enable,
+    hasstatus  => $service_status,
+    pattern    => $process,
     require    => Package['puppet'],
   }
 
@@ -743,156 +743,156 @@ class puppet (
   or $::operatingsystem == 'Debian'
   or $::operatingsystem == 'SLES') {
     file { 'default-puppet':
-      ensure  => $puppet::manage_file,
-      path    => $puppet::config_file_init,
+      ensure  => $manage_file,
+      path    => $config_file_init,
       require => Package[puppet],
-      content => template($puppet::config_file_init_template),
-      mode    => $puppet::config_file_mode,
-      owner   => $puppet::config_file_owner,
-      group   => $puppet::config_file_group,
-      notify  => $puppet::manage_service_autorestart,
+      content => template($config_file_init_template),
+      mode    => $config_file_mode,
+      owner   => $config_file_owner,
+      group   => $config_file_group,
+      notify  => $manage_service_autorestart,
     }
   }
 
   file { 'puppet.conf':
-    ensure  => $puppet::manage_file,
-    path    => $puppet::config_file,
-    mode    => $puppet::config_file_mode,
-    owner   => $puppet::config_file_owner,
-    group   => $puppet::config_file_group,
+    ensure  => $manage_file,
+    path    => $config_file,
+    mode    => $config_file_mode,
+    owner   => $config_file_owner,
+    group   => $config_file_group,
     require => Package['puppet'],
-    notify  => $puppet::manage_service_autorestart,
-    source  => $puppet::manage_file_source,
-    content => $puppet::manage_file_content,
-    replace => $puppet::manage_file_replace,
-    audit   => $puppet::manage_audit,
+    notify  => $manage_service_autorestart,
+    source  => $manage_file_source,
+    content => $manage_file_content,
+    replace => $manage_file_replace,
+    audit   => $manage_audit,
   }
 
   file { 'namespaceauth.conf':
-    ensure  => $puppet::manage_file,
+    ensure  => $manage_file,
     path    => "${puppet::config_dir}/namespaceauth.conf",
-    mode    => $puppet::config_file_mode,
-    owner   => $puppet::config_file_owner,
-    group   => $puppet::config_file_group,
+    mode    => $config_file_mode,
+    owner   => $config_file_owner,
+    group   => $config_file_group,
     require => Package['puppet'],
-    notify  => $puppet::manage_service_autorestart,
-    content => $puppet::manage_file_namespaceauth_content,
-    replace => $puppet::manage_file_replace,
-    audit   => $puppet::manage_audit,
+    notify  => $manage_service_autorestart,
+    content => $manage_file_namespaceauth_content,
+    replace => $manage_file_replace,
+    audit   => $manage_audit,
   }
 
   file { 'auth.conf':
-    ensure  => $puppet::manage_file,
+    ensure  => $manage_file,
     path    => "${puppet::config_dir}/auth.conf",
-    mode    => $puppet::config_file_mode,
-    owner   => $puppet::config_file_owner,
-    group   => $puppet::config_file_group,
+    mode    => $config_file_mode,
+    owner   => $config_file_owner,
+    group   => $config_file_group,
     require => Package['puppet'],
-    notify  => $puppet::manage_service_autorestart,
-    content => $puppet::manage_file_auth_content,
-    replace => $puppet::manage_file_replace,
-    audit   => $puppet::manage_audit,
+    notify  => $manage_service_autorestart,
+    content => $manage_file_auth_content,
+    replace => $manage_file_replace,
+    audit   => $manage_audit,
   }
 
   file { 'tagmail.conf':
-    ensure  => $puppet::manage_file_tagmail,
+    ensure  => $manage_file_tagmail,
     path    => "${puppet::config_dir}/tagmail.conf",
-    mode    => $puppet::config_file_mode,
-    owner   => $puppet::config_file_owner,
-    group   => $puppet::config_file_group,
+    mode    => $config_file_mode,
+    owner   => $config_file_owner,
+    group   => $config_file_group,
     require => Package['puppet'],
-    notify  => $puppet::manage_service_autorestart,
-    content => $puppet::manage_file_tagmail_content,
-    replace => $puppet::manage_file_replace,
-    audit   => $puppet::manage_audit,
+    notify  => $manage_service_autorestart,
+    content => $manage_file_tagmail_content,
+    replace => $manage_file_replace,
+    audit   => $manage_audit,
   }
 
   file { 'puppet.log.dir':
-    ensure  => $puppet::manage_directory,
-    path    => $puppet::log_dir,
-    mode    => $puppet::log_dir_mode,
-    owner   => $puppet::manage_log_dir_owner,
-    group   => $puppet::manage_log_dir_group,
+    ensure  => $manage_directory,
+    path    => $log_dir,
+    mode    => $log_dir_mode,
+    owner   => $manage_log_dir_owner,
+    group   => $manage_log_dir_group,
     require => Package['puppet'],
-    audit   => $puppet::manage_audit,
+    audit   => $manage_audit,
   }
 
   # The whole puppet configuration directory can be recursively overriden
-  if $puppet::source_dir and $puppet::source_dir != '' {
+  if $source_dir and $source_dir != '' {
     file { 'puppet.dir':
-      ensure  => $puppet::manage_directory,
-      path    => $puppet::config_dir,
+      ensure  => $manage_directory,
+      path    => $config_dir,
       require => Package['puppet'],
-      notify  => $puppet::manage_service_autorestart,
-      source  => $puppet::source_dir,
+      notify  => $manage_service_autorestart,
+      source  => $source_dir,
       recurse => true,
-      purge   => $puppet::bool_source_dir_purge,
-      replace => $puppet::manage_file_replace,
-      audit   => $puppet::manage_audit,
+      purge   => $bool_source_dir_purge,
+      replace => $manage_file_replace,
+      audit   => $manage_audit,
     }
   }
 
 
   ### Include custom class if $my_class is set
-  if $puppet::my_class {
-    include $puppet::my_class
+  if $my_class {
+    include $my_class
   }
 
 
   ### Provide puppi data, if enabled ( puppi => true )
-  if $puppet::bool_puppi == true {
+  if $bool_puppi == true {
     $classvars=get_class_args()
     puppi::ze { 'puppet':
-      ensure    => $puppet::manage_file,
+      ensure    => $manage_file,
       variables => $classvars,
-      helper    => $puppet::puppi_helper,
+      helper    => $puppi_helper,
     }
   }
 
 
   ### Service monitoring, if enabled ( monitor => true )
-  if $puppet::monitor == true and $puppet::monitor_tool and $puppet::runmode == 'service' {
-    if $puppet::bool_listen == true {
+  if $monitor == true and $monitor_tool and $runmode == 'service' {
+    if $bool_listen == true {
       monitor::port { "puppet_${puppet::protocol}_${puppet::port_listen}":
-        protocol => $puppet::protocol,
-        port     => $puppet::port_listen,
-        target   => $puppet::monitor_target,
-        tool     => $puppet::monitor_tool,
-        enable   => $puppet::manage_monitor,
+        protocol => $protocol,
+        port     => $port_listen,
+        target   => $monitor_target,
+        tool     => $monitor_tool,
+        enable   => $manage_monitor,
       }
     }
     monitor::process { 'puppet_process':
-      process  => $puppet::process,
-      service  => $puppet::service,
-      pidfile  => $puppet::pid_file,
-      user     => $puppet::process_user,
-      argument => $puppet::process_args,
-      tool     => $puppet::monitor_tool,
-      enable   => $puppet::manage_monitor,
+      process  => $process,
+      service  => $service,
+      pidfile  => $pid_file,
+      user     => $process_user,
+      argument => $process_args,
+      tool     => $monitor_tool,
+      enable   => $manage_monitor,
     }
   }
 
 
   ### Firewall management, if enabled ( firewall => true )
-  if $puppet::bool_firewall == true
-  and $puppet::bool_listen == true {
+  if $bool_firewall == true
+  and $bool_listen == true {
     firewall { "puppet_${puppet::protocol}_${puppet::port_listen}":
-      source      => $puppet::firewall_src,
-      destination => $puppet::firewall_dst,
-      protocol    => $puppet::protocol,
-      port        => $puppet::port_listen,
+      source      => $firewall_src,
+      destination => $firewall_dst,
+      protocol    => $protocol,
+      port        => $port_listen,
       action      => 'allow',
       direction   => 'input',
-      tool        => $puppet::firewall_tool,
-      enable      => $puppet::manage_firewall,
+      tool        => $firewall_tool,
+      enable      => $manage_firewall,
     }
   }
 
 
   ### Debugging, if enabled ( debug => true )
-  if $puppet::bool_debug == true {
+  if $bool_debug == true {
     file { 'debug_puppet':
-      ensure  => $puppet::manage_file,
+      ensure  => $manage_file,
       path    => "${settings::vardir}/debug-puppet",
       mode    => '0640',
       owner   => 'root',
@@ -902,7 +902,7 @@ class puppet (
   }
 
   ### PuppetMaster configuration
-  if $puppet::mode == 'server' {
+  if $mode == 'server' {
     include puppet::server
   }
 
@@ -913,21 +913,21 @@ class puppet (
   case $::operatingsystem {
     /(?i:OpenBSD|FreeBSD)/: {
       cron { 'puppet_cron':
-        ensure   => $puppet::manage_file_cron,
-        command  => $puppet::croncommand,
-        user     => $puppet::process_user,
-        minute   => [ $puppet::tmp_cronminute , $puppet::tmp_cronminute2 ],
+        ensure   => $manage_file_cron,
+        command  => $croncommand,
+        user     => $process_user,
+        minute   => [ $tmp_cronminute , $tmp_cronminute2 ],
       }
     }
     /(?i:Windows)/: { }
     default: {
       file { 'puppet_cron':
-        ensure  => $puppet::manage_file_cron,
+        ensure  => $manage_file_cron,
         path    => '/etc/cron.d/puppet',
         mode    => '0644',
         owner   => 'root',
         group   => 'root',
-        content => template($puppet::template_cron),
+        content => template($template_cron),
       }
     }
   }

@@ -6,7 +6,7 @@ class puppet::server::sqlite {
 
   require puppet
 
-  package { $puppet::sqlite_package:
+  package { $::puppet::sqlite_package:
     ensure => present,
   }
 }
