@@ -17,6 +17,7 @@ matrix:
   exclude:
     - rvm: 1.9.3
       env: PUPPET_VERSION="~> 2.7.0"
+sudo: false
 notifications:
   email:
     - al@lab42.it

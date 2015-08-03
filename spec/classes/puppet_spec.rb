@@ -7,6 +7,7 @@ describe 'puppet' do
   let(:facts) { {
     :ipaddress => '10.42.42.42',
     :concat_basedir => '/tmp/cb',
+    :operatingsystemrelease => '6.6'
   } }
 
   describe 'Test standard installation' do
@@ -97,7 +98,7 @@ describe 'puppet' do
   end
 
   describe 'Test service autorestart default (false)' do
-    it { should contain_file('puppet.conf').without_notify('Service[puppet]') }
+    it { should contain_file('puppet.conf').with_notify(nil) }
   end
 
   describe 'Test service autorestart=true' do
@@ -125,7 +126,7 @@ describe 'puppet' do
   end
 
   describe 'Test OldGen Module Set Integration' do
-    let(:params) { {:monitor => "yes" , :monitor_tool => "puppi" , :firewall => "yes" , :mode => 'server', :firewall_tool => "iptables" , :puppi => "yes" , :port => "42" , :protocol => 'tcp' } }
+    let(:params) { {:monitor => true , :monitor_tool => "puppi" , :firewall => "yes" , :mode => 'server', :firewall_tool => "iptables" , :puppi => "yes" , :port => "42" , :protocol => 'tcp', :runmode => 'service' } }
 
     it { should contain_monitor__process('puppet_process').with_tool('puppi') }
     it { should contain_firewall('puppet_tcp_42').with_tool('iptables') }

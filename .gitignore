@@ -10,3 +10,5 @@ spec/fixtures
 
 # conflicts with setting various PUPPET_VERSIONs on travis-ci
 /Gemfile.lock
+.bundle
+vendor
