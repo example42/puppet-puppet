@@ -13,7 +13,7 @@ class puppet::server inherits puppet {
     ensure   => $::puppet::manage_package_server,
     name     => $::puppet::package_server,
     notify   => $::puppet::manage_service_server_autorestart,
-    provider => $::puppet::package_provider,
+    provider => $::puppet::real_package_provider,
   }
 
   service { 'puppet_server':
