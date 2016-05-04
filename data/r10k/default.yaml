@@ -1,0 +1,5 @@
+---
+  r10k::settings:
+    package_name: 'r10k'
+    package_provider: 'gem'
+    config_file_path: '/etc/r10k.yaml'

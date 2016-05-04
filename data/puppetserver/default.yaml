@@ -1,0 +1,25 @@
+---
+  puppetserver::settings:
+    package_name: 'puppetserver'
+    service_name: 'puppetserver'
+    config_file_path: '/etc/puppetlabs/puppetserver/puppetserver.conf'
+    config_dir_path: '/etc/puppetlabs/puppetserver'
+    conf_dir_path: '/etc/puppetlabs/puppetserver/conf.d'
+    code_dir_path: '/etc/puppetlabs/code'
+    environment_dir_path: '/etc/puppetlabs/code/environments'
+    install_dir_path: '/opt/puppetlabs/server/apps/puppetserver'
+    pid_file_path: '/var/run/puppetlabs/puppetserver/puppetserver.pid'
+    log_file_path: '/var/log/puppetlabs/puppetserver/puppetserver-daemon.log'
+    log_dir_path: '/var/log/puppetlabs/puppetserver'
+    process_name: 'puppet'
+    process_user: 'puppet'
+    process_group: 'puppet'
+    config_dir_owner: 'puppet'
+    config_dir_group: 'puppet'
+    config_dir_mode: '0750'
+    nodaemon_args: 'foreground'
+
+    puppetserver::options::init:
+      java_args: '-Xms2g -Xmx2g -XX:MaxPermSize=256m'
+      service_stop_retries: '60'
+      start_timeout: '120'

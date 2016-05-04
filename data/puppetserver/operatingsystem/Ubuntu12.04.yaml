@@ -1,0 +1,4 @@
+---
+  puppetserver::settings:
+    apt_release: 'precise'
+
