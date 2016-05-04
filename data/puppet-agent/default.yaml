@@ -16,3 +16,4 @@
     process_name: 'puppet'
     process_user: 'root'
     process_group: 'root'
+    config_file_template: 'puppet/profile/agent/init.erb'        

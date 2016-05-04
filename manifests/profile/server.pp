@@ -11,23 +11,9 @@ class puppet::profile::server (
 
   include ::puppet
 
-  $tp_settings = tp_lookup('puppetserver','settings',$::puppet::data_module,'merge')
-  $module_settings = $tp_settings + $settings
-
-  $tp_config_options=tp_lookup('puppetserver','options::puppetserver::config',$::puppet::data_module,merge)
-  $tp_init_options=tp_lookup('puppetserver','options::puppetserver::init',$::puppet::data_module,merge)
-  $real_config_options=$tp_config_options + $options
-  $real_init_options=$tp_init_options + $options
-
-  if $module_settings['service_name'] and $service_autorestart {
-    $service_notify = "Service[${module_settings['service_name']}]"
-  } else {
-    $service_notify = undef
-  } 
-
   ::tp::install { 'puppetserver':
     ensure        => $ensure,
-    settings_hash => $module_settings,
+    settings_hash => $settings,
     data_module   => $::puppet::data_module,
     auto_conf     => false,
   }
@@ -36,7 +22,8 @@ class puppet::profile::server (
     ::tp::conf { 'puppetserver':
       ensure             => $ensure,
       template           => $config_template,
-      settings_hash      => $module_settings,
+      settings_hash      => $settings,
+      options_hash       => $options,
       config_file_notify => $service_autorestart,
       data_module        => $::puppet::data_module,
     }
@@ -46,8 +33,8 @@ class puppet::profile::server (
     ::tp::conf { 'puppetserver::init':
       ensure             => $ensure,
       template           => $init_template,
-      options_hash       => $real_init_options,
-      settings_hash      => $module_settings,
+      options_hash       => $options,
+      settings_hash      => $settings,
       base_file          => 'init',
       config_file_notify => $service_autorestart,
       data_module        => $::puppet::data_module,
