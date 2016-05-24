@@ -1,0 +1,13 @@
+# File managed by Puppet
+JAVA_BIN="/usr/bin/java"
+JAVA_ARGS="<%= @options['java_args'] %>"
+
+USER="<%= @settings['process_user'] %>"
+GROUP="<%= @settings['process_group'] %>"
+INSTALL_DIR="<%= @settings['install_dir_path'] %>"
+CONFIG="<%= @settings['conf_dir_path'] %>"
+BOOTSTRAP_CONFIG="<%= @settings['config_dir_path'] %>/bootstrap.cfg"
+SERVICE_STOP_RETRIES="<%= @options['service_stop_retries'] %>"
+
+# Used only in System-V style init scripts. No effect in systemd.
+START_TIMEOUT=<%= @options['start_timeout'] %>

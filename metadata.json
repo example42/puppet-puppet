@@ -1,29 +1,58 @@
 {
   "name": "example42-puppet",
-  "version": "2.0.25",
-  "summary": "Puppet module for puppet",
-  "author": "Alessandro Franceschi",
-  "description": "This module installs and manages puppet. Check README.rdoc for details. Puppi is required for some common functions: you can install them without using the whole module. Monitor and firewall dependencies are needed only if the relevant features are enabled",
-  "dependencies": [
-    {
-      "name": "example42/puppi",
-      "version_requirement": ">=2.0.0"
-    },
-    {
-      "name": "example42/apache",
-      "version_requirement": ">=2.0.0"
-    },
-    {
-      "name": "example42/mysql",
-      "version_requirement": ">=2.0.0"
-    }
-  ],
-  "types": [
-
-  ],
+  "version": "4.0.0.alpha1",
+  "summary": "Puppet module for puppet. Based on Tiny Puppet ",
+  "license": "Apache-2.0",
+  "author": "Alessandro Franceschi @  example42",
   "checksums": {
   },
   "source": "https://github.com/example42/puppet-puppet",
-  "project_page": "http://www.example42.com",
-  "license": "Apache2"
+  "project_page": "https://github.com/example42/puppet-puppet",
+  "issues_url": "https://github.com/example42/puppet-puppet/issues",
+  "operatingsystem_support": [
+    {
+      "operatingsystem": "RedHat",
+      "operatingsystemrelease": [
+        "7"
+      ]
+    },
+    {
+      "operatingsystem": "Centos",
+      "operatingsystemrelease": [
+        "7"
+      ]
+    },
+    {
+      "operatingsystem": "Debian",
+      "operatingsystemrelease": [
+        "7"
+      ]
+    },
+    {
+      "operatingsystem": "Ubuntu",
+      "operatingsystemrelease": [
+        "14.04"
+      ]
+    }
+  ],
+  "requirements": [
+    {
+      "name": "pe",
+      "version_requirement": ">= 3.0.0 < 5.0.0"
+    },
+    {
+      "name": "puppet",
+      "version_requirement": ">= 3.0.0 < 5.0.0"
+    }
+  ],
+  "dependencies": [
+    {
+      "name": "puppetlabs/stdlib",
+      "version_requirement": ">= 3.2.0 < 5.0.0"
+    },
+    {
+      "name": "example42/tp",
+      "version_requirement": ">= 1.0.0 < 3.0.0"
+    }
+  ]
 }
