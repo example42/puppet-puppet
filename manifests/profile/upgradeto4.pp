@@ -1,4 +1,4 @@
-class profile::puppet::upgradeto4 (
+class puppet::profile::upgradeto4 (
   $ensure              = 'present',
   $settings            = hiera('profile::puppet::agent::settings', { }),
   $options             = hiera('profile::puppet::agent::options',{ }),
