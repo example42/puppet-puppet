@@ -1,6 +1,6 @@
 ---
   puppet-agent::settings:
-    repo_url: 'https://apt.puppetlabs.com'
+    repo_url: 'http://apt.puppetlabs.com'
     key: '4BD6EC30'
     key_url: 'http://apt.puppetlabs.com/pubkey.gpg'
     apt_repos: 'PC1'
