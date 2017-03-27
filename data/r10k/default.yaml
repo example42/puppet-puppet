@@ -2,4 +2,6 @@
   r10k::settings:
     package_name: 'r10k'
     package_provider: 'gem'
-    config_file_path: '/etc/puppetlabs/r10k/r10k.yaml'
+    config_file_path: '/etc/r10k.yaml'
+    tp_prerequisites:
+      - ruby

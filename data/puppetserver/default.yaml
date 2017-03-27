@@ -9,7 +9,6 @@
     environment_dir_path: '/etc/puppetlabs/code/environments'
     install_dir_path: '/opt/puppetlabs/server/apps/puppetserver'
     pid_file_path: '/var/run/puppetlabs/puppetserver/puppetserver.pid'
-    log_file_path: '/var/log/puppetlabs/puppetserver/puppetserver-daemon.log'
     log_dir_path: '/var/log/puppetlabs/puppetserver'
     process_name: 'puppet'
     process_user: 'puppet'
@@ -18,9 +17,9 @@
     config_dir_group: 'puppet'
     config_dir_mode: '0750'
     nodaemon_args: 'foreground'
-    init_file_template: 'puppet/profile/server/init.erb'
+    log_file_path:
+      - '/var/log/puppetlabs/puppetserver/puppetserver.log'
+      - '/var/log/puppetlabs/puppetserver/masterhttp.log'
+      - '/var/log/puppetlabs/puppetserver/puppetserver-access.log'
+      - '/var/log/puppetlabs/puppetserver/file-sync-access.log'
 
-  puppetserver::options::init:
-      java_args: '-Xms2g -Xmx2g -XX:MaxPermSize=256m'
-      service_stop_retries: '60'
-      start_timeout: '120'
