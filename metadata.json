@@ -1,6 +1,6 @@
 {
   "name": "example42-puppet",
-  "version": "4.0.0.alpha1",
+  "version": "4.0.0",
   "summary": "Puppet module for puppet. Based on Tiny Puppet ",
   "license": "Apache-2.0",
   "author": "Alessandro Franceschi @  example42",
@@ -31,18 +31,19 @@
     {
       "operatingsystem": "Ubuntu",
       "operatingsystemrelease": [
-        "14.04"
+        "14.04",
+        "16.04"
       ]
     }
   ],
   "requirements": [
     {
       "name": "pe",
-      "version_requirement": ">= 3.0.0 < 5.0.0"
+      "version_requirement": ">= 2015.2.0 < 2017.4.0"
     },
     {
       "name": "puppet",
-      "version_requirement": ">= 3.0.0 < 5.0.0"
+      "version_requirement": ">= 4.0.0 < 6.0.0"
     }
   ],
   "dependencies": [
