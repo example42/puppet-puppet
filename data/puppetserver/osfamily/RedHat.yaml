@@ -1,0 +1,8 @@
+---
+  puppet-agent::settings:
+    repo_package_name: 'puppetlabs-release-pc1'
+    repo_package_provider: 'rpm'
+#    repo_url: 'http://yum.puppetlabs.com/el/7/PC1/$basearch/'
+#    key: '07BB6C57'
+#    key_url: 'http://yum.puppetlabs.com/RPM-GPG-KEY-puppet'
+    dockerfile_prerequisites: 'RUN yum install -y wget'

@@ -1,0 +1,8 @@
+---
+  puppet-agent::settings:
+    repo_url: 'http://apt.puppetlabs.com'
+    key: 'EF8D349F'
+    key_url: 'http://apt.puppetlabs.com/pubkey.gpg'
+    apt_repos: 'PC1'
+    # apt_release: 'stable'
+    dockerfile_prerequisites: 'RUN apt-get update && apt-get install -y --force-yes --no-install-recommends wget'
