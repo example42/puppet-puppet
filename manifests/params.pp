@@ -246,7 +246,7 @@ class puppet::params {
       /(?i:OpenBSD)/ => '/var/puppet/run/puppet.pid',
       default        => '/var/run/puppet/puppet.pid',
     },
-    '2.x' => $::operatingsystme ? {
+    '2.x' => $::operatingsystem ? {
       /(?i:OpenBSD)/ => '/var/puppet/run/agent.pid',
       default        => '/var/run/puppet/agent.pid',
     }
